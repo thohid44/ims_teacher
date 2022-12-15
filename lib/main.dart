@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:imsteacher/pages/Dairy/view/add_new_diary_page.dart';
+import 'package:imsteacher/pages/Dairy/view/dairy_page.dart';
+import 'package:imsteacher/pages/Leave/view/leave_management_page.dart';
 import 'package:imsteacher/pages/login/login_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 void main() {
@@ -27,7 +30,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: const LoginPage(),
+      child: const LeaveManagementPage(),
     );
   }
 }
