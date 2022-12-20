@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:imsteacher/pages/Dairy/view/add_new_diary_page.dart';
-import 'package:imsteacher/pages/Dairy/view/dairy_page.dart';
+import 'package:imsteacher/pages/Home/deshboard.dart';
+import 'package:imsteacher/pages/Home/home_page.dart';
 import 'package:imsteacher/pages/Leave/view/leave_management_page.dart';
+
 import 'package:imsteacher/pages/login/login_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:imsteacher/pages/login/view/otp_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context , child) {
-        return MaterialApp(
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'First Method',
           // You can use the library anywhere in the app even in theme
@@ -30,7 +33,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: const LeaveManagementPage(),
+      child:  DeashBoard(),
     );
   }
 }

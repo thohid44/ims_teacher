@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/pages/Dairy/view/dairy_page.dart';
-import 'package:imsteacher/pages/daily%20Attendence/daily_attendance_page.dart';
+import 'package:imsteacher/pages/Attendance/view/daily_attendance_page.dart';
 import 'package:imsteacher/widgets/custom_appbar.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 
@@ -19,7 +19,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar("DASHBOARD", primaryColor),
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        title: Text("DASHBOARD", 
+      
+      ), centerTitle: true, ),
 
       body: Padding(
         padding: const EdgeInsets.all(25.0),

@@ -17,9 +17,14 @@ class _DairyDetailsPageState extends State<DairyDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar("Diary: Bangla 1st Paper", dark),
-
+      appBar: 
+ AppBar(
+        backgroundColor: primaryColor,
+        title: Text("Diary: Bangla 1st Paper", 
+      
+      ), centerTitle: true, ),
       body: ListView(
+        shrinkWrap: true,
         children: [
           SizedBox(height: 20.h,),
           Row(
@@ -38,7 +43,8 @@ class _DairyDetailsPageState extends State<DairyDetailsPage> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15.w),
             child:Image.asset("assets/diary-img.jpg") ,
-          )
+          ), 
+          SizedBox(height: 10.h,)
         ],
       ),
     );

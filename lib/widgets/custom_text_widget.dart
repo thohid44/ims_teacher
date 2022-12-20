@@ -6,5 +6,5 @@ Widget customText(String title,color, size,FontWeight weight){
     fontSize: size, 
     fontWeight: weight, 
 
-  ), );
+  ), textAlign: TextAlign.center,);
 }

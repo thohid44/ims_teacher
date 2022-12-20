@@ -10,6 +10,7 @@ const textDark = Color(0xFF000000);
  const dark = Colors.black;
  const offWhite = Color(0xffD9D9D9);
 
+
 const List<Color> randomColors = [
 Colors.red, 
 Colors.green,

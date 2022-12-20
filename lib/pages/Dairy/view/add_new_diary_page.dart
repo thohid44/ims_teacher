@@ -39,7 +39,8 @@ String selectedValue = "Academic Class";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar("ADD NEW DIARY", Colors.white),
+      appBar: AppBar(title: Text("ADD NEW DIARY"), centerTitle: true, backgroundColor: primaryColor,),
+     
 
       body: ListView(
         children: [
@@ -91,7 +92,7 @@ String selectedValue = "Academic Class";
     Container(
       margin: EdgeInsets.symmetric(horizontal: 30),
       child: TextField(
-        maxLines: 15,
+        maxLines: 12,
         decoration: InputDecoration(
          
             focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1.w, color: Colors.grey)),
@@ -104,9 +105,24 @@ String selectedValue = "Academic Class";
           )
         ),
       ),
-    )
+    ),
+     
+    // SizedBox(height: 15.h,),
 
-    
+       Container(
+        margin: EdgeInsets.symmetric(horizontal: 30.w,vertical: 15.h),
+        alignment: Alignment.center,
+        height: 50.h,
+        width: 150.w, 
+        decoration: BoxDecoration(
+          color: Colors.deepPurpleAccent,
+           borderRadius: BorderRadius.circular(30.r)
+
+        ),
+
+        child: Text("Submit Diary",style: TextStyle(fontFamily: 'Roboto',color: Colors.white, fontSize: 17.sp, fontWeight: FontWeight.bold),),
+       ),
+     SizedBox(height: 20.h,)
         ],
       ),
     );
