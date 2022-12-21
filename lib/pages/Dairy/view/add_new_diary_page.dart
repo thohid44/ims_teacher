@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/pages/Dairy/model/add_new_dairy_model.dart';
 import 'package:imsteacher/widgets/custom_appbar.dart';
+import 'package:intl/intl.dart';
 
 class AddNewDiaryPage extends StatefulWidget {
   const AddNewDiaryPage({super.key});
@@ -16,26 +21,66 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
   List<DropdownMenuItem<String>> get dropdownItems{
   List<DropdownMenuItem<String>> menuItems = [
   const  DropdownMenuItem(child: Text("Academic Class"),value: "Academic Class"),
-  const  DropdownMenuItem(child: Text("Class Five"),value: "five"),
-   const DropdownMenuItem(child: Text("Class Six"),value: "six"),
-   const DropdownMenuItem(child: Text("Class Seven"),value: "seven"),
-   const DropdownMenuItem(child: Text("Class Eight"),value: "eight"),
+  const  DropdownMenuItem(child: Text("Class Five"),value: "5"),
+   const DropdownMenuItem(child: Text("Class Six"),value: "6"),
+   const DropdownMenuItem(child: Text("Class Seven"),value: "7"),
+   const DropdownMenuItem(child: Text("Class Eight"),value: "8"),
   ];
   return menuItems;
 }
 
 List<DropdownMenuItem<String>> get dropdownItem{
-  List<DropdownMenuItem<String>> menuItems = [
-  const  DropdownMenuItem(child: Text("Subject "),value: "Subject 1"),
+  List<DropdownMenuItem<String>> menuItem = [
+  const  DropdownMenuItem( child: Text("Select Subject "),value: "Select Subject"),
+   const  DropdownMenuItem(child: Text("Bangla "),value: "1"),
+   const  DropdownMenuItem(child: Text("English "),value: "2"),
  
   ];
-  return menuItems;
+  return menuItem;
 }
+
+final TextEditingController _des = TextEditingController(); 
 
 
 String selectedValue = "Academic Class";
 
-  String selectedValue1 = "Subject";
+  String selectedValue1 = "Select Subject";
+
+   addNewDairy() async{
+      String teacher_id='';
+      String subject_id='';
+      String academic_class_id=''; 
+      String description = '';
+      String date = ''; 
+      
+       AddNewDiaryModel dairy = AddNewDiaryModel(diary: Diary(teacherId:'1',subjectId: selectedValue1, academicClassId: selectedValue, 
+        description: _des.text, date: DateTime.tryParse(dateController.toString())
+        ));
+
+        var convertData = json.encode(dairy);
+
+            var response = await ApiUrl.userClient.post(
+        Uri.parse('https://demo.webpointbd.com/api/teacher-add-diary'), 
+        headers: {
+'Accept':'application/json',
+      'Authorization': 'Bearer '+ApiUrl.token,
+        }, 
+        body: convertData
+      );
+print(response); 
+       var data = json.decode(response.body); 
+         print(data);
+    if(response.statusCode==200){
+      print(data); 
+    }
+      
+   }
+    TextEditingController dateinput = TextEditingController(); 
+    void initState(){
+      dateinput.text = "";
+      super.initState();
+    }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +89,12 @@ String selectedValue = "Academic Class";
 
       body: ListView(
         children: [
-          SizedBox(height: 20.h,),
+            Container(
+            width: 160.w,
+            height: 45.h,
+             child: _buildDatePicker()
+           ),
+             SizedBox(height: 20.h,),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 30.w),
             width: 160.w,
@@ -55,13 +105,11 @@ String selectedValue = "Academic Class";
                          labelStyle: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold),
                             focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1.w, color: Colors.grey)),
                          enabledBorder: OutlineInputBorder(
-                          
                           borderSide: BorderSide(
                             width: 1.w, 
                             color: Colors.grey
                           )
                          ), 
-
                          suffixIcon: Icon(Icons.calendar_month, size: 20.h,)
                         ),),
            ),
@@ -80,24 +128,48 @@ String selectedValue = "Academic Class";
       style: TextStyle(color: Colors.black,fontSize: 17.sp),
       onChanged: (String? newValue){
         setState(() {
+
           selectedValue = newValue!;
+
+          print(selectedValue);
+
         });
       },
       items: dropdownItems
-      )
+      ),
            ),
 
+         SizedBox(height: 20.h,),
+  Container(
+            margin: EdgeInsets.symmetric(horizontal: 30.w),
+            height: 45.h,
+            alignment: Alignment.center,
+            width: 150.w,
+            decoration: BoxDecoration(
+              border: Border.all(width: 1.w, color: Colors.grey)
+            ),
+             child: DropdownButton(
+              underline: SizedBox(),
+      value: selectedValue1,
+      style: TextStyle(color: Colors.black,fontSize: 17.sp),
+      onChanged: (String? newValue){
+        setState(() {
+          selectedValue1 = newValue!;
+          print(selectedValue1);
+        });
+      },
+      items: dropdownItem
+      )
+           ),
            SizedBox(height: 20.h,),
-           
     Container(
       margin: EdgeInsets.symmetric(horizontal: 30),
       child: TextField(
+        controller: _des,
         maxLines: 12,
         decoration: InputDecoration(
-         
             focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1.w, color: Colors.grey)),
           enabledBorder: OutlineInputBorder(
-            
            borderSide: BorderSide(
                             width: 1.w, 
                             color: Colors.grey
@@ -109,22 +181,103 @@ String selectedValue = "Academic Class";
      
     // SizedBox(height: 15.h,),
 
-       Container(
-        margin: EdgeInsets.symmetric(horizontal: 30.w,vertical: 15.h),
-        alignment: Alignment.center,
-        height: 50.h,
-        width: 150.w, 
-        decoration: BoxDecoration(
-          color: Colors.deepPurpleAccent,
-           borderRadius: BorderRadius.circular(30.r)
-
-        ),
-
-        child: Text("Submit Diary",style: TextStyle(fontFamily: 'Roboto',color: Colors.white, fontSize: 17.sp, fontWeight: FontWeight.bold),),
+       InkWell(
+        onTap: () async{
+     await addNewDairy(); 
+        },
+         child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 30.w,vertical: 15.h),
+          alignment: Alignment.center,
+          height: 50.h,
+          width: 150.w, 
+          decoration: BoxDecoration(
+            color: Colors.deepPurpleAccent,
+             borderRadius: BorderRadius.circular(30.r)
+          ),
+          child: Text("Submit Diary",style: TextStyle(fontFamily: 'Roboto',color: Colors.white, fontSize: 17.sp, fontWeight: FontWeight.bold),),
+         ),
        ),
      SizedBox(height: 20.h,)
         ],
       ),
+     
     );
   }
+
+
+   final TextEditingController dateController = TextEditingController(); 
+ 
+  DateTime selectedDate = DateTime.now(); 
+  late String date; 
+  late String weekDay; 
+  Widget _buildDatePicker(){
+    
+    return TextFormField(
+    controller: dateController,
+    readOnly: true,
+    textAlign: TextAlign.center,
+    decoration: const InputDecoration(
+      contentPadding: EdgeInsets.all(8.0), 
+      suffixIcon: Icon(Icons.date_range, color: dark,), 
+      hintText: "YYYY-MM-DD", 
+      hintMaxLines: 1, 
+      hintStyle: TextStyle(fontSize: 15.0), 
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey)
+      ), 
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey)
+      ), 
+
+      
+    ),
+    onTap:() async{
+        final pickedDate = await selectDate(
+        context:context, 
+        initialDate:selectedDate,
+        allowedDays:_allowedDays 
+         );
+      if(pickedDate != null && pickedDate !=selectedDate){
+setState(() {
+  selectedDate = pickedDate; 
+  dateController.text = DateFormat('yyyy-MM-dd').format(selectedDate); 
+  print("thohdi ${dateController.text}");
+});
+      }
+      }
+    );
+  }
+    bool _allowedDays(DateTime day) {
+    if ((day.isBefore(DateTime.now()))) {
+      return true;
+    }
+    return false;
+  }
+  selectDate({
+ required BuildContext context,
+  required DateTime initialDate,
+  required allowedDays
+}) async {
+  final selected = await showDatePicker(
+    context: context,
+    initialDate: initialDate,
+    firstDate: DateTime(2010),
+    lastDate: DateTime(2025),
+    selectableDayPredicate: allowedDays,
+    builder: (context, child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+           
+            ),
+          ),
+        ),
+        child: child!,
+      );
+    },
+  );
+  return selected;
+}
 }

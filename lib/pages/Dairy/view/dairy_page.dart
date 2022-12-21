@@ -48,11 +48,12 @@ headers: {
     
      var   data = json.decode(response.body);
 
-     AllDairyModel modelData = AllDairyModel.fromJson(data); 
-
-     _allDairyModel = modelData; 
-   print("lenght ${_allDairyModel!.diaries!.length}");
-   return _allDairyModel; 
+    if(response.statusCode==200){
+      return AllDairyModel.fromJson(data);
+    }else{
+      return AllDairyModel.fromJson(data);
+    }
+     
     }
   void initState(){
    fetchAllDairy(); 
@@ -110,8 +111,13 @@ headers: {
           height: 400.h,
           padding: EdgeInsets.symmetric(horizontal: 15.w),
            child: Expanded(
-                child: ListView.builder(
-                   itemCount: 4,
+                child: FutureBuilder(
+                  future: fetchAllDairy(),
+               
+                  builder:((context, snapshot) {
+                 if(snapshot.hasData){
+                   return ListView.builder(
+                   itemCount: snapshot.data!.diaries!.length,
                    itemBuilder: ((context, index) {
                      return   Card(
                       child: Container(
@@ -119,31 +125,35 @@ headers: {
                         padding: EdgeInsets.all(8.0),
                         child: ListTile(
                       
-                          title: customText("Bangla 1st Page", dark, 17.0, FontWeight.bold),
-                          subtitle: customText("Bangla 1st Page Bangla 1st Page Bangla 1st Page Bangla 1st PageBangla 1st Page",
+                          title: customText(snapshot.data!.diaries![index].subject.toString(), dark, 17.0, FontWeight.bold),
+                          subtitle: customText(snapshot.data!.diaries![index].diary.toString(),
                            dark, 13.0, FontWeight.normal),
 
                            onTap: () {
-                             Navigator.push(context, MaterialPageRoute(builder: (context)=>DairyDetailsPage()));
+                            String id = snapshot.data!.diaries![index].id.toString(); 
+                           
+                             Navigator.push(context, MaterialPageRoute(builder: (context)=>DairyDetailsPage(
+                              id:id
+                             )));
                            },
                         ),
                       ),
                     );
                    }),
-                ),
+                );
+                 }
+
+                 return const Center(child: CircularProgressIndicator(),);
+                }))
               ),
          ),
           
       
           ],
         ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder:(context)=>AddNewDiaryPage())); 
+     
 
-      }, 
-      child: Icon(Icons.add),
       
-      ),
     );
   }
 
@@ -184,7 +194,7 @@ headers: {
 setState(() {
   selectedDate = pickedDate; 
   dateController.text = DateFormat('yyyy-MM-dd').format(selectedDate); 
-  print(dateController.value);
+  print("thohdi ${dateController.text}");
 });
       }
       }

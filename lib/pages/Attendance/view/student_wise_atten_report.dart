@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imsteacher/Service/Api_url.dart';
+import 'package:imsteacher/pages/Attendance/model/student_wise_atten_model.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 
 import '../../../Utils/Constrans/color.dart';
@@ -16,6 +20,30 @@ class StudentWishAttendence extends StatefulWidget {
 }
 
 class _StudentWishAttendenceState extends State<StudentWishAttendence> {
+
+  Future<StudentWiseAttenModel> fetchStudent() async{
+   
+   String url = 'https://demo.webpointbd.com/api/student-wise-attendance?studentId=S10575'; 
+
+      var response = await ApiUrl.userClient.get(Uri.parse(url),
+headers: {    
+      'Accept':'application/json',
+      'Authorization': 'Bearer '+ApiUrl.token,
+    } );
+    
+     var data = json.decode(response.body);
+        print(data);
+    if(response.statusCode==200){
+      return StudentWiseAttenModel.fromJson(data);
+    }else{
+      return StudentWiseAttenModel.fromJson(data); 
+    }
+     
+    }
+  void initState(){
+   fetchStudent(); 
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
