@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/pages/Home/deshboard.dart';
+import 'package:imsteacher/pages/login/view/otp_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 class LoginController extends GetxController  {
@@ -21,13 +22,19 @@ class LoginController extends GetxController  {
 
   print(card_no); 
   print(password);
-   Get.to(DeashBoard());
- //  var response = await http.post(Uri.parse('uri')); 
-   //var res = await ApiUrl.client.post(Uri.https(ApiUrl.baseUrl,ApiUrl.logInUrl), body: json.encode(data)); 
+  
+ // var response = await http.post(Uri.parse('uri')); 
+  var res = await ApiUrl.userClient.post(Uri.parse("https://demo.webpointbd.com/api/teacher-login"), body: {
+    "card_no": card_no,
+    "password": "123"
+}); 
 
-  //  if(res.statusCode==200){
-  //   print(res); 
-  //  }
+  if(res.statusCode==200){
+  print(res.body); 
+  Get.to(OTPScreen());
+    }
+
+
 
   }
 

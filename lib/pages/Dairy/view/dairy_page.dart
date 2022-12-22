@@ -5,8 +5,11 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Dairy/Controller/Dairies_Controllder.dart';
 import 'package:imsteacher/pages/Dairy/model/all_dairy_model.dart';
 import 'package:imsteacher/pages/Dairy/view/add_new_diary_page.dart';
@@ -36,14 +39,19 @@ List<DropdownMenuItem<String>> get dropdownItems{
 }
 String selectedValue = "Academic Class";
   
-  AllDairyModel? _allDairyModel; 
+  AllDairyModel? _allDairyModel;
+  final _box = GetStorage(); 
+   
    Future<AllDairyModel?>  fetchAllDairy() async{
+ //   final token = _box.read(PrefLocalStoreKey.token);
+ 
+
   String url = 'https://demo.webpointbd.com/api/teacher-diaries?date=2022-12-09&academic_class_id=1'; 
-final token ='299|zMyupKV6HpnziSTcgbRcH47kmdXki8zygRtgcg2L';
+
       var response = await ApiUrl.userClient.get(Uri.parse(url),
 headers: {    
       'Accept':'application/json',
-      'Authorization': 'Bearer '+token,
+      'Authorization': 'Bearer '+ApiUrl.token,
     } );
     
      var   data = json.decode(response.body);

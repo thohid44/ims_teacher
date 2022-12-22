@@ -1,9 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
+import 'package:imsteacher/pages/Home/deshboard.dart';
+import 'package:imsteacher/pages/login/model/otp_model.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -132,7 +140,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     }),
                     style: Theme.of(context).textTheme.headline6,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       enabledBorder: OutlineInputBorder(), 
                       focusedBorder: OutlineInputBorder(), 
                       errorBorder: OutlineInputBorder()
@@ -154,10 +162,31 @@ class _OTPScreenState extends State<OTPScreen> {
     );
   }
 
-  sendOtp(){
+  final _box = GetStorage(); 
+
+  sendOtp() async{
    var data = _digit1.text.toString() + _digit2.text.toString()+_digit3.text.toString()+_digit4.text.toString();
 
-   print(data);
-  
+  var res = await ApiUrl.userClient.post(Uri.parse("https://demo.webpointbd.com/api/teacher-otp-match"), body: {
+    "otp": data
+}); 
+   var covertData = json.decode(res.body);
+  if(res.statusCode==200){
+    
+    var resData = OtpModel.fromJson(covertData);
+
+     _box.write(PrefLocalStoreKey.token, resData.authToken);
+
+     print(_box.read(PrefLocalStoreKey.token)); 
+     Get.to(DeashBoard()); 
+ 
+    }else{
+      Get.snackbar("OTP", "Your OTP does not match"); 
+    }
+
+
+
   }
+
+  
 }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
-import 'package:imsteacher/pages/Home/deshboard.dart';
-import 'package:imsteacher/pages/Home/home_page.dart';
+
 import 'package:imsteacher/pages/login/controller/login_controller.dart';
 
 class LoginPage extends StatefulWidget {

@@ -55,7 +55,7 @@ class Attendance {
         this.date,
         this.inTime,
         this.outTime,
-        this.status,
+        this.attnStatus,
     });
 
     int? id;
@@ -63,7 +63,7 @@ class Attendance {
     String? date;
     String? inTime;
     String? outTime;
-    Section? status;
+    Section? attnStatus;
 
     factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
         id: json["id"],
@@ -71,7 +71,7 @@ class Attendance {
         date: json["date"],
         inTime: json["inTime"] == null ? null : json["inTime"],
         outTime: json["outTime"] == null ? null : json["outTime"],
-        status: sectionValues.map[json["status"]],
+        attnStatus: sectionValues.map[json["attnStatus"]],
     );
 
     Map<String, dynamic> toJson() => {
@@ -80,7 +80,7 @@ class Attendance {
         "date": date,
         "inTime": inTime == null ? null : inTime,
         "outTime": outTime == null ? null : outTime,
-        "status": sectionValues.reverse![status],
+        "attnStatus": sectionValues.reverse![attnStatus],
     };
 }
 
@@ -98,7 +98,7 @@ final sectionValues = EnumValues({
 
 class EnumValues<T> {
     Map<String, T> map;
-late    Map<T, String> reverseMap;
+    Map<T, String>? reverseMap;
 
     EnumValues(this.map);
 

@@ -47,25 +47,20 @@ String selectedValue = "Academic Class";
   String selectedValue1 = "Select Subject";
 
    addNewDairy() async{
-      String teacher_id='';
-      String subject_id='';
-      String academic_class_id=''; 
-      String description = '';
-      String date = ''; 
-      
-       AddNewDiaryModel dairy = AddNewDiaryModel(diary: Diary(teacherId:'1',subjectId: selectedValue1, academicClassId: selectedValue, 
-        description: _des.text, date: DateTime.tryParse(dateController.toString())
-        ));
-
-        var convertData = json.encode(dairy);
-
-            var response = await ApiUrl.userClient.post(
+     
+       var response = await ApiUrl.userClient.post(
         Uri.parse('https://demo.webpointbd.com/api/teacher-add-diary'), 
         headers: {
 'Accept':'application/json',
       'Authorization': 'Bearer '+ApiUrl.token,
         }, 
-        body: convertData
+        body:  {
+        "academic_class_id": selectedValue.toString(),
+        "date": dateController.text,
+        "teacher_id": "2",
+        "subject_id": selectedValue1.toString(),
+        "description": _des.text.toString()
+    } 
       );
 print(response); 
        var data = json.decode(response.body); 
@@ -89,31 +84,16 @@ print(response);
 
       body: ListView(
         children: [
+                   
+  SizedBox(height: 20.h,),
             Container(
             width: 160.w,
             height: 45.h,
+              margin: EdgeInsets.symmetric(horizontal: 30.w),
              child: _buildDatePicker()
            ),
              SizedBox(height: 20.h,),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 30.w),
-            width: 160.w,
-            height: 45.h,
-             child: TextField(
-                        decoration: InputDecoration(
-                         labelText: "YYYY-MM-DD", 
-                         labelStyle: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold),
-                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1.w, color: Colors.grey)),
-                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 1.w, 
-                            color: Colors.grey
-                          )
-                         ), 
-                         suffixIcon: Icon(Icons.calendar_month, size: 20.h,)
-                        ),),
-           ),
-  SizedBox(height: 20.h,),
+
               Container(
                    margin: EdgeInsets.symmetric(horizontal: 30.w),
             height: 45.h,

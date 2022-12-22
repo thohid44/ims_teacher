@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 
 class MobileAttendancePage extends StatefulWidget {
@@ -29,11 +33,37 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   return menuItems;
 }
 String selectedValue = "Academic Class";
+
+  Future<MobileAttendFetchClass> fetchMobileCls() async{
+
+ var response = await ApiUrl.userClient.post(Uri.parse("https://demo.webpointbd.com/api/mobile-attendance?class_id=1"), 
+ headers: {    
+      'Accept':'application/json',
+      'Authorization': 'Bearer '+ApiUrl.token,
+    }
+
+ );
+    var jsonData= json.decode(response.body);
+
+     if(response.statusCode==200){
+      return MobileAttendFetchClass.fromJson(jsonData);
+     }else{
+      return MobileAttendFetchClass.fromJson(jsonData);
+     }
+
+  }
+  @override
+  void initState() {
+    fetchMobileCls();
+    // TODO: implement initState
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("MOBILE ATTENDENCE"),
+        title:const Text("MOBILE ATTENDENCE"),
         backgroundColor: primaryColor,
       ),
        body: Padding(
@@ -62,137 +92,33 @@ String selectedValue = "Academic Class";
       )
            ),
              
-   
+           
                SizedBox(height: 10.h,),
-            Table(
-              
-              border: TableBorder.all(width: 1.w), 
-              columnWidths: {
-                      0: FlexColumnWidth(4),
-                     
-                      1: FlexColumnWidth(5),
-                      2:FlexColumnWidth(5),
-                    
-                    },  
-              children: [
-               const TableRow(
-                  children: [
-                    TableCell(child: Padding(
-                      padding: const EdgeInsets.only(left:8, top: 8, bottom: 8),
-                      child: Text("ID",style: TextStyle(fontWeight: FontWeight.bold),),
-                    )),
-                   
-                    TableCell(child: Padding(
-                          padding: const EdgeInsets.only(left:8, top: 8, bottom: 8),
-                      child: Text("Name",style: TextStyle(fontWeight: FontWeight.bold),),
-                    )),
-                    TableCell(child: Padding(
-                           padding: const EdgeInsets.only(left:8, top: 8, bottom: 8),
-                      child: Text("Status",style: TextStyle(fontWeight: FontWeight.bold),),
-                    )),
-                    
-                  ]
-                ), 
-            
-
-                TableRow(
-                  
-                  children: [
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal:5, vertical: 3),
-                      child: customText("S38", dark, 13.0, FontWeight.bold),
-                    )),
-                    
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Padding(
-                            padding:  EdgeInsets.symmetric(horizontal:5, vertical: 3),
-                          child: customText("Amzad Mortuza", dark, 13.0, FontWeight.bold),
-                        )),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.middle,
-                            child: Padding(
-                          padding:  EdgeInsets.symmetric(horizontal:5, vertical: 3),
-                            child: Switch(
+               FutureBuilder(
+                future: fetchMobileCls(),
+                builder:(context, snapshot) {
+                  if(snapshot.hasData){
+                    return  DataTable(columns:const [
+              DataColumn(label:Text("ID",style: TextStyle(fontWeight: FontWeight.bold),) ),
+                DataColumn(label:Text("Name",style: TextStyle(fontWeight: FontWeight.bold),) ),
+                  DataColumn(label:Text("Status",style: TextStyle(fontWeight: FontWeight.bold),) )
+            ], rows: snapshot.data!.attendances!.map((e) =>DataRow(cells: [
+                DataCell(customText(e.studentId.toString(), dark, 13.0, FontWeight.bold),),
+                   DataCell(customText(e.studentName.toString(), dark, 13.0, FontWeight.bold),), 
+                   DataCell(Switch(
                               
                               value: status1, onChanged: (value){
                                     setState(() {
                                       status1 = value;
                                     });
-                            }),
-                          )),
-                         
-                  ]
-                ),
-
-                  
-                  TableRow(
-                  
-                  children: [
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal:5, vertical: 3),
-                      child: customText("S38", dark, 13.0, FontWeight.bold),
-                    )),
-                    
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Padding(
-                            padding:  EdgeInsets.symmetric(horizontal:5, vertical: 3),
-                          child: customText("Amzad Mortuza", dark, 13.0, FontWeight.bold),
-                        )),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.middle,
-                            child: Padding(
-                          padding:  EdgeInsets.symmetric(horizontal:5, vertical: 3),
-                            child: Switch(
-                              
-                              value: status2, onChanged: (value){
-                                    setState(() {
-                                      status2 = value;
-                                    });
-                            }),
-                          )),
-                         
-                  ]
-                ),TableRow(
-                  
-                  children: [
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal:5, vertical: 3),
-                      child: customText("S38", dark, 13.0, FontWeight.bold),
-                    )),
-                    
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Padding(
-                            padding:  EdgeInsets.symmetric(horizontal:5, vertical: 3),
-                          child: customText("Amzad Mortuza", dark, 13.0, FontWeight.bold),
-                        )),
-                          TableCell(
-                            verticalAlignment: TableCellVerticalAlignment.middle,
-                            child: Padding(
-                          padding:  EdgeInsets.symmetric(horizontal:5, vertical: 3),
-                            child: Switch(
-                              
-                              value: status3, onChanged: (value){
-                                    setState(() {
-                                   status3 =value; 
-                                     
-                                    });
-                            }),
-                          )),
-                         
-                  ]
-                ),
-                   
-              ],
-            ),
+                            }),)
+              ])).toList()
+              
+            );
+                  }
+                 return Center(child: CircularProgressIndicator(),);
+               },),
+            
             SizedBox(height: 20.h,), 
 
 
