@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/pages/Attendance/view/daily_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/mobile_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/student_wise_atten_report.dart';
 import 'package:imsteacher/pages/Dairy/view/add_new_diary_page.dart';
@@ -52,6 +52,11 @@ class _DeashBoardState extends State<DeashBoard> {
             child: ListView(
               scrollDirection: Axis.horizontal, 
               children: [
+                  InkWell(
+                     onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder:(_)=>DailyAttendancePage()));
+                  },
+                  child: deshboardItem(title: "Daily Attendence",)), 
                 InkWell(
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
@@ -62,11 +67,7 @@ class _DeashBoardState extends State<DeashBoard> {
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
                   },
                   child: deshboardItem(title:"Student Wise Report",)), 
-                InkWell(
-                     onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
-                  },
-                  child: deshboardItem(title: "Daily Report",)), 
+              
                 
               ],
             ),

@@ -42,7 +42,7 @@ class StudentWiseAttenModel {
         "studentId": studentId,
         "studentName": studentName,
         "class": studentWiseAttenModelClass,
-        "section": sectionValues.reverse![section],
+        "section": sectionValues.reverse[section],
         "group": group,
         "attendances": List<dynamic>.from(attendances!.map((x) => x.toJson())),
     };
@@ -80,7 +80,7 @@ class Attendance {
         "date": date,
         "inTime": inTime == null ? null : inTime,
         "outTime": outTime == null ? null : outTime,
-        "attnStatus": sectionValues.reverse![attnStatus],
+        "attnStatus": sectionValues.reverse[attnStatus],
     };
 }
 
@@ -98,11 +98,11 @@ final sectionValues = EnumValues({
 
 class EnumValues<T> {
     Map<String, T> map;
-    Map<T, String>? reverseMap;
+  late  Map<T, String> reverseMap;
 
     EnumValues(this.map);
 
-    Map<T, String>? get reverse {
+    Map<T, String> get reverse {
         if (reverseMap == null) {
             reverseMap = map.map((k, v) => new MapEntry(v, k));
         }
