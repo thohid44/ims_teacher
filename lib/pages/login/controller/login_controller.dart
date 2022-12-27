@@ -32,6 +32,8 @@ class LoginController extends GetxController  {
   if(res.statusCode==200){
   print(res.body); 
   Get.to(OTPScreen());
+    }else{
+      Get.snackbar("Error", "Login Faild");
     }
 
 

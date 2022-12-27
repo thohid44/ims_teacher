@@ -240,15 +240,17 @@ return StudentWiseAttenModel.fromJson(data);
       bottomNavigationBar: Container(
         child: CurvedNavigationBar(
           backgroundColor: Colors.white,
+         
           key: _bottomNavigationKey,
+        
           index: 0,
           height: 60.0,
-          items: <Widget>[
-            Icon(Icons.add, size: 30),
-            Icon(Icons.list, size: 30),
-            Icon(Icons.compare_arrows, size: 30),
-            Icon(Icons.call_split, size: 30),
-            Icon(Icons.perm_identity, size: 30),
+          items: const <Widget>[
+            Icon(Icons.add, size: 30, color: Colors.white,),
+            Icon(Icons.list, size: 30,color: Colors.white,),
+            Icon(Icons.compare_arrows, size: 30,color: Colors.white,),
+            Icon(Icons.call_split, size: 30,color: Colors.white,),
+            Icon(Icons.perm_identity, size: 30,color: Colors.white,),
           ],
           color: primaryColor,
           buttonBackgroundColor: primaryColor,

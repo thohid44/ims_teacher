@@ -132,10 +132,11 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                         ),
                                         DataCell(
                                           Switch(
-                                              value: status1,
+                                              value: false,
                                               onChanged: (value) {
+                                                print(value);
                                                 setState(() {
-                                                  status1 = value;
+                                               status1 =!status1;
                                                 });
                                               }),
                                         )

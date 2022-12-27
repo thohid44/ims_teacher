@@ -29,11 +29,11 @@ class _DairyPageState extends State<DairyPage> {
 
 List<DropdownMenuItem<String>> get dropdownItems{
   List<DropdownMenuItem<String>> menuItems = [
-  const  DropdownMenuItem(child: Text("Class Five"),value: "Academic Class"),
-  const  DropdownMenuItem(child: Text("Class Five"),value: "five"),
-   const DropdownMenuItem(child: Text("Class Six"),value: "six"),
-   const DropdownMenuItem(child: Text("Class Seven"),value: "seven"),
-   const DropdownMenuItem(child: Text("Class Eight"),value: "eight"),
+  const  DropdownMenuItem(child: Text("Academic Class"),value: "Academic Class"),
+  const  DropdownMenuItem(child: Text("Class One"),value: "1"),
+   const DropdownMenuItem(child: Text("Class Two"),value: "2"),
+   const DropdownMenuItem(child: Text("Class Three"),value: "3"),
+   const DropdownMenuItem(child: Text("Class Four"),value: "4"),
   ];
   return menuItems;
 }
@@ -45,8 +45,7 @@ String selectedValue = "Academic Class";
    Future<AllDairyModel?>  fetchAllDairy() async{
  //   final token = _box.read(PrefLocalStoreKey.token);
  
-
-  String url = 'https://demo.webpointbd.com/api/teacher-diaries?date=2022-12-09&academic_class_id=1'; 
+  String url = 'https://demo.webpointbd.com/api/teacher-diaries?date=$date&academic_class_id=$id'; 
 
       var response = await ApiUrl.userClient.get(Uri.parse(url),
 headers: {    
@@ -64,9 +63,11 @@ headers: {
      
     }
   void initState(){
-   fetchAllDairy(); 
     super.initState();
   }
+
+  bool isLoading = false; 
+  String id='';
   @override
   Widget build(BuildContext context) {
     
@@ -102,6 +103,17 @@ headers: {
       onChanged: (String? newValue){
         setState(() {
           selectedValue = newValue!;
+           
+           if(selectedValue.isNotEmpty && dateController.text.isNotEmpty){
+            
+               id=selectedValue; 
+          isLoading=true;
+        
+          fetchAllDairy();
+
+           }
+  
+
         });
       },
       items: dropdownItems
@@ -118,7 +130,7 @@ headers: {
          Container(
           height: 400.h,
           padding: EdgeInsets.symmetric(horizontal: 15.w),
-           child: Expanded(
+           child: isLoading==true? Expanded(
                 child: FutureBuilder(
                   future: fetchAllDairy(),
                
@@ -153,7 +165,9 @@ headers: {
 
                  return const Center(child: CircularProgressIndicator(),);
                 }))
-              ),
+              )
+           
+              :Center(child: Text("Loading..."),)
          ),
           
       
@@ -202,7 +216,8 @@ headers: {
 setState(() {
   selectedDate = pickedDate; 
   dateController.text = DateFormat('yyyy-MM-dd').format(selectedDate); 
-  print("thohdi ${dateController.text}");
+ 
+ 
 });
       }
       }

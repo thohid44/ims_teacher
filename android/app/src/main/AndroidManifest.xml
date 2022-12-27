@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.imsteacher">
+    package="com.webpointbd.imsteacher">
+
+<uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="imsteacher"
         android:name="${applicationName}"

@@ -1,13 +1,18 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/pages/Attendance/view/daily_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/mobile_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/student_wise_atten_report.dart';
 import 'package:imsteacher/pages/Dairy/view/add_new_diary_page.dart';
 import 'package:imsteacher/pages/Dairy/view/dairy_page.dart';
+import 'package:imsteacher/pages/Exam/views/exam_routine_page.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
+import 'package:provider/provider.dart';
 
 class DeashBoard extends StatefulWidget {
   const DeashBoard({super.key});
@@ -25,7 +30,88 @@ class _DeashBoardState extends State<DeashBoard> {
         title: Text("DASHBOARD", 
       
       ), centerTitle: true, ),
+     drawer: Container(
+      margin: EdgeInsets.only(right: 40.h),
+       child: ClipPath(
+      clipper:LDOvalRightBorderClipper(),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+         child: Drawer(
+          backgroundColor: Color(0xff1A1A1A),
+           child: Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 30.0),
+                padding: EdgeInsets.zero,
+                child: ListView(
+             children: [
+              DrawerHeader(child:Container(
+                margin: EdgeInsets.only(right: 25),
+                child: Center(
+                  child: Icon(Icons.abc, color: Colors.white,),
+                ),
+              )),
+              ListTile(
+                   onTap: () {
+                Get.to(DeashBoard());
+                   },
+                      title: const Text(
+                      'Dashboard',
+                      style: TextStyle(fontSize: 18,fontFamily: 'Roboto',
+                      
+                      fontWeight: FontWeight.bold,
+                       color: Colors.white) ,
+                    ),
+                    ),
+                     ListTile(
+                   
+                      title: const Text(
+                      'Profile',
+                      style:
+                       TextStyle(fontSize: 18,fontFamily: 'Roboto',
+                      
+                      fontWeight: FontWeight.bold,
+                       color: Colors.white) ,
+                    ),
+                    onTap: (){
 
+                    },
+                    ),
+                       ListTile(
+                   
+                      title: const Text(
+                      'Change Password',
+                      style:
+                       TextStyle(fontSize: 18,fontFamily: 'Roboto',
+                      
+                      fontWeight: FontWeight.bold,
+                       color: Colors.white) ,
+                    ),
+                    onTap: (){
+
+                    },
+                    ),
+                            ListTile(
+                   
+                      title: const Text(
+                      'LogOut',
+                      style:
+                       TextStyle(fontSize: 18,fontFamily: 'Roboto',
+                      
+                      fontWeight: FontWeight.bold,
+                       color: Colors.white) ,
+                    ),
+                    onTap: (){
+
+                    },
+                    ),
+             ],
+                ),
+              )
+            ],
+           ),
+         ),
+       ),
+     ),
       body: ListView(
 
         children: [
@@ -161,6 +247,51 @@ class _DeashBoardState extends State<DeashBoard> {
               ],
             ),
           ),
+    SizedBox(height: 10.h,), 
+Container(
+            margin: EdgeInsets.only(left: 10.w,right: 10.w, 
+            top: 10.h, bottom: 10.h),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(
+                width: 2, 
+                color: dark
+              ))
+            ),
+            child: Text("Exam ",style: TextStyle(
+              fontSize: 17.sp, 
+              fontWeight: FontWeight.bold, 
+              color: dark
+            ),),
+          ),
+
+           Container(
+            padding: EdgeInsets.symmetric(horizontal: 15.w,),
+        
+            height: 100.h,
+           
+            child: ListView(
+              scrollDirection: Axis.horizontal, 
+              children: [
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder:(_)=>ExamRoutinePage()));
+                  },
+                  child: deshboardItem(title:"Exam Routine",)), 
+                InkWell(
+                     onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
+                  },
+                  child: deshboardItem(title:"Exam Schedule",)), 
+                InkWell(
+                     onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
+                  },
+                  child: deshboardItem(title: "X",)), 
+                
+              ],
+            ),
+          ),
+
         ],
       ),
     );
@@ -187,5 +318,24 @@ class deshboardItem extends StatelessWidget {
         child: customText(title.toString(), dark, 15.0, FontWeight.bold),
       ),
     );
+  }
+}
+
+
+class LDOvalRightBorderClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0, 0);
+    path.lineTo(size.width - 50, 0);
+    path.quadraticBezierTo(size.width, size.height / 4, size.width, size.height / 2);
+    path.quadraticBezierTo(size.width, size.height - (size.height / 4), size.width - 40, size.height);
+    path.lineTo(0, size.height);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
   }
 }
