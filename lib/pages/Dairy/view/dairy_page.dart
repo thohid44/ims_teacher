@@ -54,7 +54,7 @@ headers: {
     } );
     
      var   data = json.decode(response.body);
-
+  print(data); 
     if(response.statusCode==200){
       return AllDairyModel.fromJson(data);
     }else{
@@ -101,8 +101,9 @@ headers: {
       value: selectedValue,
       style: TextStyle(color: Colors.black,fontSize: 17.sp),
       onChanged: (String? newValue){
+         selectedValue = newValue!;
         setState(() {
-          selectedValue = newValue!;
+         
            
            if(selectedValue.isNotEmpty && dateController.text.isNotEmpty){
             
@@ -141,13 +142,17 @@ headers: {
                    itemBuilder: ((context, index) {
                      return   Card(
                       child: Container(
-                      
+                       alignment: Alignment.centerLeft,
+                       width: double.infinity,
                         padding: EdgeInsets.all(8.0),
                         child: ListTile(
-                      
-                          title: customText(snapshot.data!.diaries![index].subject.toString(), dark, 17.0, FontWeight.bold),
-                          subtitle: customText(snapshot.data!.diaries![index].diary.toString(),
-                           dark, 13.0, FontWeight.normal),
+                        tileColor: offWhite,
+                          title: Text(snapshot.data!.diaries![index].subject.toString(),style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          ),),
+                          subtitle:  Text(snapshot.data!.diaries![index].diary.toString(),style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          ),),
 
                            onTap: () {
                             String id = snapshot.data!.diaries![index].id.toString(); 
@@ -183,7 +188,7 @@ headers: {
    final TextEditingController dateController = TextEditingController(); 
  
   DateTime selectedDate = DateTime.now(); 
-  late String date; 
+   String date=''; 
   late String weekDay; 
   Widget _buildDatePicker(){
     

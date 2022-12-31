@@ -109,38 +109,44 @@ String selectedValue = "Select Class";
              SizedBox(height: 19.h,), 
            selectCls==true? Expanded(
             child: SingleChildScrollView(
-              child: FutureBuilder(
-                future: fetchDailyAttnd(),
-                builder:(context,snapshot){
-                if(snapshot.connectionState==ConnectionState.done){
-                  return 
-                  DataTable(
-                    border: TableBorder.all(width: 1.w),
-                    dataRowHeight: 50.h,
-                      columnSpacing: 15.w,
-                      columns: [
-                      DataColumn(label:customText("ID", dark, 17.0, FontWeight.w700)),
-                          DataColumn(label:customText("Name", dark, 17.0, FontWeight.w700)),
-                          DataColumn(label:customText("IN", dark, 17.0, FontWeight.w700)),
-                          DataColumn(label:customText("Out", dark, 17.0, FontWeight.w700)),
-                          DataColumn(label:customText("ST", dark, 17.0, FontWeight.w700))
-                    ], rows:snapshot.data!.attendances!.map((e) {
-                      return DataRow(cells: [
-                          DataCell(customText(e.studentId.toString(), dark, 15.0, FontWeight.w400)),
-                          DataCell(customText(e.studentName.toString(), dark, 15.0, FontWeight.w400)),
-                          DataCell(customText(e.inTime.toString(), dark, 15.0, FontWeight.w400)),
-                          DataCell(customText(e.outTime.toString(), dark, 15.0, FontWeight.w400)),
-                          DataCell(customText(e.status.toString(), dark, 15.0, FontWeight.w400)),
-                        ]);
-                    }).toList(),
-              );
-                }else if(snapshot.hasData == null){
-                  return Center(child:CircularProgressIndicator());
-                }
-               else{
-                 return Center(child:Text("Please select date and class"));
-               }
-              }),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: FutureBuilder(
+                  future: fetchDailyAttnd(),
+                  builder:(context,snapshot){
+                  if(snapshot.connectionState==ConnectionState.done){
+                    return 
+                    DataTable(
+                      border: TableBorder.all(width: 1.w, color: dark),
+                headingRowColor:
+        MaterialStateColor.resolveWith((states) =>offWhite),
+ 
+                      dataRowHeight: 50.h,
+                        columnSpacing: 10.w,
+                        columns: [
+                        DataColumn(label:customText("ID", dark, 17.0, FontWeight.w700)),
+                            DataColumn(label:customText("Name", dark, 17.0, FontWeight.w700)),
+                            DataColumn(label:customText("IN", dark, 17.0, FontWeight.w700)),
+                            DataColumn(label:customText("Out", dark, 17.0, FontWeight.w700)),
+                            DataColumn(label:customText("ST", dark, 17.0, FontWeight.w700))
+                      ], rows:snapshot.data!.attendances!.map((e) {
+                        return DataRow(cells: [
+                            DataCell(customText(e.studentId.toString(), dark, 15.0, FontWeight.w400)),
+                            DataCell(customText(e.studentName.toString(), dark, 15.0, FontWeight.w400)),
+                            DataCell(customText(e.inTime.toString(), dark, 15.0, FontWeight.w400)),
+                            DataCell(customText(e.outTime.toString(), dark, 15.0, FontWeight.w400)),
+                            DataCell(customText(e.status.toString(), dark, 15.0, FontWeight.w400)),
+                          ]);
+                      }).toList(),
+                );
+                  }else if(snapshot.hasData == null){
+                    return Center(child:CircularProgressIndicator());
+                  }
+                 else{
+                   return Center(child:Text("Please select date and class"));
+                 }
+                }),
+              ),
             ),
           ):Container(child: Text("Select Date and Class"),)
         ],

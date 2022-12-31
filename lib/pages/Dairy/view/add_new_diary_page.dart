@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_summernote/flutter_summernote.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/pages/Dairy/model/add_new_dairy_model.dart';
@@ -38,7 +39,7 @@ List<DropdownMenuItem<String>> get dropdownItem{
   ];
   return menuItem;
 }
-
+ GlobalKey<FlutterSummernoteState> _keyEditor = GlobalKey();
 final TextEditingController _des = TextEditingController(); 
 
 
@@ -143,27 +144,32 @@ print(response);
            ),
            SizedBox(height: 20.h,),
     Container(
+      height: 400.h,
       margin: EdgeInsets.symmetric(horizontal: 30),
-      child: TextField(
-        controller: _des,
-        maxLines: 12,
-        decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1.w, color: Colors.grey)),
-          enabledBorder: OutlineInputBorder(
-           borderSide: BorderSide(
-                            width: 1.w, 
-                            color: Colors.grey
-                          )
-          )
-        ),
-      ),
+      child: FlutterSummernote(
+        height: 300,
+        key: _keyEditor,
+        value: "Value",
+    hint: "Enter your text...",
+    
+    hasAttachment: true,
+    showBottomToolbar: true,
+     
+    customToolbar: """[
+      ['style' : 'bold','italic', 'underline', 'clear']],
+      ['font' : 'superscript', 'subscript', 'strikethrough']],
+      ['insert; : 'link' ,'hr', 'table']] 
+    ]""",
+//returnContent: _keyEditor.currentContext!.getText(),
+),
     ),
      
     // SizedBox(height: 15.h,),
 
        InkWell(
         onTap: () async{
-     await addNewDairy(); 
+  //   await addNewDairy(); 
+  print(_keyEditor);
         },
          child: Container(
           margin: EdgeInsets.symmetric(horizontal: 30.w,vertical: 15.h),

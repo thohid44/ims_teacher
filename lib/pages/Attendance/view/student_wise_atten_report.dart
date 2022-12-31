@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -141,11 +142,7 @@ return StudentWiseAttenModel.fromJson(data);
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                customText(
-                                    "P: ${snapshot.data!.studentName.toString()}",
-                                    Colors.green,
-                                    16.0,
-                                    FontWeight.bold),
+                               _countClassStatus(snapshot.data.attendances, 'p'),
                                 customText(
                                     "A:1", Colors.red, 16.0, FontWeight.bold),
                                 customText(
@@ -170,6 +167,9 @@ return StudentWiseAttenModel.fromJson(data);
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.vertical,
                                 child: DataTable(
+                                     headingRowColor:
+        MaterialStateColor.resolveWith((states) =>offWhite),
+ 
                                     columnSpacing: 10.w,
                                     horizontalMargin: 10,
                                     dataRowHeight: 20.h,
@@ -269,4 +269,16 @@ return StudentWiseAttenModel.fromJson(data);
 
   int _page = 0;
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+
+   Widget _countClassStatus( data, String element) {
+     int count=0;
+      for(int i=0; i<data.length; i++){
+        if(data[i]==element){
+          count++;
+        }
+      }
+
+      return Container(child: Text(count.toString()),);
+   }
 }
+// 

@@ -1,13 +1,6 @@
-// To parse this JSON data, do
-//
-//     final studentWiseAttenModel = studentWiseAttenModelFromJson(jsonString);
 
 import 'dart:convert';
-
 StudentWiseAttenModel studentWiseAttenModelFromJson(String str) => StudentWiseAttenModel.fromJson(json.decode(str));
-
-String studentWiseAttenModelToJson(StudentWiseAttenModel data) => json.encode(data.toJson());
-
 class StudentWiseAttenModel {
     StudentWiseAttenModel({
         this.status,
@@ -23,7 +16,7 @@ class StudentWiseAttenModel {
     String? studentId;
     String? studentName;
     String? studentWiseAttenModelClass;
-    Section? section;
+    String? section;
     String? group;
     List<Attendance>? attendances;
 
@@ -32,20 +25,12 @@ class StudentWiseAttenModel {
         studentId: json["studentId"],
         studentName: json["studentName"],
         studentWiseAttenModelClass: json["class"],
-        section: sectionValues.map[json["section"]],
+        section: json["section"],
         group: json["group"],
         attendances: List<Attendance>.from(json["attendances"].map((x) => Attendance.fromJson(x))),
     );
 
-    Map<String, dynamic> toJson() => {
-        "status": status,
-        "studentId": studentId,
-        "studentName": studentName,
-        "class": studentWiseAttenModelClass,
-        "section": sectionValues.reverse[section],
-        "group": group,
-        "attendances": List<dynamic>.from(attendances!.map((x) => x.toJson())),
-    };
+
 }
 
 class Attendance {
@@ -63,7 +48,7 @@ class Attendance {
     String? date;
     String? inTime;
     String? outTime;
-    Section? attnStatus;
+    String? attnStatus;
 
     factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
         id: json["id"],
@@ -71,41 +56,34 @@ class Attendance {
         date: json["date"],
         inTime: json["inTime"] == null ? null : json["inTime"],
         outTime: json["outTime"] == null ? null : json["outTime"],
-        attnStatus: sectionValues.map[json["attnStatus"]],
+        attnStatus: json['attnStatus'],
     );
 
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "student_academic_id": studentAcademicId,
-        "date": date,
-        "inTime": inTime == null ? null : inTime,
-        "outTime": outTime == null ? null : outTime,
-        "attnStatus": sectionValues.reverse[attnStatus],
-    };
+  
 }
 
-enum Section { L, A, W, E, D, P, LE }
+// enum Section { L, A, W, E, D, P, LE }
 
-final sectionValues = EnumValues({
-    "A": Section.A,
-    "D": Section.D,
-    "E": Section.E,
-    "L": Section.L,
-    "LE": Section.LE,
-    "P": Section.P,
-    "W": Section.W
-});
+// final sectionValues = EnumValues({
+//     "A": Section.A,
+//     "D": Section.D,
+//     "E": Section.E,
+//     "L": Section.L,
+//     "LE": Section.LE,
+//     "P": Section.P,
+//     "W": Section.W
+// });
 
-class EnumValues<T> {
-    Map<String, T> map;
-  late  Map<T, String> reverseMap;
+// class EnumValues<T> {
+//     Map<String, T> map;
+//   late  Map<T, String> reverseMap;
 
-    EnumValues(this.map);
+//     EnumValues(this.map);
 
-    Map<T, String> get reverse {
-        if (reverseMap == null) {
-            reverseMap = map.map((k, v) => new MapEntry(v, k));
-        }
-        return reverseMap;
-    }
-}
+//     Map<T, String> get reverse {
+//         if (reverseMap == null) {
+//             reverseMap = map.map((k, v) => new MapEntry(v, k));
+//         }
+//         return reverseMap;
+//     }
+// }

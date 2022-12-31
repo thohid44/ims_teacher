@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:imsteacher/pages/Home/deshboard.dart';
 import 'package:imsteacher/pages/Home/home_page.dart';
 import 'package:imsteacher/pages/Leave/view/leave_management_page.dart';
+import 'package:imsteacher/pages/Result_Sheet/views/result_sheet.dart';
 
 import 'package:imsteacher/pages/login/login_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:imsteacher/pages/login/view/otp_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       builder: (context , child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'First Method',
+          title: 'Teacher WPIMS',
           // You can use the library anywhere in the app even in theme
           theme: ThemeData(
             primarySwatch: Colors.blue,
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child:  LoginPage(),
+      child:  DeashBoard(),
     );
   }
 }

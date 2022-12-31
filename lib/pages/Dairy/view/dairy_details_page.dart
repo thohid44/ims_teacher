@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/pages/Dairy/model/single_dairy_model.dart';
-import 'package:imsteacher/widgets/custom_appbar.dart';
+
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 
 class DairyDetailsPage extends StatefulWidget {

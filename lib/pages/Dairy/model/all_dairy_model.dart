@@ -6,8 +6,6 @@ import 'dart:convert';
 
 AllDairyModel allDairyModelFromJson(String str) => AllDairyModel.fromJson(json.decode(str));
 
-String allDairyModelToJson(AllDairyModel data) => json.encode(data.toJson());
-
 class AllDairyModel {
     AllDairyModel({
         this.status,
@@ -34,14 +32,7 @@ class AllDairyModel {
         diaries: List<DiaryElement>.from(json["diaries"].map((x) => DiaryElement.fromJson(x))),
     );
 
-    Map<String, dynamic> toJson() => {
-        "status": status,
-        "class": allDairyModelClass,
-        "group": group,
-        "section": section,
-        "date": "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
-        "diaries": List<dynamic>.from(diaries!.map((x) => x.toJson())),
-    };
+   
 }
 
 class DiaryElement {
@@ -52,47 +43,15 @@ class DiaryElement {
     });
 
     int? id;
-    Subject? subject;
-    DiaryEnum? diary;
+    String? subject;
+    String? diary;
 
     factory DiaryElement.fromJson(Map<String, dynamic> json) => DiaryElement(
         id: json["id"],
-        subject: subjectValues.map[json["subject"]],
-        diary: diaryEnumValues.map[json["diary"]],
+        subject: json["subject"],
+        diary: json["diary"],
     );
 
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "subject": subjectValues.reverse[subject],
-        "diary": diaryEnumValues.reverse[diary],
-    };
+   
 }
 
-enum DiaryEnum { DESCRIPTION_FROM_RANDOM_GENERATE, TEST_DESCRIPTION }
-
-final diaryEnumValues = EnumValues({
-    "Description From Random Generate": DiaryEnum.DESCRIPTION_FROM_RANDOM_GENERATE,
-    "Test Description": DiaryEnum.TEST_DESCRIPTION
-});
-
-enum Subject { MATH, ENGLISH, BANGLA }
-
-final subjectValues = EnumValues({
-    "Bangla": Subject.BANGLA,
-    "English": Subject.ENGLISH,
-    "Math": Subject.MATH
-});
-
-class EnumValues<T> {
-    Map<String, T> map;
- late   Map<T, String> reverseMap;
-
-     EnumValues(this.map);
-
-    Map<T, String> get reverse {
-        if (reverseMap == null) {
-            reverseMap = map.map((k, v) => new MapEntry(v, k));
-        }
-        return reverseMap;
-    }
-}

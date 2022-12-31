@@ -103,6 +103,9 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return DataTable(
+                               headingRowColor:
+        MaterialStateColor.resolveWith((states) =>offWhite),
+ 
                               columns: const [
                                 DataColumn(
                                     label: Text(
