@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-const primaryColor = Colors.deepPurple;
+const primaryColor = Color(0xffB947E1);
 
 const bgGrey= Color(0xFF808080);
 const textColorSecondary = Color(0xFF778390);

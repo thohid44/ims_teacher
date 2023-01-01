@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context , child) {
         return GetMaterialApp(
+         
           debugShowCheckedModeBanner: false,
           title: 'Teacher WPIMS',
           // You can use the library anywhere in the app even in theme
