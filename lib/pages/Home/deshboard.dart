@@ -14,6 +14,7 @@ import 'package:imsteacher/pages/Dairy/view/dairy_page.dart';
 import 'package:imsteacher/pages/Exam/views/exam_routine_page.dart';
 import 'package:imsteacher/pages/Home/drawer.dart';
 import 'package:imsteacher/pages/Leave/view/add_student_leave.dart';
+import 'package:imsteacher/pages/Result_Sheet/views/result_sheet.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,7 @@ class _DeashBoardState extends State<DeashBoard> {
       ), centerTitle: true, ),
      drawer: AppDrawer(),
       body: ListView(
-
+             scrollDirection: Axis.vertical,
         children: [
           Container(
             margin: EdgeInsets.only(left: 10.w,right: 10.w, 
@@ -68,18 +69,18 @@ class _DeashBoardState extends State<DeashBoard> {
                      onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>DailyAttendancePage()));
                   },
-                  child: deshboardItem(title: "Daily Attendence",)), 
+                  child: deshboardItem(title: "Daily Attendence",imageLInk:"assets/attendance.png")), 
                   
                 InkWell(
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
                   },
-                  child: deshboardItem(title:"Mobile Attendance",)), 
+                  child: deshboardItem(title:"Mobile Attendance",imageLInk:"assets/attendance.png")), 
                 InkWell(
                      onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
                   },
-                  child: deshboardItem(title:"Student Wise Report",)), 
+                  child: deshboardItem(title:"Student Wise Report",imageLInk:"assets/attendance.png")), 
               
                 
               ],
@@ -114,12 +115,12 @@ class _DeashBoardState extends State<DeashBoard> {
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>DairyPage()));
                   },
-                  child: deshboardItem(title:"Daily Diary",)), 
+                  child: deshboardItem(title:"Daily Diary",imageLInk:"assets/diary.png")), 
                 InkWell(
                      onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
                   },
-                  child: deshboardItem(title:"Add New Diary",)), 
+                  child: deshboardItem(title:"Add New Diary",imageLInk:"assets/diary.png")), 
                 InkWell(
                      onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
@@ -203,17 +204,17 @@ Container(
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>ExamRoutinePage()));
                   },
-                  child: deshboardItem(title:"Exam Routine",)), 
+                  child: deshboardItem(title:"Exam Routine",imageLInk: "assets/routine.png",)), 
+                // InkWell(
+                //      onTap: (){
+                //     Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
+                //   },
+                //   child: deshboardItem(title:"Exam Schedule",imageLInk: "assets/routine.png",)), 
                 InkWell(
                      onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
+                    Navigator.push(context, MaterialPageRoute(builder:(_)=>ResultSheet()));
                   },
-                  child: deshboardItem(title:"Exam Schedule",)), 
-                InkWell(
-                     onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
-                  },
-                  child: deshboardItem(title: "X",)), 
+                  child: deshboardItem(title: "Exam Result",imageLInk: "assets/result.png",)), 
                 
               ],
             ),
@@ -227,8 +228,9 @@ Container(
 
 class deshboardItem extends StatelessWidget {
   String? title; 
+  String? imageLInk;
    deshboardItem({
-    Key? key, this.title
+    Key? key, this.title,  this.imageLInk
   }) : super(key: key);
 
   @override
@@ -238,23 +240,28 @@ class deshboardItem extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-           color: Color(0xffD6D6D6),
+           color: Colors.white,
           borderRadius: BorderRadius.circular(20.r),
       
-          // boxShadow: const[
-          //   BoxShadow(
-          //    blurStyle: BlurStyle.inner,
-          //    blurRadius: 20.0,
-          //   offset: Offset(1, 1)
-          // )
-          // ]
+          boxShadow:const [
+            BoxShadow(
+              color: primaryColor,
+             blurStyle: BlurStyle.inner,
+             blurRadius: 20.0,
+            offset: Offset(2, 2)
+          )
+          ]
         ),
         height: 100.h,
         width: 100.w,
         child: Column(
           children: [
            SizedBox(height: 10.h,),
-            Icon(Icons.class_outlined,size: 40, color:Colors.black,),
+            Container(
+              height: 40.h,
+              width: 60.w,
+              child: imageLInk==null?Text("No Image"):Image.asset(imageLInk.toString(), ),
+            ), 
             SizedBox(height: 10.h,),
             customText(title.toString(), dark, 15.0, FontWeight.bold),
           ],

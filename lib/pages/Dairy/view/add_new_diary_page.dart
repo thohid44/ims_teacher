@@ -144,10 +144,10 @@ print(response);
            ),
            SizedBox(height: 20.h,),
     Container(
-      height: 400.h,
+     
       margin: EdgeInsets.symmetric(horizontal: 30),
       child: FlutterSummernote(
-        height: 300,
+        height: 400,
         key: _keyEditor,
         value: "Value",
     hint: "Enter your text...",
