@@ -29,6 +29,7 @@ class _DeashBoardState extends State<DeashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: AppBar(
         backgroundColor: primaryColor,
         title:const Text("DASHBOARD", 
@@ -75,12 +76,12 @@ class _DeashBoardState extends State<DeashBoard> {
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
                   },
-                  child: deshboardItem(title:"Mobile Attendance",imageLInk:"assets/attendance.png")), 
+                  child: deshboardItem(title:"Mobile Attendance",imageLInk:"assets/mobile.png")), 
                 InkWell(
                      onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
                   },
-                  child: deshboardItem(title:"Student Wise Report",imageLInk:"assets/attendance.png")), 
+                  child: deshboardItem(title:"Student Wise Report",imageLInk:"assets/student.png")), 
               
                 
               ],
@@ -120,12 +121,12 @@ class _DeashBoardState extends State<DeashBoard> {
                      onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
                   },
-                  child: deshboardItem(title:"Add New Diary",imageLInk:"assets/diary.png")), 
+                  child: deshboardItem(title:"Add New Diary",imageLInk:"assets/add_diary.png")), 
                 InkWell(
                      onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
                   },
-                  child: deshboardItem(title: "X",)), 
+                  child: deshboardItem(title: "Comming Soon",)), 
                 
               ],
             ),
@@ -160,12 +161,12 @@ class _DeashBoardState extends State<DeashBoard> {
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>AddStudentLeave()));
                   },
-                  child: deshboardItem(title:"Add Leave",)), 
+                  child: deshboardItem(title:"Add Leave",imageLInk: "assets/leave.png")), 
                 InkWell(
                      onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
                   },
-                  child: deshboardItem(title:"Leave Categories",)), 
+                  child: deshboardItem(title:"Leave Categories",imageLInk: "assets/add_leave.png")), 
                 InkWell(
                      onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
@@ -220,6 +221,7 @@ Container(
             ),
           ),
 
+
         ],
       ),
     );
@@ -229,44 +231,53 @@ Container(
 class deshboardItem extends StatelessWidget {
   String? title; 
   String? imageLInk;
+  int? height; 
+  int? width;
    deshboardItem({
-    Key? key, this.title,  this.imageLInk
+    Key? key, this.title,  this.imageLInk , this.height, this.width
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(left:8.0),
+      padding:  EdgeInsets.only(left:14.0,),
       child: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-           color: Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-      
-          boxShadow:const [
-            BoxShadow(
-              color: primaryColor,
-             blurStyle: BlurStyle.inner,
-             blurRadius: 20.0,
-            offset: Offset(2, 2)
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+             color: Colors.white,
+            borderRadius: BorderRadius.circular(20.r),
+        
+            // boxShadow:const [
+            //   BoxShadow(
+            //     color: primaryColor,
+            //    blurStyle: BlurStyle.inner,
+            //    blurRadius: 20.0,
+            //   offset: Offset(2, 2)
+            // )
+            // ]
+          ),
+          height: 100.h,
+          width: 100.w,
+          child: Column(
+            children: [
+             SizedBox(height: 10.h,),
+              Container(
+                height: 40.h,
+                width: 60.w,
+                child: imageLInk==null?Text("No Image"):Image.asset(imageLInk.toString(), ),
+              ), 
+              SizedBox(height: 10.h,),
+              Text(title.toString(), 
+              style: TextStyle(fontFamily: "Roboto", 
+              fontSize: 13.sp, fontWeight: FontWeight.w700, 
+              color: Colors.black
+              ),
+              textAlign: TextAlign.center,
+              )
+            ],
           )
-          ]
         ),
-        height: 100.h,
-        width: 100.w,
-        child: Column(
-          children: [
-           SizedBox(height: 10.h,),
-            Container(
-              height: 40.h,
-              width: 60.w,
-              child: imageLInk==null?Text("No Image"):Image.asset(imageLInk.toString(), ),
-            ), 
-            SizedBox(height: 10.h,),
-            customText(title.toString(), dark, 15.0, FontWeight.bold),
-          ],
-        )
-      ),
+      
     );
   }
 }
