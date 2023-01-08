@@ -20,7 +20,7 @@ class _DailyAttendancePageState extends State<DailyAttendancePage>
      {
 
  Future<DailyAttendanceModel> fetchDailyAttnd() async {
-  String token = "302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv";
+ 
     var response = await ApiUrl.userClient.get(
         Uri.parse(
             "https://demo.webpointbd.com/api/daily-attendance?date=$date&class_id=$clsId"),

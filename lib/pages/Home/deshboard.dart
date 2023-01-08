@@ -15,6 +15,7 @@ import 'package:imsteacher/pages/Exam/views/exam_routine_page.dart';
 import 'package:imsteacher/pages/Home/drawer.dart';
 import 'package:imsteacher/pages/Leave/view/add_student_leave.dart';
 import 'package:imsteacher/pages/Result_Sheet/views/result_sheet.dart';
+import 'package:imsteacher/pages/login/controller/auth_controller.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -26,8 +27,10 @@ class DeashBoard extends StatefulWidget {
 }
 
 class _DeashBoardState extends State<DeashBoard> {
+  final AuthenticationManager authManager = Get.find<AuthenticationManager>();
   @override
   Widget build(BuildContext context) {
+    print(authManager.getToken());
     return Scaffold(
       backgroundColor: Colors.white,
         appBar: AppBar(

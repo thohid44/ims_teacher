@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Home/deshboard.dart';
 import 'package:imsteacher/pages/login/view/otp_screen.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +13,8 @@ class LoginController extends GetxController  {
 
   String card_no =''; 
   String password = ''; 
-
+  final _box = GetStorage();
   Future<void> checkLogin(String card_no, String password) async{
-
 
   Map<String,dynamic>  data = {
    card_no:card_no,
@@ -30,7 +31,7 @@ class LoginController extends GetxController  {
 }); 
 
   if(res.statusCode==200){
-  print(res.body); 
+
   Get.to(OTPScreen());
     }else{
       Get.snackbar("Error", "Login Faild");

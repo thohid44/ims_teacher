@@ -1,3 +1,3 @@
-class PrefLocalStoreKey{
+class LocalStoreKey{
   static const token = "Token"; 
 }
