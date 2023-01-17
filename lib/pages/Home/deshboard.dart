@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
-import 'package:imsteacher/pages/Attendance/model/student_wise_atten_model.dart';
+
 import 'package:imsteacher/pages/Attendance/view/daily_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/mobile_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/student_wise_atten_report.dart';
@@ -16,8 +16,7 @@ import 'package:imsteacher/pages/Home/drawer.dart';
 import 'package:imsteacher/pages/Leave/view/add_student_leave.dart';
 import 'package:imsteacher/pages/Result_Sheet/views/result_sheet.dart';
 import 'package:imsteacher/pages/login/controller/auth_controller.dart';
-import 'package:imsteacher/widgets/custom_text_widget.dart';
-import 'package:provider/provider.dart';
+
 
 class DeashBoard extends StatefulWidget {
   const DeashBoard({super.key});

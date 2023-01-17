@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+
 import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 
@@ -20,7 +20,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   bool status1 = false;
   bool status2 = false;
   bool status3 = false;
-
+  bool present=true;
+  bool absent = false; 
   List<DropdownMenuItem<String>> get dropdownItems {
     List<DropdownMenuItem<String>> menuItems = [
       const DropdownMenuItem(
@@ -41,10 +42,10 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
             "https://demo.webpointbd.com/api/mobile-attendance?class_id=$selectedValue"),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ' + ApiUrl.token,
+          'Authorization': 'Bearer '+ApiUrl.token,
         });
     var jsonData = json.decode(response.body);
-
+print(jsonData); 
     if (response.statusCode == 200) {
       return MobileAttendFetchClass.fromJson(jsonData);
     } else {
@@ -54,7 +55,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   @override
   void initState() {
-    fetchMobileCls();
+  fetchMobileCls();
     // TODO: implement initState
 
     super.initState();
@@ -121,6 +122,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                     label: Text(
                                   "Status",
                                   style: TextStyle(fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
                                 ))
                               ],
                               rows: snapshot.data!.attendances!
@@ -130,18 +132,28 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                               dark, 13.0, FontWeight.bold),
                                         ),
                                         DataCell(
-                                          customText(e.studentName.toString(),
-                                              dark, 13.0, FontWeight.bold),
+                                      Text(e.studentName.toString(), style: TextStyle(fontSize:13, fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.justify,)
                                         ),
                                         DataCell(
-                                          Switch(
-                                              value: false,
-                                              onChanged: (value) {
-                                                print(value);
-                                                setState(() {
-                                               status1 =!status1;
-                                                });
-                                              }),
+                                          InkWell(
+                                            onTap:(){
+                                              print("Present");
+                                           setState(() {
+                                               present = false;
+                                              print(present);
+                                           });
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                                              decoration: BoxDecoration(
+                                                color: Colors.green,
+                                              ),
+                                              child: Text(present==true?"Present":"Absent", style: TextStyle(
+                                                color: Colors.white, fontWeight: FontWeight.bold
+                                              ),),
+                                            ),
+                                          ),
                                         )
                                       ]))
                                   .toList());
@@ -176,4 +188,9 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
           ),
         ));
   }
+
+takeAttendance() async{
+
+}
+
 }

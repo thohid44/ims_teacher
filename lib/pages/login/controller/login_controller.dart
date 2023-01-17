@@ -27,7 +27,7 @@ class LoginController extends GetxController  {
  // var response = await http.post(Uri.parse('uri')); 
   var res = await ApiUrl.userClient.post(Uri.parse("https://demo.webpointbd.com/api/teacher-login"), body: {
     "card_no": card_no,
-    "password": "123"
+    "password": password
 }); 
 
   if(res.statusCode==200){

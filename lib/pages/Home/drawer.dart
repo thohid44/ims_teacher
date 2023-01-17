@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 
 import 'package:imsteacher/pages/Home/deshboard.dart';
+import 'package:imsteacher/pages/login/login_page.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
 
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  final _box = GetStorage(); 
+  Future<void> logout() async{
+    _box.remove(LocalStoreKey.token); 
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -80,17 +92,7 @@ class AppDrawer extends StatelessWidget {
                        color: Colors.white) ,
                     ),
                     onTap: (){
-                        showDialog(context: context, builder:((context) {
-                          return AlertDialog(
-                            content: Container(
-                              height: 100.h,
-                              child: Text("Are You Sure?"),
-                            ),
-                            actions: [
-                              Text("Yes")
-                            ],
-                          );
-                        }));
+                      _showAlertDialog();
                     },
                     ),
              ],
@@ -102,4 +104,42 @@ class AppDrawer extends StatelessWidget {
        ),
      );
   }
+  Future<void> _showAlertDialog() async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog( // <-- SEE HERE
+      
+        content: SingleChildScrollView(
+          child: ListBody(
+            children:  <Widget>[
+              Container(
+                margin: EdgeInsets.only(left: 30.w, top: 15.h),
+                child: Text('Do you  want to Logout?',style: TextStyle(
+                  fontSize: 15.sp,fontWeight: FontWeight.bold
+                ),),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('No'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Yes'),
+            onPressed: () {
+              logout();
+              Get.off(LoginPage());
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 }

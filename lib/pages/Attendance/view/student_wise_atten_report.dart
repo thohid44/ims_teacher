@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart';
 import 'package:imsteacher/pages/Attendance/model/student_wise_atten_model.dart';
+import 'package:imsteacher/pages/Home/custom_navigation_bar.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 
 import '../../../Utils/Constrans/color.dart';
@@ -34,7 +35,7 @@ class _StudentWishAttendenceState extends State<StudentWishAttendence> {
     if(response.statusCode==200){
 return StudentWiseAttenModel.fromJson(data);
     }else{
-      return StudentWiseAttenModel.fromJson(data);
+      return null;
     }
     
       
@@ -104,7 +105,7 @@ return StudentWiseAttenModel.fromJson(data);
               child:stdStatus==true? FutureBuilder(
                   future: fetchStudent(),
                   builder: ((context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
                       
                       return SingleChildScrollView(
                         child: Column(
@@ -232,38 +233,12 @@ return StudentWiseAttenModel.fromJson(data);
                           ],
                         ),
                       );
-                    }
+                    } 
                     return Center(child: CircularProgressIndicator());
                   })):Center(child: Container(child:Text("Please Search By Student ID"))) ,),
         ],
       ),
-      bottomNavigationBar: Container(
-        child: CurvedNavigationBar(
-          backgroundColor: Colors.white,
-         
-          key: _bottomNavigationKey,
-        
-          index: 0,
-          height: 60.0,
-          items: const <Widget>[
-            Icon(Icons.add, size: 30, color: Colors.white,),
-            Icon(Icons.list, size: 30,color: Colors.white,),
-            Icon(Icons.compare_arrows, size: 30,color: Colors.white,),
-            Icon(Icons.call_split, size: 30,color: Colors.white,),
-            Icon(Icons.perm_identity, size: 30,color: Colors.white,),
-          ],
-          color: primaryColor,
-          buttonBackgroundColor: primaryColor,
-          animationCurve: Curves.easeInOut,
-          animationDuration: Duration(milliseconds: 600),
-          onTap: (index) {
-            setState(() {
-              _page = index;
-            });
-          },
-          letIndexChange: (index) => true,
-        ),
-      ),
+      bottomNavigationBar: CustomNavigationBar()
     );
   }
 

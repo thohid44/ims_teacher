@@ -16,7 +16,7 @@ class MobileAttendFetchClass {
 
     factory MobileAttendFetchClass.fromJson(Map<String, dynamic> json) => MobileAttendFetchClass(
         status: json["status"],
-        attendances: List<Attendance>.from(json["attendances"].map((x) => Attendance.fromJson(x))),
+        attendances: List<Attendance>.from(json["attendances"]!.map((x) => Attendance.fromJson(x))),
     );
 }
 

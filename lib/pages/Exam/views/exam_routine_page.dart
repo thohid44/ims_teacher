@@ -25,7 +25,7 @@ class _ExamRoutinePageState extends State<ExamRoutinePage> {
 String? classValue;
 String? eaxmValue; 
    Future<ExamRoutineModel> fetchRoutine() async {
-  String token = "302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv";
+ 
     var response = await ApiUrl.userClient.get(
         Uri.parse(
             "https://demo.webpointbd.com/api/exam-routine?academic_class_id=$classValue&exam_id=$eaxmValue"),

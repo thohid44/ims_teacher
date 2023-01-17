@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
+import 'package:imsteacher/local_data_store_test.dart';
 import 'package:imsteacher/pages/Home/deshboard.dart';
 import 'package:imsteacher/pages/login/controller/auth_controller.dart';
 import 'package:imsteacher/pages/login/login_page.dart';
 import 'package:imsteacher/splash_screen.dart';
 
 Future<void> main() async{
-WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
+// WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+//   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
 await GetStorage.init(); 
 Get.put(AuthenticationManager());
   runApp( MyApp());
@@ -36,7 +40,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
           ),
-          home: isToken() ? DeashBoard(): LoginPage(),
+          home:  isToken()? DeashBoard():LoginPage(),
         );
       },
       

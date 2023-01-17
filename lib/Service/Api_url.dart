@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 class ApiUrl {
 
-   static final token ='302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv';
+   static final token ='336|gEIWADhLxvkn452qHLwPMRRzgxuu5Q84mBDsChrD';
 
   static final  userClient = http.Client();
 

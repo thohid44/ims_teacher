@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Attendance/model/daily_attendance_model.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +28,7 @@ class _DailyAttendancePageState extends State<DailyAttendancePage>
             "https://demo.webpointbd.com/api/daily-attendance?date=$date&class_id=$clsId"),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer '+ApiUrl.token,
+          'Authorization': 'Bearer '+token,
         });
     var jsonData = json.decode(response.body);
  
@@ -37,6 +39,7 @@ class _DailyAttendancePageState extends State<DailyAttendancePage>
   }
   bool selectCls = false; 
   bool seletcdate = false; 
+  //akgm302
   String clsId='';
   List<DropdownMenuItem<String>> get dropdownItems{
   List<DropdownMenuItem<String>> menuItems = [
@@ -49,9 +52,11 @@ class _DailyAttendancePageState extends State<DailyAttendancePage>
   return menuItems;
 }
 String selectedValue = "Select Class";
+final _box = GetStorage();
+  var token;
   @override
   void initState() {
-    
+    token = _box.read(LocalStoreKey.token);
     super.initState();
 
   }
@@ -117,7 +122,7 @@ String selectedValue = "Select Class";
                   if(snapshot.connectionState==ConnectionState.done){
                     return 
                     DataTable(
-                      border: TableBorder.all(width: 1.w, color: dark),
+                     
                 headingRowColor:
         MaterialStateColor.resolveWith((states) =>offWhite),
  
