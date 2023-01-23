@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
 
 import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart';
+import 'package:imsteacher/pages/Attendance/model/store_attendance_model.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
-
+import 'package:http/http.dart' as http;
 class MobileAttendancePage extends StatefulWidget {
   const MobileAttendancePage({super.key});
 
@@ -17,11 +20,8 @@ class MobileAttendancePage extends StatefulWidget {
 }
 
 class _MobileAttendancePageState extends State<MobileAttendancePage> {
-  bool status1 = false;
-  bool status2 = false;
-  bool status3 = false;
-  bool present=true;
-  bool absent = false; 
+ bool status = false; 
+
   List<DropdownMenuItem<String>> get dropdownItems {
     List<DropdownMenuItem<String>> menuItems = [
       const DropdownMenuItem(
@@ -35,34 +35,42 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   }
 
   String selectedValue = "Select Class";
+    List<AttendanceStoreModel> storeAttendance = [];
+
+ late List<Attendance> moible; 
   bool selectClass = false;
-  Future<MobileAttendFetchClass> fetchMobileCls() async {
-    var response = await ApiUrl.userClient.post(
-        Uri.parse(
-            "https://demo.webpointbd.com/api/mobile-attendance?class_id=$selectedValue"),
+   fetchMobileCls() async {
+    var response = await http.post(Uri.parse("https://demo.webpointbd.com/api/mobile-attendance?class_id=1"),
+  
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer '+ApiUrl.token,
         });
     var jsonData = json.decode(response.body);
-print(jsonData); 
+    //  print(jsonData);
     if (response.statusCode == 200) {
-      return MobileAttendFetchClass.fromJson(jsonData);
+      MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData); 
+       
+         moible = data.attendances! ;
+    
+      return moible;  
+    
     } else {
-      return MobileAttendFetchClass.fromJson(jsonData);
+      return moible;
     }
   }
 
   @override
   void initState() {
-  fetchMobileCls();
+
     // TODO: implement initState
 
     super.initState();
   }
-
+   final GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    var controller = Get.put(TakeAttendController());
     return Scaffold(
         appBar: AppBar(
           title: const Text("MOBILE ATTENDENCE"),
@@ -98,76 +106,45 @@ print(jsonData);
               SizedBox(
                 height: 10.h,
               ),
-              selectClass == true
-                  ? FutureBuilder(
-                      future: fetchMobileCls(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return DataTable(
-                               headingRowColor:
-        MaterialStateColor.resolveWith((states) =>offWhite),
- 
-                              columns: const [
-                                DataColumn(
-                                    label: Text(
-                                  "ID",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )),
-                                DataColumn(
-                                    label: Text(
-                                  "Name",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )),
-                                DataColumn(
-                                    label: Text(
-                                  "Status",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ))
-                              ],
-                              rows: snapshot.data!.attendances!
-                                  .map((e) => DataRow(cells: [
-                                        DataCell(
-                                          customText(e.studentId.toString(),
-                                              dark, 13.0, FontWeight.bold),
-                                        ),
-                                        DataCell(
-                                      Text(e.studentName.toString(), style: TextStyle(fontSize:13, fontWeight: FontWeight.bold),
-                                      textAlign: TextAlign.justify,)
-                                        ),
-                                        DataCell(
-                                          InkWell(
-                                            onTap:(){
-                                              print("Present");
-                                           setState(() {
-                                               present = false;
-                                              print(present);
-                                           });
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                                              decoration: BoxDecoration(
-                                                color: Colors.green,
-                                              ),
-                                              child: Text(present==true?"Present":"Absent", style: TextStyle(
-                                                color: Colors.white, fontWeight: FontWeight.bold
-                                              ),),
-                                            ),
-                                          ),
-                                        )
-                                      ]))
-                                  .toList());
-                        }
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                    )
-                  : Container(
-                      child: Center(
-                        child: Text("Please Select a Class"),
+                   Container(
+               child:ListTile(leading: Text("ID"),
+               title: Text("Name"), 
+               trailing: Text("Status"),
+               
+               )
+                   ), 
+                  Container(
+                    height: 400.h,
+                    child: FutureBuilder(
+                        future: fetchMobileCls(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                             itemCount: moible.length,
+                              itemBuilder:((context, index) {
+                              return ListTile(
+                                leading:  Text(moible[index].studentId.toString()),
+                                title: Text(moible[index].studentName.toString()),
+                                trailing: InkWell(
+                                  onTap: (() {
+                                  // storeData[index]['']
+                                   takeAttendance("54", index+1, '1', "2023-01-19");
+                                }),
+                                child: Text("Present", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                
+                                ),
+                                ),
+                                
+                              );
+                            }));
+                          }
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
                       ),
-                    ),
+                  )
+                 ,
               SizedBox(
                 height: 20.h,
               ),
@@ -188,9 +165,31 @@ print(jsonData);
           ),
         ));
   }
+List<AttendanceStoreModel> storeData= [];
 
-takeAttendance() async{
+   takeAttendance(String studentAcademicId, int shiftId,String attendanceStatusId,String date) async{
+    storeData.add(AttendanceStoreModel(date: date, studentAcademicId: studentAcademicId, shiftId: shiftId.toString(), attendanceStatusId: attendanceStatusId));      
+     print(storeData.first.attendanceStatusId);
+    
+    var convert = attendanceStoreModelToJson(AttendanceStoreModel(date: date, studentAcademicId: studentAcademicId, shiftId: shiftId.toString(), attendanceStatusId: attendanceStatusId));
+    var jsonConvert = jsonDecode(convert);
 
-}
+   var response = await ApiUrl.userClient.post(Uri.https("demo.webpointbd.com","/api/mobile-attendance-store"), 
+
+      headers: {'Accept':'application/json', 'Authorization':'Bearer '+ApiUrl.token},
+      body: jsonConvert); 
+    
+  if(response.statusCode==200){
+ print(response.body);
+  print("success");
+    }else{
+       
+      Get.snackbar("Error", "Attendance Faild");
+    }
+
+   
+   }
+
+
 
 }

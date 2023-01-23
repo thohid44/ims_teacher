@@ -50,6 +50,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
+  checkbox_grouped:
+    dependency: "direct main"
+    description:
+      name: checkbox_grouped
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.1"
   checked_yaml:
     dependency: transitive
     description:

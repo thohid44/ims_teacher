@@ -29,34 +29,34 @@ class Attendance {
 
     String? studentId;
     String? studentName;
-    Status? status;
+    String? status;
 
     factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
         studentId: json["studentId"],
         studentName: json["studentName"],
-        status: statusValues.map[json["status"]],
+        status: json["status"],
     );
 
    
 }
 
-enum Status { LE, E }
+// enum Status { LE, E }
 
-final statusValues = EnumValues({
-    "E": Status.E,
-    "LE": Status.LE
-});
+// final statusValues = EnumValues({
+//     "E": Status.E,
+//     "LE": Status.LE
+// });
 
-class EnumValues<T> {
-    Map<String, T> map;
-   late Map<T, String> reverseMap;
+// class EnumValues<T> {
+//     Map<String, T> map;
+//    late Map<T, String> reverseMap;
 
-    EnumValues(this.map);
+//     EnumValues(this.map);
 
-    Map<T, String> get reverse {
-        if (reverseMap == null) {
-            reverseMap = map.map((k, v) => new MapEntry(v, k));
-        }
-        return reverseMap;
-    }
-}
+//     Map<T, String> get reverse {
+//         if (reverseMap == null) {
+//             reverseMap = map.map((k, v) => new MapEntry(v, k));
+//         }
+//         return reverseMap;
+//     }
+// }

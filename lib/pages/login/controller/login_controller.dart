@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
-import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
-import 'package:imsteacher/pages/Home/deshboard.dart';
+
 import 'package:imsteacher/pages/login/view/otp_screen.dart';
-import 'package:provider/provider.dart';
+
 import 'package:http/http.dart' as http;
 class LoginController extends GetxController  {
 
