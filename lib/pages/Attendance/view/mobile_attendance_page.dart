@@ -36,8 +36,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   String selectedValue = "Select Class";
     List<AttendanceStoreModel> storeAttendance = [];
-
- late List<Attendance> moible; 
+ List<String> list=[];
+  List<Attendance> moible=[]; 
   bool selectClass = false;
    fetchMobileCls() async {
     var response = await http.post(Uri.parse("https://demo.webpointbd.com/api/mobile-attendance?class_id=1"),
@@ -62,7 +62,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   @override
   void initState() {
-
+  fetchMobileCls();
     // TODO: implement initState
 
     super.initState();
@@ -97,6 +97,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                           selectedValue = newValue!;
                           if (selectedValue == "Select Class") {
                             selectClass = false;
+                           
                           } else {
                             selectClass = true;
                           }
@@ -115,11 +116,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                    ), 
                   Container(
                     height: 400.h,
-                    child: FutureBuilder(
-                        future: fetchMobileCls(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
+                    child: ListView.builder(
                              itemCount: moible.length,
                               itemBuilder:((context, index) {
                               return ListTile(
@@ -127,22 +124,27 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                 title: Text(moible[index].studentName.toString()),
                                 trailing: InkWell(
                                   onTap: (() {
-                                  // storeData[index]['']
-                                   takeAttendance("54", index+1, '1', "2023-01-19");
+                               setState(() {
+                                  if(list.contains(moible[index].studentId.toString())){
+                                   
+                                     list.remove(moible[index].studentId.toString());
+                                  
+                                  }else{
+                                     list.add(moible[index].studentId.toString());
+                                        print(list);
+                                  }
+                               });
+
+                    
+                                //   takeAttendance("54", index+1, '1', "2023-01-19");
                                 }),
-                                child: Text("Present", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                child: Text(list.contains(moible[index].studentId.toString())?"Absent":"Present", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                                 
                                 ),
                                 ),
                                 
                               );
-                            }));
-                          }
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      ),
+                            }))
                   )
                  ,
               SizedBox(
@@ -165,6 +167,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
           ),
         ));
   }
+
+
 List<AttendanceStoreModel> storeData= [];
 
    takeAttendance(String studentAcademicId, int shiftId,String attendanceStatusId,String date) async{
