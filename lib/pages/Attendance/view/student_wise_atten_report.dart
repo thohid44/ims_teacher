@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:imsteacher/Service/Api_url.dart';
-import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart';
+
 import 'package:imsteacher/pages/Attendance/model/student_wise_atten_model.dart';
 import 'package:imsteacher/pages/Home/custom_navigation_bar.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
@@ -31,7 +31,7 @@ class _StudentWishAttendenceState extends State<StudentWishAttendence> {
     });
 
     var data = json.decode(response.body);
-    print(data);
+  
     if(response.statusCode==200){
 return StudentWiseAttenModel.fromJson(data);
     }else{
@@ -105,8 +105,9 @@ return StudentWiseAttenModel.fromJson(data);
               child:stdStatus==true? FutureBuilder(
                   future: fetchStudent(),
                   builder: ((context, snapshot) {
+                    var data = snapshot.data.attendances;
                     if (snapshot.hasData) {
-                      
+                      var val ='L';
                       return SingleChildScrollView(
                         child: Column(
                           children: [
@@ -117,7 +118,7 @@ return StudentWiseAttenModel.fromJson(data);
                                 padding: EdgeInsets.only(left: 10.w, bottom: 5.h),
                                 alignment: Alignment.centerLeft,
                                 child: customText(
-                                    "Student Id: ${snapshot!.data!.studentId.toString()}",
+                                    "Student Id: ${snapshot.data.studentId.toString()}",
                                     dark,
                                     16.0,
                                     FontWeight.bold)),
@@ -143,13 +144,15 @@ return StudentWiseAttenModel.fromJson(data);
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                               _countClassStatus(snapshot.data.attendances, 'p'),
+                              
+    
                                 customText(
                                     "A:1", Colors.red, 16.0, FontWeight.bold),
+                                    _countClassStatus(data,val),
                                 customText(
                                     "D:1", Colors.purple, 16.0, FontWeight.bold),
                                 customText(
-                                    "L:1", Colors.lightBlue, 16.0, FontWeight.bold),
+                                    "L:", Colors.lightBlue, 16.0, FontWeight.bold),
                                 customText(
                                     "H:1", Colors.yellow, 16.0, FontWeight.bold),
                                 customText(
@@ -245,14 +248,24 @@ return StudentWiseAttenModel.fromJson(data);
   int _page = 0;
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
-   Widget _countClassStatus( data, String element) {
+   Widget _countClassStatus( List data, String element) {
+    print(data); 
      int count=0;
-      for(int i=0; i<data.length; i++){
-        if(data[i]==element){
-          count++;
-        }
-      }
+     print("thohdi ${data.length}");
+  
+  //   for(int i=0; i<data.length; i++){
+  //   if(data[i]['attnStatus']=='L') {
 
+  //     print(count++);
+  //   }
+    
+  // }
+data.forEach((element) { 
+    if(element.attnStatus=='L'){
+      var counts =count++; 
+      print(counts);
+    }
+    });
       return Container(child: Text(count.toString()),);
    }
 }

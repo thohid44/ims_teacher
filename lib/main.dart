@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/local_data_store_test.dart';
+import 'package:imsteacher/pages/Attendance/view/std.dart';
 import 'package:imsteacher/pages/Home/deshboard.dart';
 import 'package:imsteacher/pages/login/controller/auth_controller.dart';
 import 'package:imsteacher/pages/login/login_page.dart';

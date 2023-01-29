@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _card_no = TextEditingController(); 
   final TextEditingController _password = TextEditingController(); 
   final _logKey = GlobalKey<FormState>();
+  bool passwordVisibility_=false;
 
   LoginController _controller = Get.put(LoginController()); 
    final _box = GetStorage();
@@ -63,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 height: 50.h,
                 padding: EdgeInsets.symmetric(horizontal: 40.w),
-                child:_textinput(
+                child:_textinput1(
                   controller:_password, 
                   hint:"Passwrod", 
                   userErrorText:"Password is wrong"
@@ -119,6 +120,48 @@ void checklogin() {
       );
     }
   }
+
+  
+Widget _textinput1({controller, hint, icon, inputAction, userErrorText}) {
+  return Container(
+
+    decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(30))),
+    child: TextFormField(
+      textInputAction: inputAction,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return userErrorText;
+        } else {
+          return null;
+        }
+      },
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hint,
+        prefixIcon: icon,
+        hintStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          gapPadding: 4.6,
+        ),
+suffixIcon: GestureDetector(
+              onTap: (){
+                setState(() {
+                  passwordVisibility_ =! passwordVisibility_;
+                });
+              },
+              child: Icon(
+                passwordVisibility_ ? Icons.visibility_off : Icons.visibility,
+                color: Color(0xFFE6E6FA),
+              ),
+            )
+        
+      ),
+    ),
+  );
+}
 }
 
 
@@ -147,6 +190,8 @@ Widget _textinput({controller, hint, icon, inputAction, userErrorText}) {
           borderRadius: BorderRadius.circular(30),
           gapPadding: 4.6,
         ),
+
+        
       ),
     ),
   );
