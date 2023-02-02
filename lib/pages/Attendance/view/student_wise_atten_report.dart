@@ -146,21 +146,15 @@ return StudentWiseAttenModel.fromJson(data);
                               children: [
                               
     
-                                customText(
-                                    "A:1", Colors.red, 16.0, FontWeight.bold),
-                                    _countClassStatus(data,val),
-                                customText(
-                                    "D:1", Colors.purple, 16.0, FontWeight.bold),
-                                customText(
-                                    "L:", Colors.lightBlue, 16.0, FontWeight.bold),
-                                customText(
-                                    "H:1", Colors.yellow, 16.0, FontWeight.bold),
-                                customText(
-                                    "LE:1", Colors.blue, 16.0, FontWeight.bold),
-                                customText(
-                                    "E:1", Colors.redAccent, 16.0, FontWeight.bold),
-                                customText("W:4", Colors.blueAccent, 16.0,
-                                    FontWeight.bold),
+                               
+                                _countClassStatus("P:", data,"P", Pcolor),
+                                  _countClassStatus("A:", data,"A",Acolor ),
+                                _countClassStatus("D:", data,"D", Dcolor),
+                                  _countClassStatus("L:", data,"L", Lcolor),
+                                     _countClassStatus("H:", data,"H", Hcolor),
+                                     _countClassStatus("LE:", data,"LE",LEcolor),
+                                  _countClassStatus("E:", data,"E", Ecolor),
+                                     _countClassStatus("W:", data,"W", Wcolor),
                               ],
                             ),
                             SizedBox(
@@ -248,7 +242,7 @@ return StudentWiseAttenModel.fromJson(data);
   int _page = 0;
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
-   Widget _countClassStatus( List data, String element) {
+   Widget _countClassStatus( String value,List data, String element,Color color) {
     print(data); 
      int count=0;
      print("thohdi ${data.length}");
@@ -260,13 +254,14 @@ return StudentWiseAttenModel.fromJson(data);
   //   }
     
   // }
-data.forEach((element) { 
-    if(element.attnStatus=='L'){
+data.forEach((e) { 
+    if(e.attnStatus==element){
       var counts =count++; 
       print(counts);
     }
     });
-      return Container(child: Text(count.toString()),);
+      return Container(child: Text("$value ${count.toString()}", 
+      style: TextStyle(color: color),),);
    }
 }
 // 

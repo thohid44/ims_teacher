@@ -24,18 +24,7 @@ class MobileAttendancePage extends StatefulWidget {
 class _MobileAttendancePageState extends State<MobileAttendancePage> {
   bool status = false;
 
-  List<DropdownMenuItem<String>> get dropdownItems {
-    List<DropdownMenuItem<String>> menuItems = [
-      const DropdownMenuItem(
-          child: Text("Select Class"), value: "Select Class"),
-      const DropdownMenuItem(child: Text("Class One"), value: "1"),
-      const DropdownMenuItem(child: Text("Class Two"), value: "2"),
-      const DropdownMenuItem(child: Text("Class Three"), value: "3"),
-      const DropdownMenuItem(child: Text("Class Four"), value: "4"),
-    ];
-    return menuItems;
-  }
-
+  
   Future<AcademicClassesModel> getAcademicCls() async {
     String token = "302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv";
     var response = await ApiUrl.userClient
@@ -62,13 +51,13 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   fetchMobileCls() async {
     var response = await http.post(
         Uri.parse(
-            "https://demo.webpointbd.com/api/mobile-attendance?class_id=$classValue"),
+            "https://demo.webpointbd.com/api/mobile-attendance?class_id=2"),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + ApiUrl.token,
         });
     var jsonData = json.decode(response.body);
-    //   print(jsonData);
+    //  print(jsonData);
     if (response.statusCode == 200) {
       MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
 
@@ -82,7 +71,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   @override
   void initState() {
-    fetchMobileCls();
+  attendList;
     // TODO: implement initState
 
     super.initState();
@@ -158,48 +147,25 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                           title: Text(mobile[index].studentName.toString()),
                           trailing: InkWell(
                             onTap: (() {
-                              print(
-                                  "ss ${mobile[index].studentAcademicId.toString()}");
-                              print("dd${mobile[index].shiftId.toString()}");
-                              print(
-                                  "ddd${mobile[index].attendanceStatusId.toString()}");
 
-                          AttendanceStoreModel data = AttendanceStoreModel(
-                            date:"2022-12-08", 
-                            studentAcademicId: mobile[index].studentAcademicId.toString(),
-                            shiftId:mobile[index].shiftId.toString() ,
-                            attendanceStatusId: mobile[index].attendanceStatusId.toString()
-                          );
-                               
-                          
-                          
-                              
-                        
-                          
-setState(() {
-       attendList.forEach((e) {
-                         //   print(e.studentAcademicId.toString() ==mobile[index].studentAcademicId.toString()); 
-                         
-                               if(e.studentAcademicId.toString() ==mobile[index].studentAcademicId.toString()){
-                                  attendList.add(data); 
-                                   print("re${attendList}");
-                               }else{
-                                     attendList.add(data); 
-                                         print("add${attendList}");
-                               }
-                              });
-});
-                              //   takeAttendance("54", index+1, '1', "2023-01-19");
+                               takeAttendance(mobile[index].studentAcademicId.toString(),
+                              mobile[index].shiftId.toString() , 
+                              mobile[index].attendanceStatusId.toString()
+                              , "2023-01-19");
                             }),
-                            child: Text(
-                              list.contains(
-                                          mobile[index].studentId.toString()) ==
-                                      false
-                                  ? "Absent"
-                                  : "Present",
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 40.w, width: 80.w,
+                              decoration: BoxDecoration(
+                                color: Colors.green, 
+                                borderRadius: BorderRadius.circular(30.r)
+                              ),
+                              child: con.rollCall.asMap().entries ==mobile[index].studentAcademicId.toString() ?
+                              Text(" Absent ", style: TextStyle(
+                                fontSize: 15.sp, fontWeight: FontWeight.bold, color: Colors.white
+                              ),):Text("Present", style: TextStyle(
+                                fontSize: 15.sp, fontWeight: FontWeight.bold, color: Colors.white
+                              ),))
                           ),
                         );
                       }))),
@@ -224,17 +190,11 @@ setState(() {
         ));
   }
 
-  List<AttendanceStoreModel> attendList = [];
-  List<AttendanceStoreModel> storeData = [];
+    List attendList = [];
+    final TakeAttendController con = Get.put(TakeAttendController()); 
 
-  takeAttendance(String studentAcademicId, int shiftId,
+  takeAttendance(String studentAcademicId, String shiftId,
       String attendanceStatusId, String date) async {
-    storeData.add(AttendanceStoreModel(
-        date: date,
-        studentAcademicId: studentAcademicId,
-        shiftId: shiftId.toString(),
-        attendanceStatusId: attendanceStatusId));
-    print(storeData.first.attendanceStatusId);
 
     var convert = attendanceStoreModelToJson(AttendanceStoreModel(
         date: date,
@@ -242,6 +202,13 @@ setState(() {
         shiftId: shiftId.toString(),
         attendanceStatusId: attendanceStatusId));
     var jsonConvert = jsonDecode(convert);
+      if(con.rollCall.contains(studentAcademicId)){
+  con.rollCall.remove(jsonConvert); 
+      }else{
+  con.rollCall.add(jsonConvert); 
+      }
+    
+      print(con.rollCall);
 
     // var response = await ApiUrl.userClient.post(
     //     Uri.https("demo.webpointbd.com", "/api/mobile-attendance-store"),
@@ -258,4 +225,6 @@ setState(() {
     //   Get.snackbar("Error", "Attendance Faild");
     // }
   }
+
+ 
 }

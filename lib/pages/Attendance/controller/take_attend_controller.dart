@@ -3,7 +3,7 @@ import 'package:imsteacher/Service/Api_url.dart';
 
 class TakeAttendController extends GetxController{
   
-
+List rollCall = [].obs ; 
   
    takeAttendance(String accademicId, int shiftId,String statusId,String date) async{
     // String date= '';
