@@ -11,6 +11,8 @@ import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.da
 
 import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart';
 import 'package:imsteacher/pages/Attendance/model/store_attendance_model.dart';
+import 'package:imsteacher/pages/Attendance/model/student.dart';
+import 'package:imsteacher/pages/Attendance/view/std.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,7 +26,6 @@ class MobileAttendancePage extends StatefulWidget {
 class _MobileAttendancePageState extends State<MobileAttendancePage> {
   bool status = false;
 
-  
   Future<AcademicClassesModel> getAcademicCls() async {
     String token = "302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv";
     var response = await ApiUrl.userClient
@@ -45,7 +46,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   String selectedValue = "Select Class";
   List<AttendanceStoreModel> storeAttendance = [];
-  List<String> list = [];
+
   List<Attendance> mobile = [];
   bool selectClass = false;
   fetchMobileCls() async {
@@ -71,7 +72,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   @override
   void initState() {
-  attendList;
+    //  sendAttendance();
     // TODO: implement initState
 
     super.initState();
@@ -118,9 +119,10 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                             onChanged: (value) {
                               setState(() {
                                 classValue = value.toString();
-                                fetchMobileCls();
+
                                 print(classValue);
                               });
+                              fetchMobileCls();
                             });
                       }
                       return Center(
@@ -146,85 +148,117 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                           leading: Text(mobile[index].studentId.toString()),
                           title: Text(mobile[index].studentName.toString()),
                           trailing: InkWell(
-                            onTap: (() {
-
-                               takeAttendance(mobile[index].studentAcademicId.toString(),
-                              mobile[index].shiftId.toString() , 
-                              mobile[index].attendanceStatusId.toString()
-                              , "2023-01-19");
-                            }),
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 40.w, width: 80.w,
-                              decoration: BoxDecoration(
-                                color: Colors.green, 
-                                borderRadius: BorderRadius.circular(30.r)
-                              ),
-                              child: con.rollCall.asMap().entries ==mobile[index].studentAcademicId.toString() ?
-                              Text(" Absent ", style: TextStyle(
-                                fontSize: 15.sp, fontWeight: FontWeight.bold, color: Colors.white
-                              ),):Text("Present", style: TextStyle(
-                                fontSize: 15.sp, fontWeight: FontWeight.bold, color: Colors.white
-                              ),))
-                          ),
+                              onTap: (() {
+                                takeAttendance(
+                                    mobile[index].studentAcademicId.toString(),
+                                    mobile[index].shiftId.toString(),
+                                    mobile[index].attendanceStatusId.toString(),
+                                    "2023-01-19");
+                              }),
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  height: 40.w,
+                                  width: 80.w,
+                                  decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius:
+                                          BorderRadius.circular(30.r)),
+                                  child: Text(
+                                    "Present",
+                                    style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ))),
                         );
                       }))),
               SizedBox(
                 height: 20.h,
               ),
-              selectClass == true
-                  ? Container(
-                      margin: EdgeInsets.only(left: 30.w, right: 30.w),
-                      alignment: Alignment.center,
-                      height: 50.h,
-                      width: 200.w,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                      ),
-                      child: customText("Save Attendance", Colors.white, 18.0,
-                          FontWeight.bold),
-                    )
-                  : Container()
+              Container(
+                margin: EdgeInsets.only(left: 30.w, right: 30.w),
+                alignment: Alignment.center,
+                height: 50.h,
+                width: 200.w,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    sendAttendance();
+                  },
+                  child: customText(
+                      "Save Attendance", Colors.white, 18.0, FontWeight.bold),
+                ),
+              )
             ],
           ),
         ));
   }
 
-    List attendList = [];
-    final TakeAttendController con = Get.put(TakeAttendController()); 
+  List attendList = [];
+
+  final TakeAttendController con = Get.put(TakeAttendController());
 
   takeAttendance(String studentAcademicId, String shiftId,
       String attendanceStatusId, String date) async {
-
     var convert = attendanceStoreModelToJson(AttendanceStoreModel(
         date: date,
         studentAcademicId: studentAcademicId,
         shiftId: shiftId.toString(),
         attendanceStatusId: attendanceStatusId));
+
     var jsonConvert = jsonDecode(convert);
-      if(con.rollCall.contains(studentAcademicId)){
-  con.rollCall.remove(jsonConvert); 
-      }else{
-  con.rollCall.add(jsonConvert); 
-      }
-    
-      print(con.rollCall);
+    attendList.add(jsonConvert);
 
-    // var response = await ApiUrl.userClient.post(
-    //     Uri.https("demo.webpointbd.com", "/api/mobile-attendance-store"),
-    //     headers: {
-    //       'Accept': 'application/json',
-    //       'Authorization': 'Bearer ' + ApiUrl.token
-    //     },
-    //     body: jsonConvert);
-
-    // if (response.statusCode == 200) {
-    //   print(response.body);
-    //   print("success");
-    // } else {
-    //   Get.snackbar("Error", "Attendance Faild");
-    // }
+    print(attendList);
   }
 
- 
+  Map sample = {
+    "date": "2022-12-08",
+    "student_academic_id": "45",
+    "shift_id": "1",
+    "attendance_status_id": "1"
+  };
+
+  List<Map<String, dynamic>> std1 = [
+    {"student_academic_id": 100, "shift_id": 2, "attendance_status_id": 1},
+    {"student_academic_id": 100, "shift_id": 1, "attendance_status_id": 1}
+  ];
+
+  List<Students> students = [
+    Students(studentAcademicId: "1", shiftId: "1", attendanceStatusId: "1"),
+    Students(studentAcademicId: "2", shiftId: "2", attendanceStatusId: "2")
+  ];
+
+  sendAttendance() async {
+    var postUri =
+        Uri.parse("https://demo.webpointbd.com/api/mobile-attendance-store");
+    Map<String, dynamic> map = {
+      "status": true,
+      "date": "2023-02-08",
+      "academic_class_id": 5,
+      "attendances": std1
+    };
+    var finalmap = jsonEncode(map);
+
+    try {
+      print("try");
+      var request = await http.post(postUri, body: finalmap, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + ApiUrl.token,
+      });
+      print("$request");
+
+      final resdata = request;
+      ;
+      if (resdata.statusCode == 200) {
+        print("ff ${resdata.body}");
+      } else {}
+      print(resdata.body);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
