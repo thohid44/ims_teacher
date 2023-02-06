@@ -48,22 +48,24 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   List<AttendanceStoreModel> storeAttendance = [];
 
   List<Attendance> mobile = [];
+ List<Attendance> mobile2 = []; 
   bool selectClass = false;
   fetchMobileCls() async {
     var response = await http.post(
         Uri.parse(
-            "https://demo.webpointbd.com/api/mobile-attendance?class_id=2"),
+            "https://demo.webpointbd.com/api/mobile-attendance?class_id=5"),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + ApiUrl.token,
         });
     var jsonData = json.decode(response.body);
-    //  print(jsonData);
+     print(jsonData);
     if (response.statusCode == 200) {
+      
       MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
-
+     
       mobile = data.attendances!;
-
+    
       return mobile;
     } else {
       return mobile;
@@ -152,7 +154,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                 takeAttendance(
                                     mobile[index].studentAcademicId.toString(),
                                     mobile[index].shiftId.toString(),
-                                    mobile[index].attendanceStatusId.toString(),
+                                    "2",
                                     "2023-01-19");
                               }),
                               child: Container(
@@ -210,22 +212,18 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
     var jsonConvert = jsonDecode(convert);
     attendList.add(jsonConvert);
+    std1.add(jsonConvert);
 
-    print(attendList);
+    print(std1);
   }
 
-  Map sample = {
-    "date": "2022-12-08",
-    "student_academic_id": "45",
-    "shift_id": "1",
-    "attendance_status_id": "1"
-  };
+  
 
-  List<Map<String, dynamic>> std1 = [
-    {"student_academic_id": 100, "shift_id": 2, "attendance_status_id": 1},
-    {"student_academic_id": 100, "shift_id": 1, "attendance_status_id": 1}
-  ];
-
+  List<Map<String, dynamic>> std1 = [];
+  // List<Map<String, dynamic>> std1 = [
+  //   {"student_academic_id": 100, "shift_id": 2, "attendance_status_id": 1},
+  //   {"student_academic_id": 100, "shift_id": 1, "attendance_status_id": 1}
+  // ];
   List<Students> students = [
     Students(studentAcademicId: "1", shiftId: "1", attendanceStatusId: "1"),
     Students(studentAcademicId: "2", shiftId: "2", attendanceStatusId: "2")
@@ -236,7 +234,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
         Uri.parse("https://demo.webpointbd.com/api/mobile-attendance-store");
     Map<String, dynamic> map = {
       "status": true,
-      "date": "2023-02-08",
+      "date": "2023-02-05",
       "academic_class_id": 5,
       "attendances": std1
     };
