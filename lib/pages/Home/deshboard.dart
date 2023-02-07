@@ -81,6 +81,7 @@ class _DeashBoardState extends State<DeashBoard> {
                   child: deshboardItem(title:"Mobile Attendance",imageLInk:"assets/mobile.png")), 
                 InkWell(
                      onTap: (){
+                      print("object"); 
                     Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
                   },
                   child: deshboardItem(title:"Student Wise Report",imageLInk:"assets/student.png")), 

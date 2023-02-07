@@ -48,7 +48,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   List<AttendanceStoreModel> storeAttendance = [];
 
   List<Attendance> mobile = [];
- List<Attendance> mobile2 = []; 
+var mobile2 = []; 
   bool selectClass = false;
   fetchMobileCls() async {
     var response = await http.post(
@@ -59,13 +59,13 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
           'Authorization': 'Bearer ' + ApiUrl.token,
         });
     var jsonData = json.decode(response.body);
-     print(jsonData);
+    
     if (response.statusCode == 200) {
       
       MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
      
       mobile = data.attendances!;
-    
+ 
       return mobile;
     } else {
       return mobile;
@@ -74,7 +74,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   @override
   void initState() {
-    //  sendAttendance();
+  
     // TODO: implement initState
 
     super.initState();
@@ -105,6 +105,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                     builder: ((context, snapshot) {
                       if (snapshot.hasData) {
                         var data = snapshot.data!;
+                      
+                 
                         return DropdownButton(
                             hint: Text("Select Class "),
                             underline: SizedBox(),
@@ -121,10 +123,17 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                             onChanged: (value) {
                               setState(() {
                                 classValue = value.toString();
-
+                               fetchMobileCls();
+                               mobile2 = mobile.map((e) {
+                                 return { 
+                                      "student_academic_id": e.studentAcademicId, "shift_id":e.shiftId, "attendance_status_id": 2,
+                                 };
+                               }).toList();
+                              
+                          
                                 print(classValue);
                               });
-                              fetchMobileCls();
+                          
                             });
                       }
                       return Center(
@@ -151,11 +160,18 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                           title: Text(mobile[index].studentName.toString()),
                           trailing: InkWell(
                               onTap: (() {
-                                takeAttendance(
-                                    mobile[index].studentAcademicId.toString(),
-                                    mobile[index].shiftId.toString(),
-                                    "2",
-                                    "2023-01-19");
+                            
+                           for(int i = 0 ; i<= mobile.length; i++){
+                             if(mobile2[index]['student_academic_id']==mobile2[index]['student_academic_id']){
+                            setState(() {
+                               mobile2[index]['attendance_status_id']=1; 
+                            });
+                         
+                             }
+                               
+                             //print(mobile); 
+                           print(mobile2); 
+                           }
                               }),
                               child: Container(
                                   alignment: Alignment.center,
@@ -165,13 +181,22 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                       color: Colors.green,
                                       borderRadius:
                                           BorderRadius.circular(30.r)),
-                                  child: Text(
+                                  child: mobile2.contains(mobile2[index]['']=='1')? Text(
                                     "Present",
                                     style: TextStyle(
                                         fontSize: 15.sp,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white),
-                                  ))),
+                                  ):Text(
+                                    "Present",
+                                    style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                  
+                                  ) ,
+                                  ),
                         );
                       }))),
               SizedBox(
@@ -200,26 +225,38 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   List attendList = [];
 
-  final TakeAttendController con = Get.put(TakeAttendController());
+  
 
-  takeAttendance(String studentAcademicId, String shiftId,
-      String attendanceStatusId, String date) async {
-    var convert = attendanceStoreModelToJson(AttendanceStoreModel(
-        date: date,
-        studentAcademicId: studentAcademicId,
-        shiftId: shiftId.toString(),
-        attendanceStatusId: attendanceStatusId));
 
-    var jsonConvert = jsonDecode(convert);
-    attendList.add(jsonConvert);
-    std1.add(jsonConvert);
 
-    print(std1);
+  takeAttendance(String studentAcademicId, 
+      String attendanceStatusId, ) async {
+
+  
+
+    for(int i=0; i<mobile2.length; i++){
+    if(mobile2[i]['student_academic_id']==47){
+
+     setState(() {
+        mobile2[i]['attendance_status_id'] = "1"; 
+
+     });
+   
+    }
+       
+  }
+
+
+    
+
+    // print(attendList);
+   //   print(std1);
   }
 
   
 
   List<Map<String, dynamic>> std1 = [];
+
   // List<Map<String, dynamic>> std1 = [
   //   {"student_academic_id": 100, "shift_id": 2, "attendance_status_id": 1},
   //   {"student_academic_id": 100, "shift_id": 1, "attendance_status_id": 1}
@@ -236,7 +273,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
       "status": true,
       "date": "2023-02-05",
       "academic_class_id": 5,
-      "attendances": std1
+      "attendances": mobile2
     };
     var finalmap = jsonEncode(map);
 
