@@ -1,6 +1,6 @@
 
-class Attendance {
-    Attendance({
+class Attendance2 {
+    Attendance2({
         this.studentAcademicId,
         this.studentId,
         this.studentName,
@@ -16,7 +16,7 @@ class Attendance {
     String? attendanceStatusId;
     String? status;
 
-    factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
+    factory Attendance2.fromJson(Map<String, dynamic> json) => Attendance2(
         studentAcademicId: json["student_academic_id"],
         studentId: json["studentId"],
         studentName: json["studentName"],

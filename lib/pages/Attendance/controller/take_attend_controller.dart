@@ -1,45 +1,70 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:imsteacher/Service/Api_url.dart';
-
+import 'package:imsteacher/pages/Academic/model/academicClassesModel.dart';
+import 'package:http/http.dart' as http;
+import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart';
 import '../model/attendance_model.dart';
+import 'package:imsteacher/pages/Attendance/model/attendance_model.dart';
 
 class TakeAttendController extends GetxController {
-  List<Attendance> rollCall = <Attendance>[].obs;
-  // This function check Roll
-  // checkRollExist(String roll) {
-  //   rollCall.forEach(
-  //     (e) {
-  //       if (e.studentId == roll) {}
-  //     },
-  //   );
-  //   return true;
-  // }
+  
+  List  classList = [].obs; 
+  
+  var looding = false.obs; 
+  
+  
+    List<Attendance> mobile = <Attendance>[].obs;
+    
+  List<Map> mobile2 = <Map>[].obs;
+ 
+  
+   getClassId(id){
 
-  takeAttendance(
-      String accademicId, int shiftId, String statusId, String date) async {
-    // String date= '';
-    // String stdAccademicId = '';
-    // String shiftId='';
-    // String attendStatusId = '';
-    print(accademicId);
-    var res = await ApiUrl.userClient.post(
-        Uri.parse("https://demo.webpointbd.com/api/mobile-attendance-store"),
+update();
+   }
+  mobile2Update(){
+    mobile2; 
+    update(); 
+  }
+   getAcademicCls() async {
+    String token = "302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv";
+    var response = await ApiUrl.userClient
+        .get(Uri.parse("https://demo.webpointbd.com/api/classes"), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ' + ApiUrl.token,
+    });
+    var jsonData = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      AcademicClassesModel academic = AcademicClassesModel.fromJson(jsonData); 
+
+    
+       classList=academic.classes!; 
+    
+        update();
+     
+    }
+    
+  }
+
+  fetchMobileCls(String classId) async {
+    var response = await http.post(
+        Uri.parse(
+            "https://demo.webpointbd.com/api/mobile-attendance?class_id=$classId"),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ' + ApiUrl.token
-        },
-        body: {
-          "date": date.toString(),
-          "student_academic_id": accademicId.toString(),
-          "shift_id": shiftId,
-          "attendance_status_id": statusId.toString()
+          'Authorization': 'Bearer ' + ApiUrl.token,
         });
+    var jsonData = json.decode(response.body);
 
-    if (res.statusCode == 200) {
-      print("success");
-    } else {
-      Get.snackbar("Error", "Attendance Faild");
-    }
+    if (response.statusCode == 200) {
+      MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
+
+      mobile = data.attendances!;
+      
+// print("controller $mobile");
+     update();
+    } 
   }
 }

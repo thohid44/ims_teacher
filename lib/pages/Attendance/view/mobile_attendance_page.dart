@@ -27,62 +27,29 @@ class MobileAttendancePage extends StatefulWidget {
 class _MobileAttendancePageState extends State<MobileAttendancePage> {
   bool status = false;
 
-  Future<AcademicClassesModel> getAcademicCls() async {
-    String token = "302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv";
-    var response = await ApiUrl.userClient
-        .get(Uri.parse("https://demo.webpointbd.com/api/classes"), headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ' + ApiUrl.token,
-    });
-    var jsonData = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      return AcademicClassesModel.fromJson(jsonData);
-    }
-    return AcademicClassesModel.fromJson(jsonData);
-  }
-
 // get class
   String? classValue;
 
   String selectedValue = "Select Class";
-  List<AttendanceStoreModel> storeAttendance = [];
 
-  List<Attendance> mobile = [];
   var mobile2 = [];
   bool selectClass = false;
-  fetchMobileCls() async {
-    var response = await http.post(
-        Uri.parse(
-            "https://demo.webpointbd.com/api/mobile-attendance?class_id=$classValue"),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ' + ApiUrl.token,
-        });
-    var jsonData = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
-
-      mobile = data.attendances!;
-
-      return mobile;
-    } else {
-      return mobile;
-    }
-  }
 
   @override
   void initState() {
-    // TODO: implement initState
-getAcademicCls();
     super.initState();
   }
 
   final GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(TakeAttendController());
+    var _con = Get.put(TakeAttendController());
+    _con.getAcademicCls();
+
+    print(_con.mobile);
+    _con.classList;
+
+    print("class data ${_con.classList}");
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -103,52 +70,41 @@ getAcademicCls();
                       width: 150.w,
                       decoration: BoxDecoration(
                           border: Border.all(width: 1.w, color: Colors.grey)),
-                      child: FutureBuilder<AcademicClassesModel>(
-                        future: getAcademicCls(),
-                        builder: ((context, snapshot) {
-                          if (snapshot.hasData) {
-                            var data = snapshot.data!;
+                      child:
+                          GetBuilder<TakeAttendController>(builder: (context) {
+                        return DropdownButton(
+                            hint: Text("Select Class "),
+                            underline: SizedBox(),
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            value: classValue,
+                            items: _con.classList
+                                .map((e) => DropdownMenuItem(
+                                      value: e.numericClass,
+                                      child: Text(
+                                        "${e.name}",
+                                      ),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectClass = true;
+                         
+                              });
+                              classValue = value.toString();
+                                    _con.getClassId(value); 
+                              _con.mobile;
+                            
+                              _con.fetchMobileCls(classValue.toString());
 
-                            return DropdownButton(
-                                hint: Text("Select Class "),
-                                underline: SizedBox(),
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                value: classValue,
-                                items: data.classes!
-                                    .map((e) => DropdownMenuItem(
-                                          value: e.numericClass,
-                                          child: Text(
-                                            "${e.name}",
-                                          ),
-                                        ))
-                                    .toList(),
-                                onChanged: (value) {
-                                 setState(() {
-                                    classValue = value.toString();
-                                    selectClass = true;
-
-                                    if (classValue!.isNotEmpty) {
-                                      selectClass = true;
-                                      fetchMobileCls();
-                                    }
-                                    mobile2 = mobile.map((e) {
-                                      return {
-                                        "student_academic_id":
-                                            e.studentAcademicId,
-                                        "shift_id": e.shiftId,
-                                        "attendance_status_id": 2,
-                                      };
-                                    }).toList();
-
-                                    print(classValue);
-                                 });
-                                });
-                          }
-                          return Center(
-                            child: Text("Looding..."),
-                          );
-                        }),
-                      )),
+                              _con.mobile2 = _con.mobile.map((e) {
+                                return {
+                                  "student_academic_id": e.studentAcademicId,
+                                  "shift_id": e.shiftId,
+                                  "attendance_status_id": 2,
+                                };
+                              }).toList();
+                            });
+                      })),
                 ],
               ),
               SizedBox(
@@ -160,73 +116,79 @@ getAcademicCls();
                 title: Text("Name"),
                 trailing: Text("Status"),
               )),
-              selectClass == true
-                  ? Container(
+             
+                   Container(
                       height: 400.h,
-                      child: FutureBuilder(
-                          future: fetchMobileCls(),
-                          builder: (context,AsyncSnapshot snapshot) {
-                            if(snapshot.connectionState ==ConnectionState.done)
-                            {
-return ListView.builder(
-                                itemCount: snapshot.data.length,
-                                itemBuilder: ((context, index) {
-                                  return ListTile(
-                                    leading: Text(
-                                         snapshot.data[index].studentId.toString()),
-                                    title: Text(
-                                       snapshot.data[index].studentId.toString()),
-                                    trailing: InkWell(
-                                      onTap: (() {
-                                        for (int i = 0;
-                                            i <= mobile.length;
-                                            i++) {
-                                          if (mobile2[index]
-                                                  ['student_academic_id'] ==
-                                              mobile2[index]
-                                                  ['student_academic_id']) {
-                                          
-                                              mobile2[index]
-                                                  ['attendance_status_id'] = 1;
-                                          
-                                          }
+                      child:
+                          GetBuilder<TakeAttendController>(builder: (context) {
+                       if(_con.mobile.isNotEmpty && selectClass==true){
+ return ListView.builder(
+                            itemCount: _con.mobile.length,
+                            itemBuilder: ((context, index) {
+                              return ListTile(
+                                leading: Text(
+                                    _con.mobile[index].studentId.toString()),
+                                title: Text(
+                                    _con.mobile[index].studentId.toString()),
+                                trailing: InkWell(
+                                  onTap: (() {
+                                    _con.mobile2Update();
+                                    for (int i = 0;
+                                        i <= _con.mobile.length;
+                                        i++) {
+                                      if (_con.mobile2[index]
+                                              ['student_academic_id'] ==
+                                          _con.mobile2[index]
+                                              ['student_academic_id'] && _con.mobile2[index]
+                                            ['attendance_status_id'] == 2  ) {
+                                        _con.mobile2[index]
+                                            ['attendance_status_id'] = 1;
+                                      }else{
+                                        _con.mobile2[index]
+                                            ['attendance_status_id'] = 2;
+                                      }
 
-                                          //print(mobile);
-                                          print(mobile2);
-                                        }
-                                      }),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 40.w,
-                                        width: 80.w,
-                                        decoration: BoxDecoration(
-                                            color:mobile2[index]['attendance_status_id']==1? Colors.green:Colors.red,
-                                            borderRadius:
-                                                BorderRadius.circular(30.r)),
-                                        child: mobile2[index]['attendance_status_id']==1
-                                            ? Text(
-                                                "Present",
-                                                style: TextStyle(
-                                                    fontSize: 15.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                              )
-                                            : Text(
-                                                "Absent",
-                                                style: TextStyle(
-                                                    fontSize: 15.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                              ),
-                                      ),
-                                    ),
-                                  );
-                                }));
-                            }
-
-                            return Center(child: CircularProgressIndicator(),);
-                          }))
-                  : Text("data"),
+                                      //print(mobile);
+                                      print(_con.mobile2);
+                                    }
+                                  }),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: 40.w,
+                                    width: 80.w,
+                                    decoration: BoxDecoration(
+                                        color: _con.mobile2[index]
+                                                    ['attendance_status_id'] ==
+                                                1
+                                            ? Colors.green
+                                            : Colors.red,
+                                        borderRadius:
+                                            BorderRadius.circular(30.r)),
+                                    child: _con.mobile2[index]
+                                                ['attendance_status_id'] ==
+                                            1
+                                        ? Text(
+                                            "Present",
+                                            style: TextStyle(
+                                                fontSize: 15.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )
+                                        : Text(
+                                            "Absent",
+                                            style: TextStyle(
+                                                fontSize: 15.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          ),
+                                  ),
+                                ),
+                              );
+                            }));
+                       }
+                       return Center(child:CircularProgressIndicator()); 
+                      }),),
+                  
               SizedBox(
                 height: 20.h,
               ),
