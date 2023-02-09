@@ -11,16 +11,15 @@ class TakeAttendController extends GetxController {
   
   List  classList = [].obs; 
   
-  var looding = false.obs; 
   
   
     List<Attendance> mobile = <Attendance>[].obs;
     
   List<Map> mobile2 = <Map>[].obs;
- 
+  String classId = ''; 
   
    getClassId(id){
-
+classId=id; 
 update();
    }
   mobile2Update(){
@@ -48,7 +47,7 @@ update();
     
   }
 
-  fetchMobileCls(String classId) async {
+  fetchMobileCls() async {
     var response = await http.post(
         Uri.parse(
             "https://demo.webpointbd.com/api/mobile-attendance?class_id=$classId"),

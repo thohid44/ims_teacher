@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
@@ -13,6 +14,7 @@ import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart'
 import 'package:imsteacher/pages/Attendance/model/store_attendance_model.dart';
 import 'package:imsteacher/pages/Attendance/model/student.dart';
 import 'package:imsteacher/pages/Attendance/view/std.dart';
+import 'package:imsteacher/pages/Attendance/view/switch_item.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -26,7 +28,7 @@ class MobileAttendancePage extends StatefulWidget {
 
 class _MobileAttendancePageState extends State<MobileAttendancePage> {
   bool status = false;
-
+  bool isSelected = true;
 // get class
   String? classValue;
 
@@ -40,6 +42,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
     super.initState();
   }
 
+  var s1 = 2;
+  bool f1 = false;
   final GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -88,25 +92,35 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                             onChanged: (value) {
                               setState(() {
                                 selectClass = true;
-                         
                               });
                               classValue = value.toString();
-                                    _con.getClassId(value); 
+                              _con.getClassId(value);
                               _con.mobile;
-                            
-                              _con.fetchMobileCls(classValue.toString());
+                              selectClass = true;
+
+                              _con.fetchMobileCls();
 
                               _con.mobile2 = _con.mobile.map((e) {
                                 return {
                                   "student_academic_id": e.studentAcademicId,
                                   "shift_id": e.shiftId,
-                                  "attendance_status_id": 2,
+                                  "attendance_status_id": true,
                                 };
                               }).toList();
                             });
                       })),
                 ],
               ),
+              SizedBox(
+                height: 30,
+              ),
+              Switch(
+                  value: s1.isEven ? false : true,
+                  onChanged: (value) {
+                    setState(() {
+                      s1 = 1;
+                    });
+                  }),
               SizedBox(
                 height: 10.h,
               ),
@@ -116,79 +130,27 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                 title: Text("Name"),
                 trailing: Text("Status"),
               )),
-             
-                   Container(
+              selectClass == true
+                  ? Container(
                       height: 400.h,
                       child:
                           GetBuilder<TakeAttendController>(builder: (context) {
-                       if(_con.mobile.isNotEmpty && selectClass==true){
- return ListView.builder(
-                            itemCount: _con.mobile.length,
-                            itemBuilder: ((context, index) {
-                              return ListTile(
-                                leading: Text(
-                                    _con.mobile[index].studentId.toString()),
-                                title: Text(
-                                    _con.mobile[index].studentId.toString()),
-                                trailing: InkWell(
-                                  onTap: (() {
-                                    _con.mobile2Update();
-                                    for (int i = 0;
-                                        i <= _con.mobile.length;
-                                        i++) {
-                                      if (_con.mobile2[index]
-                                              ['student_academic_id'] ==
-                                          _con.mobile2[index]
-                                              ['student_academic_id'] && _con.mobile2[index]
-                                            ['attendance_status_id'] == 2  ) {
-                                        _con.mobile2[index]
-                                            ['attendance_status_id'] = 1;
-                                      }else{
-                                        _con.mobile2[index]
-                                            ['attendance_status_id'] = 2;
-                                      }
-
-                                      //print(mobile);
-                                      print(_con.mobile2);
-                                    }
-                                  }),
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 40.w,
-                                    width: 80.w,
-                                    decoration: BoxDecoration(
-                                        color: _con.mobile2[index]
-                                                    ['attendance_status_id'] ==
-                                                1
-                                            ? Colors.green
-                                            : Colors.red,
-                                        borderRadius:
-                                            BorderRadius.circular(30.r)),
-                                    child: _con.mobile2[index]
-                                                ['attendance_status_id'] ==
-                                            1
-                                        ? Text(
-                                            "Present",
-                                            style: TextStyle(
-                                                fontSize: 15.sp,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )
-                                        : Text(
-                                            "Absent",
-                                            style: TextStyle(
-                                                fontSize: 15.sp,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          ),
-                                  ),
-                                ),
-                              );
-                            }));
-                       }
-                       return Center(child:CircularProgressIndicator()); 
-                      }),),
-                  
+                        if (_con.mobile.isNotEmpty) {
+                          return ListView.builder(
+                              itemCount: _con.mobile.length,
+                              itemBuilder: ((context, index) {
+                              
+                                return MyListItem(title: _con.mobile[index].studentName.toString(),
+                                 roll: _con.mobile[index].studentId.toString()
+                                 
+                                 );
+                              }));
+                        }
+                        return Center(child: CircularProgressIndicator());
+                      }))
+                  : Center(
+                      child: Text("Please select a class"),
+                    ),
               SizedBox(
                 height: 20.h,
               ),

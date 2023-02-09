@@ -36,8 +36,8 @@ dependencies:
   flutter_summernote: ^1.0.0
   flutter_native_splash: ^2.2.16
   shared_preferences: ^2.0.15
-  
-  
+  custom_switch_button: ^0.5.0
+  font_awesome_flutter: ^10.3.0
 flutter_native_splash:
   color: "#ffffff"
   image: assets/logo.png
