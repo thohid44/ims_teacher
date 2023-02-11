@@ -24,7 +24,7 @@ void toggleSwitch(bool value){
     return ListTile(
   
     
-      title:  Text("Title"+widget.title),
+      title:  Text(widget.title),
       subtitle: Text(
         isSelected ? "Selected" : 'Not Selected',
       ),
@@ -32,12 +32,31 @@ void toggleSwitch(bool value){
       trailing: Switch(value: isSelected , onChanged:(bool value){
          setState(() {
       isSelected=!isSelected;
-      if(isSelected){
-        _con.mobile2; 
+
+      
+       print(_con.mobile);
+        _con.mobile2Update();
+        print("mobile 2 ${ _con.mobile2}");
+                                    for (int i = 0;
+                                        i <= _con.mobile.length;
+                                        i++) {
+                                      if (_con.mobile2[i]
+                                              ['student_academic_id'] ==
+                                          _con.mobile2[i]
+                                              ['student_academic_id'] && _con.mobile2[i]
+                                            ['attendance_status_id'] == 2  ) {
+                                        _con.mobile2[i]
+                                            ['attendance_status_id'] = 1;
+                                      }else{
+                                        _con.mobile2[i]
+                                            ['attendance_status_id'] = 2;
+                                      }
+
+                                      //print(mobile);
+                                      print(_con.mobile2);
+                                    }
         print("object");
-      }else{
-        print("No");
-      }
+    
     });
       },)
     );

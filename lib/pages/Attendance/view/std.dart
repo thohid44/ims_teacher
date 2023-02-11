@@ -3,6 +3,7 @@
 // import 'package:flutter/material.dart';
 
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:get/get.dart';
 // import 'package:imsteacher/Service/Api_url.dart';
 // import 'package:imsteacher/Utils/Constrans/color.dart';
@@ -13,8 +14,10 @@
 // import 'package:imsteacher/pages/Attendance/model/store_attendance_model.dart';
 // import 'package:imsteacher/pages/Attendance/model/student.dart';
 // import 'package:imsteacher/pages/Attendance/view/std.dart';
+// import 'package:imsteacher/pages/Attendance/view/switch_item.dart';
 // import 'package:imsteacher/widgets/custom_text_widget.dart';
 // import 'package:http/http.dart' as http;
+// import 'package:intl/intl.dart';
 
 // class MobileAttendancePage extends StatefulWidget {
 //   const MobileAttendancePage({super.key});
@@ -25,65 +28,32 @@
 
 // class _MobileAttendancePageState extends State<MobileAttendancePage> {
 //   bool status = false;
-
-//   Future<AcademicClassesModel> getAcademicCls() async {
-//     String token = "302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv";
-//     var response = await ApiUrl.userClient
-//         .get(Uri.parse("https://demo.webpointbd.com/api/classes"), headers: {
-//       'Accept': 'application/json',
-//       'Authorization': 'Bearer ' + ApiUrl.token,
-//     });
-//     var jsonData = json.decode(response.body);
-
-//     if (response.statusCode == 200) {
-//       return AcademicClassesModel.fromJson(jsonData);
-//     }
-//     return AcademicClassesModel.fromJson(jsonData);
-//   }
-
+//   bool isSelected = true;
 // // get class
 //   String? classValue;
 
 //   String selectedValue = "Select Class";
-//   List<AttendanceStoreModel> storeAttendance = [];
 
-//   List<Attendance> mobile = [];
-// var mobile2 = []; 
+//   var mobile2 = [];
 //   bool selectClass = false;
-//   fetchMobileCls() async {
-//     var response = await http.post(
-//         Uri.parse(
-//             "https://demo.webpointbd.com/api/mobile-attendance?class_id=5"),
-//         headers: {
-//           'Accept': 'application/json',
-//           'Authorization': 'Bearer ' + ApiUrl.token,
-//         });
-//     var jsonData = json.decode(response.body);
-    
-//     if (response.statusCode == 200) {
-      
-//       MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
-     
-//       mobile = data.attendances!;
- 
-//       return mobile;
-//     } else {
-//       return mobile;
-//     }
-//   }
 
 //   @override
 //   void initState() {
-  
-//     // TODO: implement initState
-
 //     super.initState();
 //   }
 
+//   var s1 = 2;
+//   bool f1 = false;
 //   final GlobalKey key = GlobalKey();
 //   @override
 //   Widget build(BuildContext context) {
-//     var controller = Get.put(TakeAttendController());
+//     var _con = Get.put(TakeAttendController());
+//     _con.getAcademicCls();
+
+   
+//     _con.classList;
+
+//     print("class data ${_con.classList}");
 //     return Scaffold(
 //         appBar: AppBar(
 //           elevation: 0,
@@ -94,25 +64,24 @@
 //           padding: const EdgeInsets.all(8.0),
 //           child: ListView(
 //             children: [
-//               Container(
-//                   height: 40.h,
-//                   alignment: Alignment.center,
-//                   width: 150.w,
-//                   decoration: BoxDecoration(
-//                       border: Border.all(width: 1.w, color: Colors.grey)),
-//                   child: FutureBuilder<AcademicClassesModel>(
-//                     future: getAcademicCls(),
-//                     builder: ((context, snapshot) {
-//                       if (snapshot.hasData) {
-//                         var data = snapshot.data!;
-                      
-//                         print(mobile2); 
+//               Row(
+//                 children: [
+//                   Container(
+//                       width: 160.w, height: 45.h, child: _buildDatePicker()),
+//                   Container(
+//                       height: 40.h,
+//                       alignment: Alignment.center,
+//                       width: 150.w,
+//                       decoration: BoxDecoration(
+//                           border: Border.all(width: 1.w, color: Colors.grey)),
+//                       child:
+//                           GetBuilder<TakeAttendController>(builder: (context) {
 //                         return DropdownButton(
 //                             hint: Text("Select Class "),
 //                             underline: SizedBox(),
 //                             icon: const Icon(Icons.keyboard_arrow_down),
 //                             value: classValue,
-//                             items: data.classes!
+//                             items: _con.classList
 //                                 .map((e) => DropdownMenuItem(
 //                                       value: e.numericClass,
 //                                       child: Text(
@@ -122,25 +91,31 @@
 //                                 .toList(),
 //                             onChanged: (value) {
 //                               setState(() {
-//                                 classValue = value.toString();
-//                                fetchMobileCls();
-//                                mobile2 = mobile.map((e) {
-//                                  return { 
-//                                       "student_academic_id": e.studentAcademicId, "shift_id":e.shiftId, "attendance_status_id": 2,
-//                                  };
-//                                }).toList();
-                              
-                          
-//                                 print(classValue);
+//                                 selectClass = true;
 //                               });
-                          
+//                               classValue = value.toString();
+//                               _con.getClassId(value);
+//                               _con.mobile;
+//                               selectClass = true;
+
+//                               _con.fetchMobileCls();
+
+//                               _con.mobile2 = _con.mobile.map((e) {
+//                                 return {
+//                                   "student_academic_id": e.studentAcademicId,
+//                                   "shift_id": e.shiftId,
+//                                   "attendance_status_id": true,
+//                                 };
+//                               }).toList();
+
+                            
 //                             });
-//                       }
-//                       return Center(
-//                         child: Text("Looding..."),
-//                       );
-//                     }),
-//                   )),
+//                       })),
+//                 ],
+//               ),
+//               SizedBox(
+//                 height: 30,
+//               ),
 //               SizedBox(
 //                 height: 10.h,
 //               ),
@@ -150,55 +125,58 @@
 //                 title: Text("Name"),
 //                 trailing: Text("Status"),
 //               )),
-//               Container(
-//                   height: 400.h,
-//                   child: ListView.builder(
-//                       itemCount: mobile.length,
-//                       itemBuilder: ((context, index) {
-//                         return ListTile(
-//                           leading: Text(mobile[index].studentId.toString()),
-//                           title: Text(mobile[index].studentName.toString()),
-//                           trailing: InkWell(
-//                               onTap: (() {
-                            
-//                            for(int i = 0 ; i<= mobile.length; i++){
-//                              if(mobile2[index]['student_academic_id']==mobile2[index]['student_academic_id']){
-//                             setState(() {
-//                                mobile2[index]['attendance_status_id']=1; 
-//                             });
-                         
-//                              }
-//                                 print(mobile2[index]['attendance_status_id'].toString()); 
-//                              //print(mobile); 
-//                             // print(mobile2); 
-//                            }
-//                               }),
-//                               child: Container(
-//                                   alignment: Alignment.center,
-//                                   height: 40.w,
-//                                   width: 80.w,
-//                                   decoration: BoxDecoration(
-//                                       color: Colors.green,
-//                                       borderRadius:
-//                                           BorderRadius.circular(30.r)),
-//                                   child: mobile2.contains(mobile2[index]['']=='1')? Text(
-//                                     "Present",
-//                                     style: TextStyle(
-//                                         fontSize: 15.sp,
-//                                         fontWeight: FontWeight.bold,
-//                                         color: Colors.white),
-//                                   ):Text(
-//                                     "Present",
-//                                     style: TextStyle(
-//                                         fontSize: 15.sp,
-//                                         fontWeight: FontWeight.bold,
-//                                         color: Colors.white),
-//                                   ),
-                                  
-//                                   ) ,
-//                                   ),
-//                         );
-//                       }))),
+//               selectClass == true
+//                   ? Container(
+//                       height: 400.h,
+//                       child:
+//                           GetBuilder<TakeAttendController>(builder: (context) {
+//                         if (_con.mobile.isNotEmpty) {
+//                           return ListView.builder(
+//                               itemCount: _con.mobile.length,
+//                               itemBuilder: ((context, index) {
+//                                 return ListTile(
+//                                   title: Text(_con.mobile[index].studentName.toString()),
+                                   
+//                                     trailing: Switch(
+//                                       value: _con.mobile2[index]['attendance_status_id'],
+//                                       onChanged: (bool value) {
+//                                         setState(() {
+                                        
+
+                                         
+//                                           _con.mobile2Update();
+                                       
+//                                           for (int i = 0;
+//                                               i <= _con.mobile.length;
+//                                               i++) {
+//                                             if (_con.mobile2[index][
+//                                                         'student_academic_id'] ==
+//                                                     _con.mobile2[index][
+//                                                         'student_academic_id'] &&
+//                                                 _con.mobile2[index][
+//                                                         'attendance_status_id'] ==
+//                                                     false) {
+//                                               _con.mobile2[index]
+//                                                   ['attendance_status_id'] = true;
+//                                             } else {
+//                                               _con.mobile2[index]
+//                                                   ['attendance_status_id'] = false;
+//                                             }
+
+//                                             //print(mobile);
+//                                             print(_con.mobile2);
+//                                           }
+                                         
+//                                         });
+//                                       },
+//                                     ));
+//                               }));
+//                         }
+//                         return Center(child: CircularProgressIndicator());
+//                       }))
+//                   : Center(
+//                       child: Text("Please select a class"),
+//                     ),
 //               SizedBox(
 //                 height: 20.h,
 //               ),
@@ -225,35 +203,21 @@
 
 //   List attendList = [];
 
-  
-
-
-
-//   takeAttendance(String studentAcademicId, 
-//       String attendanceStatusId, ) async {
-
-  
-
-//     for(int i=0; i<mobile2.length; i++){
-//     if(mobile2[i]['student_academic_id']==47){
-
-//      setState(() {
-//         mobile2[i]['attendance_status_id'] = "1"; 
-
-//      });
-   
+//   takeAttendance(
+//     String studentAcademicId,
+//     String attendanceStatusId,
+//   ) async {
+//     for (int i = 0; i < mobile2.length; i++) {
+//       if (mobile2[i]['student_academic_id'] == 47) {
+//         setState(() {
+//           mobile2[i]['attendance_status_id'] = "1";
+//         });
+//       }
 //     }
-       
-//   }
-
-
-    
 
 //     // print(attendList);
-//    //   print(std1);
+//     //   print(std1);
 //   }
-
-  
 
 //   List<Map<String, dynamic>> std1 = [];
 
@@ -296,20 +260,77 @@
 //       print(e);
 //     }
 //   }
-// }
 
-// [{student_academic_id: 45, shift_id: 1, attendance_status_id: 1},
-//  {student_academic_id: 46, shift_id: 1, attendance_status_id: 1}, 
-//  {student_academic_id: 47, shift_id: 1, attendance_status_id: 1}, 
-//  {student_academic_id: 48, shift_id: 1, attendance_status_id: 1}, 
-//  {student_academic_id: 49, shift_id: 1, attendance_status_id: 1},
-//   {student_academic_id: 50, shift_id: 1, attendance_status_id: 1}, 
-//   {student_academic_id: 51, shift_id: 1, attendance_status_id: 1}, 
-//   {student_academic_id: 52, shift_id: 1, attendance_status_id: 1}, 
-//   {student_academic_id: 53, shift_id: 1, attendance_status_id: 1}, 
-//   {student_academic_id: 54, shift_id: 1, attendance_status_id: 1}, 
-//   {student_academic_id: 55, shift_id: 1, attendance_status_id: 1}, 
-//   {student_academic_id: 214, shift_id: 0, attendance_status_id: 1}, 
-//   {student_academic_id: 258, shift_id: 1, attendance_status_id: 1}, 
-//   {student_academic_id: 259, shift_id: 1, attendance_status_id: 1}, 
-// {student_academic_id: 260, shift_id: 1, attendance_status_id: 1}]
+//   // For Select and upload
+
+//   final TextEditingController dateController = TextEditingController();
+
+//   DateTime selectedDate = DateTime.now();
+//   late String date;
+//   late String weekDay;
+//   Widget _buildDatePicker() {
+//     return TextFormField(
+//         controller: dateController,
+//         readOnly: true,
+//         textAlign: TextAlign.center,
+//         decoration: const InputDecoration(
+//           contentPadding: EdgeInsets.all(8.0),
+//           suffixIcon: Icon(
+//             Icons.date_range,
+//             color: dark,
+//           ),
+//           hintText: "YYYY-MM-DD",
+//           hintMaxLines: 1,
+//           hintStyle: TextStyle(fontSize: 15.0),
+//           enabledBorder:
+//               OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+//           focusedBorder:
+//               OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+//         ),
+//         onTap: () async {
+//           final pickedDate = await selectDate(
+//               context: context,
+//               initialDate: selectedDate,
+//               allowedDays: _allowedDays);
+//           if (pickedDate != null && pickedDate != selectedDate) {
+//             setState(() {
+//               selectedDate = pickedDate;
+//               dateController.text =
+//                   DateFormat('yyyy-MM-dd').format(selectedDate);
+//               print("thohid ${dateController.text}");
+//             });
+//           }
+//         });
+//   }
+
+//   bool _allowedDays(DateTime day) {
+//     if ((day.isBefore(DateTime.now()))) {
+//       return true;
+//     }
+//     return false;
+//   }
+
+//   selectDate(
+//       {required BuildContext context,
+//       required DateTime initialDate,
+//       required allowedDays}) async {
+//     final selected = await showDatePicker(
+//       context: context,
+//       initialDate: initialDate,
+//       firstDate: DateTime(2010),
+//       lastDate: DateTime(2025),
+//       selectableDayPredicate: allowedDays,
+//       builder: (context, child) {
+//         return Theme(
+//           data: Theme.of(context).copyWith(
+//             textButtonTheme: TextButtonThemeData(
+//               style: TextButton.styleFrom(),
+//             ),
+//           ),
+//           child: child!,
+//         );
+//       },
+//     );
+//     return selected;
+//   }
+// }

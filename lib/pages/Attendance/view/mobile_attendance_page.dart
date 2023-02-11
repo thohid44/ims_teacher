@@ -34,23 +34,22 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   String selectedValue = "Select Class";
 
-  var mobile2 = [];
   bool selectClass = false;
 
   @override
   void initState() {
     super.initState();
   }
-
+  var _con = Get.put(TakeAttendController());
   var s1 = 2;
   bool f1 = false;
   final GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    var _con = Get.put(TakeAttendController());
+  
     _con.getAcademicCls();
-
-    print(_con.mobile);
+   _con.fetchMobileCls();
+   _con.mobile; 
     _con.classList;
 
     print("class data ${_con.classList}");
@@ -92,13 +91,12 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                             onChanged: (value) {
                               setState(() {
                                 selectClass = true;
-                              });
-                              classValue = value.toString();
+                                 classValue = value.toString();
                               _con.getClassId(value);
                               _con.mobile;
                               selectClass = true;
 
-                              _con.fetchMobileCls();
+                            
 
                               _con.mobile2 = _con.mobile.map((e) {
                                 return {
@@ -107,6 +105,10 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                   "attendance_status_id": true,
                                 };
                               }).toList();
+                              });
+                             
+
+                            
                             });
                       })),
                 ],
@@ -114,13 +116,6 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
               SizedBox(
                 height: 30,
               ),
-              Switch(
-                  value: s1.isEven ? false : true,
-                  onChanged: (value) {
-                    setState(() {
-                      s1 = 1;
-                    });
-                  }),
               SizedBox(
                 height: 10.h,
               ),
@@ -135,17 +130,55 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                       height: 400.h,
                       child:
                           GetBuilder<TakeAttendController>(builder: (context) {
-                        if (_con.mobile.isNotEmpty) {
-                          return ListView.builder(
-                              itemCount: _con.mobile.length,
-                              itemBuilder: ((context, index) {
-                              
-                                return MyListItem(title: _con.mobile[index].studentName.toString(),
-                                 roll: _con.mobile[index].studentId.toString()
-                                 
-                                 );
-                              }));
-                        }
+                      
+                          return FutureBuilder(
+                            builder: (context, AsyncSnapshot snapshot) {
+                              return ListView.builder(
+                                  itemCount: _con.mobile.length,
+                                  itemBuilder: ((context, index) {
+                                    return ListTile(
+                                      title: Text(_con.mobile[index].studentName.toString()),
+                                       subtitle: Text(_con.mobile2[index]['attendance_status_id'].toString()),
+                                        trailing: Switch(
+                                          value: _con.mobile2[index]['attendance_status_id'],
+                                          onChanged: (bool value) {
+                                           
+       
+                                              _con.mobile2Update();
+                                           
+                                              for (int i = 0;
+                                                  i <= _con.mobile2.length;
+                                                  i++) {
+                                                if (_con.mobile2[index][
+                                                            'student_academic_id'] ==
+                                                        _con.mobile2[index][
+                                                            'student_academic_id'] &&
+                                                    _con.mobile2[index][
+                                                            'attendance_status_id'] ==
+                                                        true) {
+                                                 setState(() {
+                                                    _con.mobile2[index]
+                                                      ['attendance_status_id'] = false;
+                                                      print( _con.mobile2[index]
+                                                      ['attendance_status_id'] );
+                                                 });
+                                                } 
+                                                // else {
+                                                //   _con.mobile2[index]
+                                                //       ['attendance_status_id'] = true;
+                                                // }
+
+                                                //print(mobile);
+                                                print(_con.mobile2);
+                                              }
+                                             
+                                     
+                                          },
+                                        ));
+                                  }));
+                            }
+                          );
+                        
                         return Center(child: CircularProgressIndicator());
                       }))
                   : Center(
@@ -175,43 +208,21 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
         ));
   }
 
-  List attendList = [];
 
-  takeAttendance(
-    String studentAcademicId,
-    String attendanceStatusId,
-  ) async {
-    for (int i = 0; i < mobile2.length; i++) {
-      if (mobile2[i]['student_academic_id'] == 47) {
-        setState(() {
-          mobile2[i]['attendance_status_id'] = "1";
-        });
-      }
-    }
 
-    // print(attendList);
-    //   print(std1);
-  }
 
-  List<Map<String, dynamic>> std1 = [];
 
-  // List<Map<String, dynamic>> std1 = [
-  //   {"student_academic_id": 100, "shift_id": 2, "attendance_status_id": 1},
-  //   {"student_academic_id": 100, "shift_id": 1, "attendance_status_id": 1}
-  // ];
-  List<Students> students = [
-    Students(studentAcademicId: "1", shiftId: "1", attendanceStatusId: "1"),
-    Students(studentAcademicId: "2", shiftId: "2", attendanceStatusId: "2")
-  ];
+ 
 
   sendAttendance() async {
     var postUri =
         Uri.parse("https://demo.webpointbd.com/api/mobile-attendance-store");
+         
     Map<String, dynamic> map = {
       "status": true,
       "date": "2023-02-05",
-      "academic_class_id": 5,
-      "attendances": mobile2
+      "academic_class_id": 2,
+      "attendances": _con.mobile2
     };
     var finalmap = jsonEncode(map);
 
