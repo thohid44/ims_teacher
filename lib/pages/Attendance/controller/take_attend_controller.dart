@@ -40,7 +40,7 @@ update();
 
     
        classList=academic.classes!; 
-    
+     fetchMobileCls();
         update();
      
     }
@@ -63,7 +63,7 @@ update();
       mobile = data.attendances!;
       
 // print("controller $mobile");
-     update();
+    
     } 
   }
 }

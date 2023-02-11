@@ -91,7 +91,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                             onChanged: (value) {
                               setState(() {
                                 selectClass = true;
-                                 classValue = value.toString();
+                              });
+                              classValue = value.toString();
                               _con.getClassId(value);
                               _con.mobile;
                               selectClass = true;
@@ -105,8 +106,6 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                   "attendance_status_id": true,
                                 };
                               }).toList();
-                              });
-                             
 
                             
                             });
@@ -129,56 +128,52 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                   ? Container(
                       height: 400.h,
                       child:
-                          GetBuilder<TakeAttendController>(builder: (context) {
-                      
-                          return FutureBuilder(
-                            builder: (context, AsyncSnapshot snapshot) {
-                              return ListView.builder(
-                                  itemCount: _con.mobile.length,
-                                  itemBuilder: ((context, index) {
-                                    return ListTile(
-                                      title: Text(_con.mobile[index].studentName.toString()),
-                                       subtitle: Text(_con.mobile2[index]['attendance_status_id'].toString()),
-                                        trailing: Switch(
-                                          value: _con.mobile2[index]['attendance_status_id'],
-                                          onChanged: (bool value) {
-                                           
+                          Obx( () {
+                        if (_con.mobile.isNotEmpty) {
+                          return ListView.builder(
+                              itemCount: _con.mobile.length,
+                              itemBuilder: ((context, index) {
+                                return ListTile(
+                                  title: Text(_con.mobile[index].studentName.toString()),
+                                   subtitle: Text(_con.mobile2[index]['attendance_status_id'].toString()),
+                                    trailing: Switch(
+                                      value: _con.mobile2[index]['attendance_status_id'],
+                                      onChanged: (bool value) {
+                                       
        
-                                              _con.mobile2Update();
-                                           
-                                              for (int i = 0;
-                                                  i <= _con.mobile2.length;
-                                                  i++) {
-                                                if (_con.mobile2[index][
-                                                            'student_academic_id'] ==
-                                                        _con.mobile2[index][
-                                                            'student_academic_id'] &&
+                                          _con.mobile2Update();
+                                       
+                                          for (int i = 0;
+                                              i <= _con.mobile2.length;
+                                              i++) {
+                                            if (_con.mobile2[index][
+                                                        'student_academic_id'] ==
                                                     _con.mobile2[index][
-                                                            'attendance_status_id'] ==
-                                                        true) {
-                                                 setState(() {
-                                                    _con.mobile2[index]
-                                                      ['attendance_status_id'] = false;
-                                                      print( _con.mobile2[index]
-                                                      ['attendance_status_id'] );
-                                                 });
-                                                } 
-                                                // else {
-                                                //   _con.mobile2[index]
-                                                //       ['attendance_status_id'] = true;
-                                                // }
+                                                        'student_academic_id'] &&
+                                                _con.mobile2[index][
+                                                        'attendance_status_id'] ==
+                                                    true) {
+                                             setState(() {
+                                                _con.mobile2[index]
+                                                  ['attendance_status_id'] = false;
+                                                  print( _con.mobile2[index]
+                                                  ['attendance_status_id'] );
+                                             });
+                                            } 
+                                            else {
+                                              _con.mobile2[index]
+                                                  ['attendance_status_id'] = true;
+                                            }
 
-                                                //print(mobile);
-                                                print(_con.mobile2);
-                                              }
-                                             
-                                     
-                                          },
-                                        ));
-                                  }));
-                            }
-                          );
-                        
+                                            //print(mobile);
+                                            print(_con.mobile2);
+                                          }
+                                         
+                                 
+                                      },
+                                    ));
+                              }));
+                        }
                         return Center(child: CircularProgressIndicator());
                       }))
                   : Center(
@@ -220,8 +215,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
          
     Map<String, dynamic> map = {
       "status": true,
-      "date": "2023-02-05",
-      "academic_class_id": 2,
+      "date": "2023-02-11",
+      "academic_class_id": classValue,
       "attendances": _con.mobile2
     };
     var finalmap = jsonEncode(map);
