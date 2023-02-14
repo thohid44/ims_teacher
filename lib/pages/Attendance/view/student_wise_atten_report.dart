@@ -54,8 +54,9 @@ List<DropdownMenuItem<String>> get dropdownItem {
   String selectMonth = "Select Month";
   String selectYear = "Select Year";
 
-  Future fetchStudent() async {
-    String url =
+   fetchStudent() async {
+    try{
+String url =
         'https://demo.webpointbd.com/api/student-wise-attendance?studentId=${_stdId.text}&month=$month&year=$year';
 
     var response = await ApiUrl.userClient.get(Uri.parse(url), headers: {
@@ -69,6 +70,9 @@ List<DropdownMenuItem<String>> get dropdownItem {
       return StudentWiseAttenModel.fromJson(data);
     } else {
       return null;
+    }
+    }catch(e){
+      print(e.toString()); 
     }
   }
 
@@ -89,45 +93,8 @@ List<DropdownMenuItem<String>> get dropdownItem {
         ),
         body: ListView(
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
-              child: Row(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    width: 220.w,
-                    height: 40.h,
-                    child: TextFormField(
-                      controller: _stdId,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                          hintText: "STUDENT ID",
-                          enabledBorder: OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder()),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      fetchStudent();
-                      setState(() {
-                        print(_stdId);
-                        stdStatus = true;
-                      });
-                    },
-                    child: Container(
-                        padding: EdgeInsets.only(
-                            left: 10.w, right: 10.w, top: 10.h, bottom: 10.h),
-                        decoration: const BoxDecoration(color: primaryColor),
-                        child: Icon(
-                          Icons.search,
-                          size: 25.w,
-                          color: Colors.white,
-                        )),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
+            
+           
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -173,13 +140,54 @@ List<DropdownMenuItem<String>> get dropdownItem {
                         items: dropdownItem)),
               ],
             ),
-            Padding(
+            SizedBox(height: 10,), 
+Container(
+              margin: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
+              child: Row(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    width: 220.w,
+                    height: 40.h,
+                    child: TextFormField(
+                      controller: _stdId,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                          hintText: "STUDENT ID",
+                          enabledBorder: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder()),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      fetchStudent();
+                      setState(() {
+                        print(_stdId);
+                        stdStatus = true;
+                      });
+                    },
+                    child: Container(
+                        padding: EdgeInsets.only(
+                            left: 10.w, right: 10.w, top: 10.h, bottom: 10.h),
+                        decoration: const BoxDecoration(color: primaryColor),
+                        child: Icon(
+                          Icons.search,
+                          size: 25.w,
+                          color: Colors.white,
+                        )),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 10,),
+            stdStatus == true ? 
+Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FutureBuilder(
                     future: fetchStudent(),
                     builder: ((context, AsyncSnapshot snapshot) {
                       var data = snapshot.data.attendances;
-                      if (snapshot.hasData) {
+                      if (data !=null) {
                         var val = 'L';
                         return SingleChildScrollView(
                           child: Column(
@@ -307,7 +315,8 @@ List<DropdownMenuItem<String>> get dropdownItem {
                         );
                       }
                       return Center(child: CircularProgressIndicator());
-                    }))),
+                    })))
+            :Center(child:Text("Please Select Month, Year and enter student Id")),
           ],
         ),
         bottomNavigationBar: CustomNavigationBar());

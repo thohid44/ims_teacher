@@ -1,11 +1,8 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
-
 import 'package:imsteacher/pages/Attendance/view/daily_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/mobile_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/student_wise_atten_report.dart';
@@ -127,7 +124,15 @@ class _DeashBoardState extends State<DeashBoard> {
                   child: deshboardItem(title:"Add New Diary",imageLInk:"assets/add_diary.png")), 
                 InkWell(
                      onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
+                    //Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
+                     Get.snackbar(
+              "",
+               "Coming Soon",
+               colorText: Colors.white,
+               backgroundColor: Colors.purple,
+               snackPosition: SnackPosition.BOTTOM,
+                 
+               );
                   },
                   child: deshboardItem(title: "Comming Soon",)), 
                 
@@ -162,17 +167,44 @@ class _DeashBoardState extends State<DeashBoard> {
               children: [
                 InkWell(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>AddStudentLeave()));
+                  
+                    //Navigator.push(context, MaterialPageRoute(builder:(_)=>AddStudentLeave()));
+                 
+                       Get.snackbar(
+              "Add Leave",
+               "Coming Soon",
+               colorText: Colors.white,
+               backgroundColor: Colors.purple,
+               snackPosition: SnackPosition.BOTTOM,
+                 
+               );
+
                   },
                   child: deshboardItem(title:"Add Leave",imageLInk: "assets/leave.png")), 
                 InkWell(
                      onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
+                  //  Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
+                           Get.snackbar(
+              "Leave Categories",
+               "Coming Soon",
+               colorText: Colors.white,
+               backgroundColor: Colors.purple,
+               snackPosition: SnackPosition.BOTTOM,
+                 
+               );
                   },
                   child: deshboardItem(title:"Leave Categories",imageLInk: "assets/add_leave.png")), 
                 InkWell(
                      onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
+                   // Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
+                            Get.snackbar(
+              "Leave Report",
+               "Coming Soon",
+               colorText: Colors.white,
+               backgroundColor: Colors.purple,
+               snackPosition: SnackPosition.BOTTOM,
+                 
+               );
                   },
                   child: deshboardItem(title: "Leave Report",)), 
                 

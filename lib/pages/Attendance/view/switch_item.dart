@@ -35,7 +35,7 @@ void toggleSwitch(bool value){
 
       
        print(_con.mobile);
-        _con.mobile2Update();
+      
         print("mobile 2 ${ _con.mobile2}");
                                     for (int i = 0;
                                         i <= _con.mobile.length;

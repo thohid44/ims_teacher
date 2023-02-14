@@ -40,14 +40,15 @@ List<DropdownMenuItem<String>> get dropdownItems{
 String selectedValue = "Academic Class";
   
   AllDairyModel? _allDairyModel;
-  final _box = GetStorage(); 
-   
+
+
+   var url = ApiUrl.baseUrl;
    Future<AllDairyModel?>  fetchAllDairy() async{
  //   final token = _box.read(PrefLocalStoreKey.token);
  
-  String url = 'https://demo.webpointbd.com/api/teacher-diaries?date=$date&academic_class_id=$id'; 
+  String url2 = '$url/teacher-diaries?date=$date&academic_class_id=$id'; 
 
-      var response = await ApiUrl.userClient.get(Uri.parse(url),
+      var response = await ApiUrl.userClient.get(Uri.parse(url2),
 headers: {    
       'Accept':'application/json',
       'Authorization': 'Bearer '+ApiUrl.token,

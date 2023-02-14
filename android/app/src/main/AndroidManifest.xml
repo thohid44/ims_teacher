@@ -1,9 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.webpointbd.imsteacher">
+ xmlns:tools="http://schemas.android.com/tools"
+    package="com.urkircharhs.edu.bd.teacher">
 
-<uses-permission android:name="android.permission.INTERNET"/>
+
+ <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" tools:node="remove"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
    <application
-        android:label="WPIMS TEACHER"
+        android:label="URKIRCHAR TEACHER"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

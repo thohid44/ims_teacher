@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         
                   child: CircleAvatar(
                    backgroundColor: primaryColor,
-                    child: Text("LOGO",style: TextStyle(fontSize: 30.sp,fontWeight: FontWeight.bold, fontFamily: 'Roboto'),),
+                    child: Image.asset("assets/logo1.png")
                   ),
                 ),
               ), 

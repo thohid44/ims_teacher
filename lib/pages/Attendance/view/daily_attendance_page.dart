@@ -20,23 +20,32 @@ class DailyAttendancePage extends StatefulWidget {
 
 class _DailyAttendancePageState extends State<DailyAttendancePage>
      {
-
+  var url = ApiUrl.baseUrl; 
+  var jsonData; 
  Future<DailyAttendanceModel> fetchDailyAttnd() async {
- 
-    var response = await ApiUrl.userClient.get(
+
+    try{
+      print("try"); 
+      var response = await ApiUrl.userClient.get(
         Uri.parse(
-            "https://demo.webpointbd.com/api/daily-attendance?date=$date&class_id=$clsId"),
+            "$url/api/daily-attendance?date=$date&class_id=$clsId"),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer '+token,
         });
-    var jsonData = json.decode(response.body);
- 
+     jsonData = json.decode(response.body);
+ print("Test $jsonData"); 
     if (response.statusCode == 200) {
    return  DailyAttendanceModel.fromJson(jsonData);
     } 
-      return  DailyAttendanceModel.fromJson(jsonData);
+      
+    }catch(e){
+      print(e.toString());
+    }
+    return  DailyAttendanceModel.fromJson(jsonData);
+      
   }
+  
   bool selectCls = false; 
   bool seletcdate = false; 
   //akgm302
@@ -116,9 +125,9 @@ final _box = GetStorage();
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
-                child: FutureBuilder(
+                child: FutureBuilder<DailyAttendanceModel>(
                   future: fetchDailyAttnd(),
-                  builder:(context,snapshot){
+                  builder:(context,AsyncSnapshot snapshot){
                   if(snapshot.connectionState==ConnectionState.done){
                     return 
                     DataTable(

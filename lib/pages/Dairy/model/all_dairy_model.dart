@@ -20,7 +20,7 @@ class AllDairyModel {
     String? allDairyModelClass;
     String? group;
     String? section;
-    DateTime? date;
+    String? date;
     List<DiaryElement>? diaries;
 
     factory AllDairyModel.fromJson(Map<String, dynamic> json) => AllDairyModel(
@@ -28,7 +28,7 @@ class AllDairyModel {
         allDairyModelClass: json["class"],
         group: json["group"],
         section: json["section"],
-        date: DateTime.parse(json["date"]),
+        date: json["date"],
         diaries: List<DiaryElement>.from(json["diaries"].map((x) => DiaryElement.fromJson(x))),
     );
 

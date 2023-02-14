@@ -4,7 +4,8 @@ class ApiUrl {
    static final token ='336|gEIWADhLxvkn452qHLwPMRRzgxuu5Q84mBDsChrD';
 
   static final  userClient = http.Client();
-
-   static const baseUrl = 'demo.webpointbd.com'; 
+//http://www.urkircharhs.edu.bd
+   
+      static const baseUrl = "http://www.urkircharhs.edu.bd/api";
   static const logInUrl = 'teacher-login'; 
 }

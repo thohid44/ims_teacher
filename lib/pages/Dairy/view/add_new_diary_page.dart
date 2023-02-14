@@ -46,11 +46,11 @@ final TextEditingController _des = TextEditingController();
 String selectedValue = "Academic Class";
 
   String selectedValue1 = "Select Subject";
-
+ var url = ApiUrl.baseUrl;
    addNewDairy() async{
      
        var response = await ApiUrl.userClient.post(
-        Uri.parse('https://demo.webpointbd.com/api/teacher-add-diary'), 
+        Uri.parse('$url/teacher-add-diary'), 
         headers: {
 'Accept':'application/json',
       'Authorization': 'Bearer '+ApiUrl.token,

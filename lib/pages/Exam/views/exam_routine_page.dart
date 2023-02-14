@@ -24,11 +24,12 @@ class _ExamRoutinePageState extends State<ExamRoutinePage> {
 // get class 
 String? classValue;
 String? eaxmValue; 
+ var url = ApiUrl.baseUrl;
    Future<ExamRoutineModel> fetchRoutine() async {
  
     var response = await ApiUrl.userClient.get(
         Uri.parse(
-            "https://demo.webpointbd.com/api/exam-routine?academic_class_id=$classValue&exam_id=$eaxmValue"),
+            "$url/exam-routine?academic_class_id=$classValue&exam_id=$eaxmValue"),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer '+ApiUrl.token,
@@ -42,10 +43,10 @@ String? eaxmValue;
   }
 
    Future<AcademicClassesModel> getAcademicCls() async {
-  String token = "302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv";
+ 
     var response = await ApiUrl.userClient.get(
         Uri.parse(
-            "https://demo.webpointbd.com/api/classes"),
+            "$url/classes"),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer '+ApiUrl.token,
@@ -61,9 +62,9 @@ String? eaxmValue;
   }
 
  Future<ExaminationsModel> getSelectExam() async {
-  String token = "302|kqsrC7vOkljIX68usiZiGV5zCDMkjkyovsjZuABv";
+  
     var response = await ApiUrl.userClient.get(
-        Uri.https("demo.webpointbd.com","/api/examinations"),
+        Uri.parse("$url/examinations"),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer '+ApiUrl.token,

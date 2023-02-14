@@ -164,11 +164,12 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   final _box = GetStorage(); 
+  var url = ApiUrl.baseUrl; 
  final AuthenticationManager authManager = Get.find<AuthenticationManager>();
   sendOtp() async{
    var data = _digit1.text.toString() + _digit2.text.toString()+_digit3.text.toString()+_digit4.text.toString();
 
-  var res = await ApiUrl.userClient.post(Uri.parse("https://demo.webpointbd.com/api/teacher-otp-match"), body: {
+  var res = await ApiUrl.userClient.post(Uri.parse("$url/teacher-otp-match"), body: {
     "otp": data
 }); 
    var covertData = json.decode(res.body);

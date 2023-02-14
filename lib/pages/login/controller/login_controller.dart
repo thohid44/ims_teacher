@@ -13,6 +13,7 @@ class LoginController extends GetxController  {
   String card_no =''; 
   String password = ''; 
   final _box = GetStorage();
+  var url = ApiUrl.baseUrl;
   Future<void> checkLogin(String card_no, String password) async{
 
   Map<String,dynamic>  data = {
@@ -24,7 +25,7 @@ class LoginController extends GetxController  {
   print(password);
   
  // var response = await http.post(Uri.parse('uri')); 
-  var res = await ApiUrl.userClient.post(Uri.parse("https://demo.webpointbd.com/api/teacher-login"), body: {
+  var res = await ApiUrl.userClient.post(Uri.parse("$url/teacher-login"), body: {
     "card_no": card_no,
     "password": password
 }); 

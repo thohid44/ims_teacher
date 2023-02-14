@@ -20,14 +20,14 @@ class DairyDetailsPage extends StatefulWidget {
 
 class _DairyDetailsPageState extends State<DairyDetailsPage> {
 
+ var url = ApiUrl.baseUrl;
   Future<SingleDairyModel> fetchSingeDairy() async{
-    final token ='299|zMyupKV6HpnziSTcgbRcH47kmdXki8zygRtgcg2L';
-
-    var response = await ApiUrl.userClient.get(Uri.parse("https://demo.webpointbd.com/api/teacher-diary?id=${widget.id}"), 
+  
+    var response = await ApiUrl.userClient.get(Uri.parse("$url/teacher-diary?id=${widget.id}"), 
   
     headers: {    
       'Accept':'application/json',
-      'Authorization': 'Bearer '+token,
+      'Authorization': 'Bearer '+ApiUrl.token,
     }
     
     );
