@@ -4,7 +4,9 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 
 import 'package:imsteacher/pages/Attendance/model/student_wise_atten_model.dart';
 import 'package:imsteacher/pages/Home/custom_navigation_bar.dart';
@@ -53,15 +55,18 @@ List<DropdownMenuItem<String>> get dropdownItem {
   }
   String selectMonth = "Select Month";
   String selectYear = "Select Year";
-
+final _box = GetStorage(); 
    fetchStudent() async {
+     var token =  _box.read(LocalStoreKey.token);
+  print(token);  
     try{
+    
 String url =
         'https://demo.webpointbd.com/api/student-wise-attendance?studentId=${_stdId.text}&month=$month&year=$year';
 
     var response = await ApiUrl.userClient.get(Uri.parse(url), headers: {
       'Accept': 'application/json',
-      'Authorization': 'Bearer ' + ApiUrl.token,
+      'Authorization': 'Bearer ' +token,
     });
 
     var data = json.decode(response.body);

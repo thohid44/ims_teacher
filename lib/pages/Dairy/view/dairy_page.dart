@@ -43,15 +43,17 @@ String selectedValue = "Academic Class";
 
 
    var url = ApiUrl.baseUrl;
+   final _box = GetStorage(); 
    Future<AllDairyModel?>  fetchAllDairy() async{
- //   final token = _box.read(PrefLocalStoreKey.token);
+ var token =  _box.read(LocalStoreKey.token);
+  print(token);  
  
   String url2 = '$url/teacher-diaries?date=$date&academic_class_id=$id'; 
 
       var response = await ApiUrl.userClient.get(Uri.parse(url2),
 headers: {    
       'Accept':'application/json',
-      'Authorization': 'Bearer '+ApiUrl.token,
+      'Authorization': 'Bearer '+token,
     } );
     
      var   data = json.decode(response.body);

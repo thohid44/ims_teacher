@@ -8,7 +8,7 @@ import 'package:imsteacher/pages/Attendance/view/mobile_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/student_wise_atten_report.dart';
 import 'package:imsteacher/pages/Dairy/view/add_new_diary_page.dart';
 import 'package:imsteacher/pages/Dairy/view/dairy_page.dart';
-import 'package:imsteacher/pages/Exam/views/exam_routine_page.dart';
+import 'package:imsteacher/pages/Exam%20Routine/views/exam_routine_page.dart';
 import 'package:imsteacher/pages/Home/drawer.dart';
 import 'package:imsteacher/pages/Leave/view/add_student_leave.dart';
 import 'package:imsteacher/pages/Result_Sheet/views/result_sheet.dart';

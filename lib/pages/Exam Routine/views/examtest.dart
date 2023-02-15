@@ -3,11 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
+import 'package:imsteacher/pages/Academic/Controller/academic_controller.dart';
 import 'package:imsteacher/pages/Academic/model/academicClassesModel.dart';
 import 'package:imsteacher/pages/Academic/model/examinationsModel.dart';
-import 'package:imsteacher/pages/Exam/model/exam_routine_model.dart';
+import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
+import 'package:imsteacher/pages/Exam%20Routine/model/exam_routine_model.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 
 class ExamRoutinePage extends StatefulWidget {
@@ -25,14 +30,16 @@ class _ExamRoutinePageState extends State<ExamRoutinePage> {
 String? classValue;
 String? eaxmValue; 
  var url = ApiUrl.baseUrl;
-   Future<ExamRoutineModel> fetchRoutine() async {
- 
+ final _box = GetStorage(); 
+     Future<ExamRoutineModel> fetchRoutine() async {
+  var token =  _box.read(LocalStoreKey.token);
+  print(token);  
     var response = await ApiUrl.userClient.get(
         Uri.parse(
-            "$url/exam-routine?academic_class_id=$classValue&exam_id=$eaxmValue"),
+            "$url/exam-routine?academic_class_id=6&exam_id=12"),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer '+ApiUrl.token,
+          'Authorization': 'Bearer '+token,
         });
     var jsonData = json.decode(response.body);
  
@@ -42,44 +49,38 @@ String? eaxmValue;
       return  ExamRoutineModel.fromJson(jsonData);
   }
 
-   Future<AcademicClassesModel> getAcademicCls() async {
- 
-    var response = await ApiUrl.userClient.get(
-        Uri.parse(
-            "$url/classes"),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer '+ApiUrl.token,
-        });
-    var jsonData = json.decode(response.body);
+   void initState(){
+    super.initState();
+   
+   }
+  //  Future<AcademicClassesModel> getAcademicCls() async {
+  // var token =  _box.read(LocalStoreKey.token);
+  // print(token);  
+  //   var response = await ApiUrl.userClient.get(
+  //       Uri.parse(
+  //           "$url/classes"),
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Authorization': 'Bearer '+token,
+  //       });
+  //   var jsonData = json.decode(response.body);
 
 
-    if (response.statusCode == 200) {
+  //   if (response.statusCode == 200) {
       
-   return  AcademicClassesModel.fromJson(jsonData);
-    } 
-      return  AcademicClassesModel.fromJson(jsonData);
-  }
+  //  return  AcademicClassesModel.fromJson(jsonData);
+  //   } 
+  //     return  AcademicClassesModel.fromJson(jsonData);
+  // }
 
- Future<ExaminationsModel> getSelectExam() async {
-  
-    var response = await ApiUrl.userClient.get(
-        Uri.parse("$url/examinations"),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer '+ApiUrl.token,
-        });
-    var jsonData = json.decode(response.body);
 
-  print(jsonData);
-    if (response.statusCode == 200) {
-      
-   return  ExaminationsModel.fromJson(jsonData);
-    } 
-      return  ExaminationsModel.fromJson(jsonData);
-  }
+
   @override
   Widget build(BuildContext context) {
+    var _con = Get.put(TakeAttendController());
+    var _examController = Get.put(AcademicController());
+    _con.getAcademicCls();  
+    _examController.getSelectExam();
       return SafeArea(child: Scaffold(
        appBar:AppBar(
         backgroundColor: primaryColor,
@@ -89,47 +90,43 @@ String? eaxmValue;
 
     body: ListView(
       children: [
-            
-
             Container(
               width: double.infinity,
               margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 15.h,  ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                       
-                        height: 40.h,
-                        alignment: Alignment.center,
-                        width: 150.w,
-                        decoration: BoxDecoration(
-                            border: Border.all(width: 1.w, color: Colors.grey)),
-                        child: FutureBuilder<AcademicClassesModel>(future: getAcademicCls(),
-                        builder: ((context, snapshot) {
-                          if(snapshot.hasData){
-                            var data = snapshot.data!; 
-                            return DropdownButton(
-                              hint: Text("Select Class "),
-                              underline: SizedBox(),
+                       // Academic Class 
+   Container(
+                      height: 40.h,
+                      alignment: Alignment.center,
+                      width: 150.w,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1.w, color: Colors.grey)),
+                      child:
+                          GetBuilder<TakeAttendController>(builder: (context) {
+                        return DropdownButton(
+                            hint: Text("Select Class "),
+                            underline: SizedBox(),
                             icon: const Icon(Icons.keyboard_arrow_down),
-                             value: classValue,
-                              items: data.classes!.map((e) =>DropdownMenuItem(
-                              value:e.numericClass, 
-                              child:Text("${e.name}",),
+                            value: classValue,
+                            items: _con.classList
+                                .map((e) => DropdownMenuItem(
+                                      value: e.numericClass,
+                                      child: Text(
+                                        "${e.name}",
+                                      ),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                           classValue = value.toString(); 
+                           if(_examController.isExamLoading(true)){
+                            fetchRoutine(); 
+                           }
                               
-                              )).toList(),
-                            
-                             onChanged:(value){
-                              setState(() {
-                                classValue = value.toString();
-                                print(classValue);
-                              });
-                             });
-                          }
-                          return Center(child: CircularProgressIndicator(),);
-                        }),
-                        
-                        )),
+                            });
+                      })),
+           //Academic Class End
                      Container(
                        
                         height: 40.h,
@@ -137,49 +134,45 @@ String? eaxmValue;
                         width: 150.w,
                         decoration: BoxDecoration(
                             border: Border.all(width: 1.w, color: Colors.grey)),
-                        child: FutureBuilder<ExaminationsModel>(future: getSelectExam(),
-                        builder: ((context, snapshot) {
-                          if(snapshot.hasData){
-                            var data = snapshot.data!; 
-                            return DropdownButton(
-                              hint: Text("Select Exam "),
+                        child: GetBuilder<AcademicController>(builder:(context){
+                          return DropdownButton(
+                              hint: Text("Select Exam"),
                               underline: SizedBox(),
                             icon: const Icon(Icons.keyboard_arrow_down),
                              value: eaxmValue,
-                              items: data.exams!.map((e) =>DropdownMenuItem(
+                              items: _examController.examList.map((e) =>DropdownMenuItem(
                               value:e.id.toString(), 
-                              child:Text("${e.name}",),
+                              child:Text("${e.name}",style: TextStyle(fontSize: 13.sp),),
                               
                               )).toList(),
                             
-                             onChanged:(value){
-                             
-                                setState(() {
-                                eaxmValue = value.toString();
+                              onChanged: (value) {
+                            eaxmValue = value.toString();
+                    
+                            print(eaxmValue);
                                 if(classValue !=null && eaxmValue !=null){
-                                print(eaxmValue);
-                                selectClass=true;
+                               
+                          
                                 fetchRoutine();}
-                              });
+                      
                                
                              });
-                          }
-                          return Center(child: CircularProgressIndicator(),);
-                        }),
+                        })
                         
-                        )),
+                        ),
                             
                 ],
               ),
             ),
                       SizedBox(height: 15.h,), 
-       selectClass==true ?Container(
+        Container(
         
           height: 600.h,
           child: Expanded(
             child: FutureBuilder(
               future: fetchRoutine(),
               builder: (context,AsyncSnapshot snapshot) {
+
                if(snapshot.hasData){
  return ListView(
                   children: [
@@ -250,10 +243,11 @@ String? eaxmValue;
               }
             ),
           ),
-        ):Center(child:Padding(
-          padding:  EdgeInsets.only(top: 60.h),
-          child: Text("Please Select Class and Exam", style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),),
-        )),
+        )
+        // :Center(child:Padding(
+        //   padding:  EdgeInsets.only(top: 60.h),
+        //   child: Text("Please Select Class and Exam", style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),),
+        // )),
       ],
     ),
 

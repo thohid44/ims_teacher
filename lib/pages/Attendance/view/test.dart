@@ -20,7 +20,7 @@ class MobileAttendancePage extends StatefulWidget {
 class _MobileAttendancePageState extends State<MobileAttendancePage> {
   bool status = false;
   bool isSelected = true;
-  var url = ApiUrl.baseUrl;
+   var url = ApiUrl.baseUrl; 
 // get class
   String? classValue;
 
@@ -34,19 +34,17 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   }
 
   var _con = Get.put(TakeAttendController());
-  var s1 = 2; 
+  var s1 = 2;
   bool f1 = false;
   final GlobalKey key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     _con.getAcademicCls();
- _con.fetchMobileCls();
+    _con.fetchMobileCls(); 
     _con.classList;
-    print(_con.mobile.length);
 
     print("class data ${_con.classList}");
     return Scaffold(
-      
         appBar: AppBar(
           elevation: 0,
           title: const Text("MOBILE ATTENDENCE"),
@@ -85,16 +83,23 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                               setState(() {
                                 selectClass = true;
 
-                                _con.clsId.add(value);
-                                _con.fetchMobileCls();
+                     
+                                  if (selectClass == true) {
+                                    classValue = value.toString();
+                                    var id = 2;
+                                  _con.clsId.add(value);
+                                  _con.fetchMobileCls(); 
+                                    _con.mobile;
+                                    _con.mobile2 = _con.mobile.map((e) {
+                                      return {
+                                        "student_academic_id":
+                                            e.studentAcademicId,
+                                        "shift_id": e.shiftId,
+                                        "attendance_status_id": true,
+                                      };
+                                    }).toList();
+                                  }
                                 
-                                _con.mobile2 = _con.mobile.map((e) {
-                                  return {
-                                    "student_academic_id": e.studentAcademicId,
-                                    "shift_id": e.shiftId,
-                                    "attendance_status_id": true,
-                                  };
-                                }).toList();
                               });
                             });
                       })),
@@ -112,63 +117,65 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                 title: Text("Name"),
                 trailing: Text("Status"),
               )),
-       
-        selectClass ==true? Container(
+              selectClass == true
+                  ? Container(
                       height: 400.h,
                       child:
-                          GetBuilder<TakeAttendController>(builder: (context) {
-                        return ListView.builder(
-                            itemCount: _con.mobile.length,
-                            itemBuilder: ((context, index) {
-                              return _con.mobile.length > 0
-                                  ? ListTile(
-                                      title: Text(_con.mobile[index].studentName
-                                          .toString()),
-                                      subtitle: Text(_con.mobile2[index]
-                                              ['attendance_status_id']
-                                          .toString(), ),
-                                      trailing: Switch(
-                                        value: _con.mobile2[index]
-                                            ['attendance_status_id'],
-                                        onChanged: (bool value) {
-                                          _con.mobile2;
+                          GetBuilder<TakeAttendController>(builder:(context) {
+                       
+                          return ListView.builder(
+                              itemCount: _con.mobile.length,
+                              itemBuilder: ((context, index) {
+                                return _con.mobile.length>0 ? ListTile(
+                                    title: Text(_con.mobile[index].studentName
+                                        .toString()),
+                                    subtitle: Text(_con.mobile2[index]
+                                            ['attendance_status_id']
+                                        .toString()),
+                                    trailing: Switch(
+                                      value: _con.mobile2[index]
+                                          ['attendance_status_id'],
+                                      onChanged: (bool value) {
+                                        _con.mobile2;
 
-                                          for (int i = 0;
-                                              i <= _con.mobile2.length;
-                                              i++) {
-                                            if (_con.mobile2[index][
-                                                        'student_academic_id'] ==
-                                                    _con.mobile2[index][
-                                                        'student_academic_id'] &&
-                                                _con.mobile2[index][
-                                                        'attendance_status_id'] ==
-                                                    true) {
-                                              setState(() {
-                                                _con.mobile2[index][
-                                                        'attendance_status_id'] =
-                                                    false;
-                                                print(_con.mobile2[index]
-                                                    ['attendance_status_id']);
-                                              });
-                                            } else {
+                                        for (int i = 0;
+                                            i <= _con.mobile2.length;
+                                            i++) {
+                                          if (_con.mobile2[index]
+                                                      ['student_academic_id'] ==
+                                                  _con.mobile2[index]
+                                                      ['student_academic_id'] &&
+                                              _con.mobile2[index][
+                                                      'attendance_status_id'] ==
+                                                  true) {
+                                            setState(() {
                                               _con.mobile2[index]
                                                       ['attendance_status_id'] =
-                                                  true;
-                                            }
-
-                                            //print(mobile);
-                                            print(_con.mobile2);
+                                                  false;
+                                              print(_con.mobile2[index]
+                                                  ['attendance_status_id']);
+                                            });
+                                          } else {
+                                            _con.mobile2[index]
+                                                ['attendance_status_id'] = true;
                                           }
-                                        },
-                                      ))
-                                  : Center(child: CircularProgressIndicator());
-                            }));
-                      })):Center(child: CircularProgressIndicator(),),
-                 
+
+                                          //print(mobile);
+                                          print(_con.mobile2);
+                                        }
+                                      },
+                                    )):Center(child: CircularProgressIndicator());
+                              }));
+                        
+                        
+                      }))
+                  : Center(
+                      child: Text("Please select a class"),
+                    ),
               SizedBox(
                 height: 20.h,
               ),
-             _con.mobile.length> 0? Container(
+              Container(
                 margin: EdgeInsets.only(left: 30.w, right: 30.w),
                 alignment: Alignment.center,
                 height: 50.h,
@@ -183,16 +190,15 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                   child: customText(
                       "Save Attendance", Colors.white, 18.0, FontWeight.bold),
                 ),
-              ): Container(child:Text('')), 
-
-
+              )
             ],
           ),
         ));
   }
 
   sendAttendance() async {
-    var postUri = Uri.parse("$url/api/mobile-attendance-store");
+    var postUri =
+        Uri.parse("$url/api/mobile-attendance-store");
 
     Map<String, dynamic> map = {
       "status": true,
@@ -259,7 +265,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
               dateController.text =
                   DateFormat('yyyy-MM-dd').format(selectedDate);
               print("thohid ${dateController.text}");
-              date = dateController.text;
+              date=dateController.text;
               print(date);
             });
           }

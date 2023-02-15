@@ -5,8 +5,10 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Dairy/model/add_new_dairy_model.dart';
 import 'package:imsteacher/widgets/custom_appbar.dart';
 import 'package:intl/intl.dart';
@@ -46,14 +48,16 @@ final TextEditingController _des = TextEditingController();
 String selectedValue = "Academic Class";
 
   String selectedValue1 = "Select Subject";
+  final _box = GetStorage(); 
  var url = ApiUrl.baseUrl;
    addNewDairy() async{
-     
+      var token =  _box.read(LocalStoreKey.token);
+  print(token);  
        var response = await ApiUrl.userClient.post(
         Uri.parse('$url/teacher-add-diary'), 
         headers: {
 'Accept':'application/json',
-      'Authorization': 'Bearer '+ApiUrl.token,
+      'Authorization': 'Bearer '+token,
         }, 
         body:  {
         "academic_class_id": selectedValue.toString(),

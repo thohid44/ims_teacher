@@ -3,10 +3,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
+import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
 import 'package:imsteacher/pages/Attendance/model/daily_attendance_model.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +23,7 @@ class DailyAttendancePage extends StatefulWidget {
 class _DailyAttendancePageState extends State<DailyAttendancePage>
      {
   var url = ApiUrl.baseUrl; 
+  
   var jsonData; 
  Future<DailyAttendanceModel> fetchDailyAttnd() async {
 
@@ -28,7 +31,7 @@ class _DailyAttendancePageState extends State<DailyAttendancePage>
       print("try"); 
       var response = await ApiUrl.userClient.get(
         Uri.parse(
-            "$url/api/daily-attendance?date=$date&class_id=$clsId"),
+            "$url/daily-attendance?date=$date&class_id=$clsId"),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer '+token,
@@ -62,6 +65,9 @@ class _DailyAttendancePageState extends State<DailyAttendancePage>
 }
 String selectedValue = "Select Class";
 final _box = GetStorage();
+ String? classValue;
+
+  bool selectClass = false;
   var token;
   @override
   void initState() {
@@ -73,7 +79,8 @@ final _box = GetStorage();
   
   @override
   Widget build(BuildContext context) {
-  
+  var _con = Get.put(TakeAttendController()); 
+  _con.getAcademicCls();
     return Scaffold(
   appBar: AppBar(
           title: const Text("DAILY ATTENDENCE"),
@@ -84,40 +91,48 @@ final _box = GetStorage();
       body: Column(
         children: [
           SizedBox(height: 10.h,), 
-           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
               Container(
             width: 160.w,
             height: 45.h,
              child: _buildDatePicker()
            ),
-           Container(
-            height: 45.h,
-            alignment: Alignment.center,
-            width: 150.w,
-            decoration: BoxDecoration(
-              border: Border.all(width: 1.w, color: Colors.grey)
-            ),
-             child: DropdownButton(
-              underline: SizedBox(),
-      value: selectedValue,
-      style: TextStyle(color: Colors.black,fontSize: 17.sp),
-      onChanged: (String? newValue){
-        setState(() {
-          selectedValue = newValue!;
-          if(selectedValue.isNotEmpty && dateController.text.isNotEmpty)
-       {
-          clsId = selectedValue;
-           date=selectedDate.toString();
-           selectCls = true; 
-          fetchDailyAttnd();
-       }
-        });
-      },
-      items: dropdownItems
-      )
-           ),
+           SizedBox(height: 10.h,), 
+           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+          
+                              // Academic Class 
+   Container(
+                      height: 40.h,
+                      alignment: Alignment.center,
+                      width: 250.w,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1.w, color: Colors.grey)),
+                      child:
+                          GetBuilder<TakeAttendController>(builder: (context) {
+                        return DropdownButton(
+                            hint: Text("Select Class "),
+                            underline: SizedBox(),
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            value: classValue,
+                            items: _con.classList
+                                .map((e) => DropdownMenuItem(
+                                      value: e.id,
+                                      child: Text(
+                                        "${e.name}",
+                                      ),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                             setState(() {
+                               selectCls =true; 
+                               if(selectCls && dateController !=null){
+                                fetchDailyAttnd(); 
+                               }
+                             });
+                            });
+                      })),
+           //Academic Class End
             ],
            ) ,
              SizedBox(height: 19.h,), 

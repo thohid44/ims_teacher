@@ -35,15 +35,13 @@ class Attendance {
         this.studentName,
         this.shiftId,
         this.attendanceStatusId,
-        this.status,
     });
 
     int? studentAcademicId;
     String? studentId;
     String? studentName;
     String? shiftId;
-    String? attendanceStatusId;
-    String? status;
+    int? attendanceStatusId;
 
     factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
         studentAcademicId: json["student_academic_id"],
@@ -51,10 +49,7 @@ class Attendance {
         studentName: json["studentName"],
         shiftId: json["shift_id"],
         attendanceStatusId: json["attendance_status_id"],
-        status: json["status"],
     );
-
-  get student_academic_id => null;
 
     Map<String, dynamic> toJson() => {
         "student_academic_id": studentAcademicId,
@@ -62,8 +57,5 @@ class Attendance {
         "studentName": studentName,
         "shift_id": shiftId,
         "attendance_status_id": attendanceStatusId,
-        "status": status,
     };
 }
-
-

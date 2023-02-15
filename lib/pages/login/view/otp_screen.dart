@@ -178,7 +178,7 @@ class _OTPScreenState extends State<OTPScreen> {
     var resData = OtpModel.fromJson(covertData);
 
      _box.write(LocalStoreKey.token, resData.authToken);
-
+     _box.write(ApiUrl.token, resData.authToken); 
      authManager.login(resData.authToken.toString());
 
      print("otp page ${authManager.getToken()}"); 

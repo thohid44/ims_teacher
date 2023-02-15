@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Dairy/model/single_dairy_model.dart';
 
 import 'package:imsteacher/widgets/custom_text_widget.dart';
@@ -21,13 +23,15 @@ class DairyDetailsPage extends StatefulWidget {
 class _DairyDetailsPageState extends State<DairyDetailsPage> {
 
  var url = ApiUrl.baseUrl;
+ final _box = GetStorage();
   Future<SingleDairyModel> fetchSingeDairy() async{
-  
+   var token =  _box.read(LocalStoreKey.token);
+  print(token);  
     var response = await ApiUrl.userClient.get(Uri.parse("$url/teacher-diary?id=${widget.id}"), 
   
     headers: {    
       'Accept':'application/json',
-      'Authorization': 'Bearer '+ApiUrl.token,
+      'Authorization': 'Bearer '+token,
     }
     
     );
