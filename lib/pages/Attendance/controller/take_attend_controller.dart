@@ -17,12 +17,13 @@ class TakeAttendController extends GetxController {
   var classId;
 
   getClassId(id) {
-    print("class id $id");
-    classId = id;
-    update();
+    print("class id2 $id");
+   classId = id;
+  print("Thohid con $classId");
   }
 
   mobile2Update() {
+  
     mobile2;
     update();
   }
@@ -45,54 +46,63 @@ class TakeAttendController extends GetxController {
     }
   }
 
-//   void fetchMobileCls() async {
-//     print(clsId);
-//    try{
-//     isLooding(true); 
-//      var token =  _box.read(LocalStoreKey.token);
-//      var response = await http.get(
-//         Uri.parse(
-//             "$url/mobile-attendance?class_id=28}"),
-//         headers: {
-//           'Accept': 'application/json',
-//           'Authorization': 'Bearer ' +token,
-//         });
+  void fetchMobileCls(var id) async {
+ 
+
+   try{
+   
+     var token =  _box.read(LocalStoreKey.token);
+     var response = await http.get(
+        Uri.parse(
+            "$url/mobile-attendance?class_id=$id"),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' +token,
+        });
+    var jsonData = json.decode(response.body);
+   
+    if (response.statusCode == 200) {
+     
+      clsId.clear();
+     MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
+      mobile = data.attendances!;
+     mobile2 = mobile.map((e) {
+                                  return {
+                                    "student_academic_id": e.studentAcademicId,
+                                    "shift_id": e.shiftId,
+                                    "attendance_status_id": true,
+                                  };
+                                }).toList();
+     isLooding(true); 
+
+ update();
+    }
+   }finally{
+    isLooding(false); 
+    
+   }
+   
+  }
+
+//   fetchMobileCls() async {
+//     var token =  _box.read(LocalStoreKey.token);
+//         var response = await ApiUrl.userClient.get(Uri.parse("https://www.urkircharhs.edu.bd/api/mobile-attendance?class_id=${clsId[0]}"), headers: {
+//       'Accept': 'application/json',
+//       'Authorization': 'Bearer '+token,
+//     });
+//   print(response.body); 
 //     var jsonData = json.decode(response.body);
-//     print(jsonData); 
+
 //     if (response.statusCode == 200) {
-//       print(jsonData);
-//       clsId.clear();
-//      MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
+   
+//       MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
+
 //       mobile = data.attendances!;
 
-//  print("controller $mobile");
-//  update();
+//  print(data); 
+//      update();
+
 //     }
-//    }finally{
-//     isLooding(false); 
-//    }
-   
+//     print("controller $mobile");
 //   }
-
-  fetchMobileCls() async {
-    var token =  _box.read(LocalStoreKey.token);
-        var response = await ApiUrl.userClient.get(Uri.parse("https://www.urkircharhs.edu.bd/api/mobile-attendance?class_id=${clsId[0]}"), headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer '+token,
-    });
-  print(response.body); 
-    var jsonData = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      print("attend $jsonData"); 
-      MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
-
-      mobile = data.attendances!;
-
- print(data); 
-     update();
-
-    }
-    print("controller $mobile");
-  }
-}
+ }

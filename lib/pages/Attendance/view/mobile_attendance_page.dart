@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
@@ -40,8 +41,9 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   @override
   Widget build(BuildContext context) {
     _con.getAcademicCls();
- _con.fetchMobileCls();
+    _con.clsId; 
     _con.classList;
+    
     print(_con.mobile.length);
 
     print("class data ${_con.classList}");
@@ -56,14 +58,10 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
           padding: const EdgeInsets.all(8.0),
           child: ListView(
             children: [
-              Row(
-                children: [
-                  Container(
-                      width: 160.w, height: 45.h, child: _buildDatePicker()),
-                  Container(
+               Container(
                       height: 40.h,
                       alignment: Alignment.center,
-                      width: 150.w,
+                      width: 230.w,
                       decoration: BoxDecoration(
                           border: Border.all(width: 1.w, color: Colors.grey)),
                       child:
@@ -82,22 +80,22 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                     ))
                                 .toList(),
                             onChanged: (value) {
+                              var id = value;
+                           _con.fetchMobileCls(id);  
+                              // _con.getClassId(value.toString()); 
                               setState(() {
-                                selectClass = true;
-
-                                _con.clsId.add(value);
-                                _con.fetchMobileCls();
-                                
-                                _con.mobile2 = _con.mobile.map((e) {
-                                  return {
-                                    "student_academic_id": e.studentAcademicId,
-                                    "shift_id": e.shiftId,
-                                    "attendance_status_id": true,
-                                  };
-                                }).toList();
+                                selectClass = true;                            
                               });
                             });
                       })),
+                   SizedBox(height: 15.h,), 
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                      width: 170.w, height: 45.h, child: _buildDatePicker()),
+                 
                 ],
               ),
               SizedBox(
@@ -117,16 +115,19 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                       height: 400.h,
                       child:
                           GetBuilder<TakeAttendController>(builder: (context) {
-                        return ListView.builder(
+                        
+                          
+                      if( _con.mobile.length>0){
+                          return ListView.builder(
                             itemCount: _con.mobile.length,
                             itemBuilder: ((context, index) {
-                              return _con.mobile.length > 0
-                                  ? ListTile(
+                              return
+                                  ListTile(
                                       title: Text(_con.mobile[index].studentName
                                           .toString()),
-                                      subtitle: Text(_con.mobile2[index]
-                                              ['attendance_status_id']
-                                          .toString(), ),
+                                      // subtitle: Text(_con.mobile2[index]
+                                      //         ['attendance_status_id']
+                                      //     .toString(), ),
                                       trailing: Switch(
                                         value: _con.mobile2[index]
                                             ['attendance_status_id'],
@@ -157,13 +158,17 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                             }
 
                                             //print(mobile);
-                                            print(_con.mobile2);
+                                           
                                           }
                                         },
-                                      ))
-                                  : Center(child: CircularProgressIndicator());
-                            }));
-                      })):Center(child: CircularProgressIndicator(),),
+                                      ));
+                                  
+                            }
+                            ),
+                            );
+                      }
+                      return Center(child: CircularProgressIndicator(),); 
+                      })):Center(child: Text("Please Select Class"),),
                  
               SizedBox(
                 height: 20.h,
