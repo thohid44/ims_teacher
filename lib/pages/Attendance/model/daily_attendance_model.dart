@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final dailyAttendanceModel = dailyAttendanceModelFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -41,17 +38,17 @@ class Attendance {
 
     String? studentName;
     String? studentId;
-    DateTime? date;
-    Class? attendanceClass;
-    String? inTime;
-    String? outTime;
+    String? date;
+    String? attendanceClass;
+    dynamic? inTime;
+    dynamic? outTime;
     String? status;
 
     factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
         studentName: json["studentName"],
         studentId: json["studentId"],
-        date: DateTime.parse(json["date"]),
-        attendanceClass: classValues.map[json["class"]],
+        date: json["date"],
+        attendanceClass: json["class"],
         inTime: json["in_time"],
         outTime: json["out_time"],
         status: json["status"],
@@ -60,30 +57,10 @@ class Attendance {
     Map<String, dynamic> toJson() => {
         "studentName": studentName,
         "studentId": studentId,
-        "date": "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
-        "class": classValues.reverse[attendanceClass],
+        "date": date,
+        "class": attendanceClass,
         "in_time": inTime,
         "out_time": outTime,
         "status": status,
     };
-}
-
-enum Class { THREE }
-
-final classValues = EnumValues({
-    "Three": Class.THREE
-});
-
-class EnumValues<T> {
-    Map<String, T> map;
- late   Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-        if (reverseMap == null) {
-            reverseMap = map.map((k, v) => new MapEntry(v, k));
-        }
-        return reverseMap;
-    }
 }

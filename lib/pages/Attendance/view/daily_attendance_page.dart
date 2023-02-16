@@ -25,29 +25,7 @@ class _DailyAttendancePageState extends State<DailyAttendancePage>
   var url = ApiUrl.baseUrl; 
   
   var jsonData; 
- Future<DailyAttendanceModel> fetchDailyAttnd() async {
-
-    try{
-      print("try"); 
-      var response = await ApiUrl.userClient.get(
-        Uri.parse(
-            "$url/daily-attendance?date=$date&class_id=$clsId"),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer '+token,
-        });
-     jsonData = json.decode(response.body);
- print("Test $jsonData"); 
-    if (response.statusCode == 200) {
-   return  DailyAttendanceModel.fromJson(jsonData);
-    } 
-      
-    }catch(e){
-      print(e.toString());
-    }
-    return  DailyAttendanceModel.fromJson(jsonData);
-      
-  }
+ 
   
   bool selectCls = false; 
   bool seletcdate = false; 
@@ -66,12 +44,33 @@ class _DailyAttendancePageState extends State<DailyAttendancePage>
 String selectedValue = "Select Class";
 final _box = GetStorage();
  String? classValue;
-
   bool selectClass = false;
-  var token;
+Future<DailyAttendanceModel> fetchDailyAttnd() async {
+    
+var  token = _box.read(LocalStoreKey.token);
+    try{
+      print("try"); 
+      var response = await ApiUrl.userClient.get(
+        Uri.parse(
+            "$url/daily-attendance?date=${dateController.text}&class_id=$clsId"),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer '+token,
+        });
+     jsonData = json.decode(response.body);
+    if (response.statusCode == 200) {
+   return  DailyAttendanceModel.fromJson(jsonData);
+    } 
+      
+    }catch(e){
+      print(e.toString());
+    }
+    return  DailyAttendanceModel.fromJson(jsonData);
+      
+  }
   @override
   void initState() {
-    token = _box.read(LocalStoreKey.token);
+   
     super.initState();
 
   }
@@ -127,6 +126,7 @@ final _box = GetStorage();
                              setState(() {
                                selectCls =true; 
                                if(selectCls && dateController !=null){
+                                clsId = value.toString(); 
                                 fetchDailyAttnd(); 
                                }
                              });
@@ -144,6 +144,7 @@ final _box = GetStorage();
                   future: fetchDailyAttnd(),
                   builder:(context,AsyncSnapshot snapshot){
                   if(snapshot.connectionState==ConnectionState.done){
+                    print("snapshot $snapshot"); 
                     return 
                     DataTable(
                      
@@ -159,7 +160,7 @@ final _box = GetStorage();
                             DataColumn(label:customText("Out", dark, 17.0, FontWeight.w700)),
                             DataColumn(label:customText("ST", dark, 17.0, FontWeight.w700))
                       ], rows:snapshot.data!.attendances!.map((e) {
-                        return DataRow(cells: [
+                        return DataRow(cells:[
                             DataCell(customText(e.studentId.toString(), dark, 15.0, FontWeight.w400)),
                             DataCell(customText(e.studentName.toString(), dark, 15.0, FontWeight.w400)),
                             DataCell(customText(e.inTime.toString(), dark, 15.0, FontWeight.w400)),

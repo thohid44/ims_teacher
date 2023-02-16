@@ -159,29 +159,17 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
           ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 30),
-            child: FlutterSummernote(
-              height: 400,
-              key: _keyEditor,
-              value: "Value",
-              hint: "Enter your text...",
-
-              hasAttachment: true,
-              showBottomToolbar: true,
-
-              customToolbar: """[
-      ['style' : 'bold','italic', 'underline', 'clear']],
-      ['font' : 'superscript', 'subscript', 'strikethrough']],
-      
-    ]""",
-//returnContent: _keyEditor.currentContext!.getText(),
-            ),
+            child: TextFormField(
+              controller: _des, 
+              decoration: InputDecoration(),
+            )
           ),
 
           SizedBox(height: 15.h,),
 
           InkWell(
-            onTap: () async {
-                 await addNewDairy();
+            onTap: ()  {
+                  addNewDairy();
               print(_keyEditor);
             },
             child: Container(

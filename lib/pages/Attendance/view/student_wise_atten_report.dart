@@ -56,21 +56,22 @@ List<DropdownMenuItem<String>> get dropdownItem {
   String selectMonth = "Select Month";
   String selectYear = "Select Year";
 final _box = GetStorage(); 
+var url = ApiUrl.baseUrl; 
    fetchStudent() async {
      var token =  _box.read(LocalStoreKey.token);
   print(token);  
     try{
     
-String url =
-        'https://demo.webpointbd.com/api/student-wise-attendance?studentId=${_stdId.text}&month=$month&year=$year';
+String url2 =
+        '$url/student-wise-attendance?studentId=${_stdId.text}&month=$month&year=$year';
 
-    var response = await ApiUrl.userClient.get(Uri.parse(url), headers: {
+    var response = await ApiUrl.userClient.get(Uri.parse(url2), headers: {
       'Accept': 'application/json',
-      'Authorization': 'Bearer ' +token,
+      'Authorization': 'Bearer '+token,
     });
 
     var data = json.decode(response.body);
-
+print(data);
     if (response.statusCode == 200) {
       return StudentWiseAttenModel.fromJson(data);
     } else {
@@ -85,6 +86,7 @@ String url =
   var month;
   var year;
   void initState() {
+    fetchStudent();
     super.initState();
   }
 
