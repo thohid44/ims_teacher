@@ -24,6 +24,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   var url = ApiUrl.baseUrl;
 // get class
   String? classValue;
+  var classId; 
 
   String selectedValue = "Select Class";
 
@@ -84,6 +85,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                            _con.fetchMobileCls(id);  
                               // _con.getClassId(value.toString()); 
                               setState(() {
+                            classId = value.toString(); 
+                            print(classId); 
                                 selectClass = true;                            
                               });
                             });
@@ -98,12 +101,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                  
                 ],
               ),
-              SizedBox(
-                height: 30,
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
+           
+          
               Container(
                   child: ListTile(
                 leading: Text("ID"),
@@ -112,7 +111,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
               )),
        
         selectClass ==true? Container(
-                      height: 400.h,
+                      height: 380.h,
                       child:
                           GetBuilder<TakeAttendController>(builder: (context) {
                         
@@ -173,7 +172,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
               SizedBox(
                 height: 20.h,
               ),
-             _con.mobile.length> 0? Container(
+      Container(
                 margin: EdgeInsets.only(left: 30.w, right: 30.w),
                 alignment: Alignment.center,
                 height: 50.h,
@@ -188,7 +187,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                   child: customText(
                       "Save Attendance", Colors.white, 18.0, FontWeight.bold),
                 ),
-              ): Container(child:Text('')), 
+              )
 
 
             ],
@@ -196,13 +195,15 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
         ));
   }
 
+final _box = GetStorage(); 
   sendAttendance() async {
-    var postUri = Uri.parse("$url/api/mobile-attendance-store");
+    var token = _box.read(ApiUrl.token);
+    var postUri = Uri.parse("$url/mobile-attendance-store");
 
     Map<String, dynamic> map = {
       "status": true,
       "date": date,
-      "academic_class_id": classValue,
+      "academic_class_id": classId,
       "attendances": _con.mobile2
     };
     var finalmap = jsonEncode(map);
@@ -212,7 +213,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
       var request = await http.post(postUri, body: finalmap, headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer ' + ApiUrl.token,
+        'Authorization': 'Bearer '+token,
       });
       print("$request");
 
