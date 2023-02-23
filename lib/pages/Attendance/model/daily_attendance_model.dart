@@ -1,10 +1,9 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 DailyAttendanceModel dailyAttendanceModelFromJson(String str) => DailyAttendanceModel.fromJson(json.decode(str));
-
 String dailyAttendanceModelToJson(DailyAttendanceModel data) => json.encode(data.toJson());
-
 class DailyAttendanceModel {
     DailyAttendanceModel({
         this.status,
@@ -40,8 +39,8 @@ class Attendance {
     String? studentId;
     String? date;
     String? attendanceClass;
-    dynamic? inTime;
-    dynamic? outTime;
+    String? inTime;
+    String? outTime;
     String? status;
 
     factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(

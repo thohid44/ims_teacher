@@ -31,7 +31,7 @@ class _DairyPageState extends State<DairyPage> {
 
   AllDairyModel? _allDairyModel;
   String? classValue;
-
+ bool isSelect = false; 
   var url = ApiUrl.baseUrl;
   final _box = GetStorage();
   Future<AllDairyModel?> fetchAllDairy() async {
@@ -84,6 +84,7 @@ class _DairyPageState extends State<DairyPage> {
             height: 15.h,
           ),
           Container(
+            margin: EdgeInsets.symmetric(horizontal: 20.w),
               height: 40.h,
               alignment: Alignment.center,
               width: 230.w,
@@ -91,13 +92,19 @@ class _DairyPageState extends State<DairyPage> {
                   border: Border.all(width: 1.w, color: Colors.grey)),
               child: GetBuilder<TakeAttendController>(builder: (context) {
                 return DropdownButton(
-                    hint: Text("Select Class "),
+                       hint: Text(
+                              "${isSelect ? selectedValue : 'Select Class'}"),
                     underline: SizedBox(),
                     icon: const Icon(Icons.keyboard_arrow_down),
                     value: classValue,
                     items: _con.classList
                         .map((e) => DropdownMenuItem(
                               value: e.id,
+                              onTap: (){
+                     setState(() {
+                          selectedValue = e.name.toString(); 
+                     });
+                              },
                               child: Text(
                                 "${e.name} ${e.id}",
                               ),
@@ -111,6 +118,7 @@ class _DairyPageState extends State<DairyPage> {
                         if (selectedValue.isNotEmpty &&
                             dateController.text.isNotEmpty) {
                           id = selectedValue;
+                          isSelect = true; 
                           isLoading = true;
                           fetchAllDairy();
                         }

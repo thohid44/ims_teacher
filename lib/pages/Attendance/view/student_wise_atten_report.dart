@@ -63,7 +63,7 @@ var url = ApiUrl.baseUrl;
     try{
     
 String url2 =
-        '$url/student-wise-attendance?studentId=${_stdId.text}&month=$month&year=$year';
+        '$url/student-wise-attendance?studentId=UHS2306A004&month=02&year=2023';
 
     var response = await ApiUrl.userClient.get(Uri.parse(url2), headers: {
       'Accept': 'application/json',
@@ -83,7 +83,7 @@ print(data);
   }
 
   final TextEditingController _stdId = TextEditingController();
-  var month;
+  String? month;
   var year;
   void initState() {
     fetchStudent();
@@ -256,15 +256,14 @@ Padding(
                                     headingRowColor:
                                         MaterialStateColor.resolveWith(
                                             (states) => offWhite),
-                                    columnSpacing: 10.w,
+                                    columnSpacing: 40.w,
                                     horizontalMargin: 10,
                                     dataRowHeight: 20.h,
                                     border: TableBorder.all(width: 1),
                                     columns: const <DataColumn>[
                                       DataColumn(label: Text("ID")),
                                       DataColumn(label: Text("Date")),
-                                      DataColumn(label: Text("In")),
-                                      DataColumn(label: Text("Out")),
+                                  
                                       DataColumn(label: Text("Status")),
                                     ],
                                     rows: snapshot.data.attendances
@@ -272,9 +271,7 @@ Padding(
                                           (e) => DataRow(cells: <DataCell>[
                                             DataCell(Text(e.id.toString())),
                                             DataCell(Text(e.date.toString())),
-                                            DataCell(Text(e.inTime.toString())),
-                                            DataCell(
-                                                Text(e.outTime.toString())),
+                                          
                                             DataCell(
                                                 Text(e.attnStatus.toString()))
                                           ]),

@@ -26,10 +26,10 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   String? classValue;
   var classId; 
 
-  String selectedValue = "Select Class";
+  String? selectedValue;
 
   bool selectClass = false;
-
+   bool isSelect = false; 
   @override
   void initState() {
     super.initState();
@@ -62,18 +62,22 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                Container(
                       height: 40.h,
                       alignment: Alignment.center,
-                      width: 230.w,
+                      width: 220.w,
                       decoration: BoxDecoration(
                           border: Border.all(width: 1.w, color: Colors.grey)),
                       child:
                           GetBuilder<TakeAttendController>(builder: (context) {
                         return DropdownButton(
-                            hint: Text("Select Class "),
+                             hint: Text(
+                              "${isSelect ? selectedValue : 'Select Class'}"),
                             underline: SizedBox(),
                             icon: const Icon(Icons.keyboard_arrow_down),
                             value: classValue,
                             items: _con.classList
                                 .map((e) => DropdownMenuItem(
+                                  onTap: (){
+                                    selectedValue = e.name.toString(); 
+                                  },
                                       value: e.id,
                                       child: Text(
                                         "${e.name}",
@@ -86,6 +90,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                               // _con.getClassId(value.toString()); 
                               setState(() {
                             classId = value.toString(); 
+                            isSelect=true; 
                             print(classId); 
                                 selectClass = true;                            
                               });
@@ -105,7 +110,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
           
               Container(
                   child: ListTile(
-                leading: Text("ID"),
+                leading: Text("Roll"),
                 title: Text("Name"),
                 trailing: Text("Status"),
               )),
@@ -124,9 +129,9 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                   ListTile(
                                       title: Text(_con.mobile[index].studentName
                                           .toString()),
-                                      // subtitle: Text(_con.mobile2[index]
-                                      //         ['attendance_status_id']
-                                      //     .toString(), ),
+                                      subtitle: Text(_con.mobile2[index]
+                                              ['student_academic_id']
+                                          .toString(), ),
                                       trailing: Switch(
                                         value: _con.mobile2[index]
                                             ['attendance_status_id'],
