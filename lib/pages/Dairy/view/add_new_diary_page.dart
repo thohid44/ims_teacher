@@ -1,8 +1,7 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
 import 'package:get/get.dart';
@@ -11,9 +10,7 @@ import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
-import 'package:imsteacher/pages/Dairy/model/add_new_dairy_model.dart';
-import 'package:imsteacher/pages/Subject/Controller/subject_controller.dart';
-import 'package:imsteacher/widgets/custom_appbar.dart';
+
 import 'package:intl/intl.dart';
 
 class AddNewDiaryPage extends StatefulWidget {
@@ -25,13 +22,23 @@ class AddNewDiaryPage extends StatefulWidget {
 
 class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
 
+String imagePath = ''; 
 
+final  _picker = ImagePicker(); 
 
-
+Future getImage() async{
+ XFile? file = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 10);
+if(file != null){
+  return file.path; 
+} else {
+  return ''; 
+}
+  
+}
   GlobalKey<FlutterSummernoteState> _keyEditor = GlobalKey();
   final TextEditingController _des = TextEditingController();
   String? classValue;
-
+   bool selectedImage = false; 
   String selectedValue = "Select Class";
  String? subjectValue; 
   String selectSubject = "Select Subject";
@@ -165,11 +172,19 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
             )
           ),
 
-          SizedBox(height: 15.h,),
-
+          SizedBox(height: 10.h,),
+         
+           Container(
+            child: imagePath==''?Image.asset('assets/camera.png', height: 70, width: 70,):Image.file(File(imagePath))
+           ), 
+            SizedBox(height: 10.h,), 
           InkWell(
             onTap: ()  {
-                  addNewDairy();
+           selectImage();
+              setState(() {
+                
+              });
+                  // addNewDairy();
               print(_keyEditor);
             },
             child: Container(
@@ -268,4 +283,97 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
     );
     return selected;
   }
+
+  Future selectImage() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 150,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Select Image From !',
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            imagePath = await getImage();
+                            print('Image_Path:-');
+                            print(imagePath);
+                            if (imagePath != '') {
+                              Navigator.pop(context);
+                              setState(() {});
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("No Image Selected !"),
+                              ));
+                            }
+                          },
+                          child: Card(
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/gallery.png',
+                                      height: 60,
+                                      width: 60,
+                                    ),
+                                    Text('Gallery'),
+                                  ],
+                                ),
+                              )),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            imagePath = await getImage();
+                            print('Image_Path:-');
+                            print(imagePath);
+
+                            if (imagePath != '') {
+                              Navigator.pop(context);
+                              setState(() {});
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("No Image Captured !"),
+                              ));
+                            }
+                          },
+                          child: Card(
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/camera.png',
+                                      height: 60,
+                                      width: 60,
+                                    ),
+                                    Text('Camera'),
+                                  ],
+                                ),
+                              )),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
 }

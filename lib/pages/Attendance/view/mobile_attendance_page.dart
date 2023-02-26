@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
+import 'package:imsteacher/pages/Home/deshboard.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -27,9 +28,9 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
   var classId; 
 
   String? selectedValue;
-
-  bool selectClass = false;
    bool isSelect = false; 
+  bool selectClass = false;
+
   @override
   void initState() {
     super.initState();
@@ -127,10 +128,12 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                             itemBuilder: ((context, index) {
                               return
                                   ListTile(
+                                    leading: Text(_con.mobile[index].studentAcademicId
+                                          .toString()),
                                       title: Text(_con.mobile[index].studentName
                                           .toString()),
-                                      subtitle: Text(_con.mobile2[index]
-                                              ['student_academic_id']
+                                      subtitle: Text(_con.mobile[index].studentId
+                                              
                                           .toString(), ),
                                       trailing: Switch(
                                         value: _con.mobile2[index]
@@ -188,6 +191,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                 child: InkWell(
                   onTap: () {
                     sendAttendance();
+                     
                   },
                   child: customText(
                       "Save Attendance", Colors.white, 18.0, FontWeight.bold),
@@ -226,6 +230,12 @@ final _box = GetStorage();
       ;
       if (resdata.statusCode == 200) {
         print("ff ${resdata.body}");
+          Get.snackbar("Attendance", "Successfully Save", 
+                    colorText: Colors.white,
+                    snackPosition: SnackPosition.BOTTOM, 
+                    backgroundColor: Colors.purple, 
+                    );
+                    Get.to(DeashBoard()); 
       } else {}
       print(resdata.body);
     } catch (e) {
