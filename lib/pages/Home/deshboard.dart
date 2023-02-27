@@ -8,6 +8,7 @@ import 'package:imsteacher/pages/Attendance/view/mobile_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/student_wise_atten_report.dart';
 import 'package:imsteacher/pages/Dairy/view/add_new_diary_page.dart';
 import 'package:imsteacher/pages/Dairy/view/dairy_page.dart';
+import 'package:imsteacher/pages/Dairy/view/image_upload.dart';
 import 'package:imsteacher/pages/Exam%20Routine/views/exam_routine_page.dart';
 import 'package:imsteacher/pages/Home/drawer.dart';
 import 'package:imsteacher/pages/Leave/view/add_student_leave.dart';
@@ -124,17 +125,16 @@ class _DeashBoardState extends State<DeashBoard> {
                   child: deshboardItem(title:"Add New Diary",imageLInk:"assets/add_diary.png")), 
                 InkWell(
                      onTap: (){
-                    //Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
-                     Get.snackbar(
-              "",
-               "Coming Soon",
-               colorText: Colors.white,
-               backgroundColor: Colors.purple,
-               snackPosition: SnackPosition.BOTTOM,
-                 
-               );
+                    Navigator.push(context, MaterialPageRoute(builder:(_)=>HomeScreen()));
+              //        Get.snackbar(
+              // "",
+              //  "Coming Soon",
+              //  colorText: Colors.white,
+              //  backgroundColor: Colors.purple,
+              //  snackPosition: SnackPosition.BOTTOM,    
+              //  );
                   },
-                  child: deshboardItem(title: "Comming Soon",)), 
+                  child: deshboardItem(title: "Image Upload",)), 
                 
               ],
             ),

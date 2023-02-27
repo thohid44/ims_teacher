@@ -323,7 +323,8 @@ Padding(
             :Center(child:Text("Please Select Month, Year and enter student Id")),
           ],
         ),
-        bottomNavigationBar: CustomNavigationBar());
+        bottomNavigationBar: CustomNavigationBar(),
+        );
   }
 
   int _page = 0;

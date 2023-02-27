@@ -194,12 +194,8 @@ class _DairyPageState extends State<DairyPage> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          subtitle: Text(
-                                            snapshot.data!.diaries![index].diary
-                                                .toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                          leading: Image.network(snapshot.data!.diaries![index].diary
+                                                .toString()),
                                           onTap: () {
                                             String id = snapshot
                                                 .data!.diaries![index].id

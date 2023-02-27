@@ -179,6 +179,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
      _box.write(LocalStoreKey.token, resData.authToken);
      _box.write(ApiUrl.token, resData.authToken); 
+     _box.write(LocalStoreKey.teacherId, resData.teacher!.cardId.toString());
      authManager.login(resData.authToken.toString());
 
      print("otp page ${authManager.getToken()}"); 

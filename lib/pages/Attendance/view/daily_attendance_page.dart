@@ -10,6 +10,7 @@ import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.da
 import 'package:imsteacher/pages/Attendance/model/daily_attendance_model.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:native_screenshot/native_screenshot.dart';
 
 class DailyAttendancePage extends StatefulWidget {
   const DailyAttendancePage({super.key});
