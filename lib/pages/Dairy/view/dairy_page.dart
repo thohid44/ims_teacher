@@ -28,7 +28,7 @@ class DairyPage extends StatefulWidget {
 
 class _DairyPageState extends State<DairyPage> {
   String selectedValue = "Academic Class";
-
+   String? className;
   AllDairyModel? _allDairyModel;
   String? classValue;
  bool isSelect = false; 
@@ -79,21 +79,23 @@ class _DairyPageState extends State<DairyPage> {
           SizedBox(
             height: 10.h,
           ),
-          Container(width: 160.w, height: 45.h, child: _buildDatePicker()),
+          Container(
+            margin: EdgeInsets.only(left: 35.w, right: 35.w, top: 10.h),
+             height: 45.h, child: _buildDatePicker()),
           SizedBox(
             height: 15.h,
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 20.w),
+            margin: EdgeInsets.symmetric(horizontal: 35.w),
               height: 40.h,
               alignment: Alignment.center,
-              width: 230.w,
+             
               decoration: BoxDecoration(
                   border: Border.all(width: 1.w, color: Colors.grey)),
               child: GetBuilder<TakeAttendController>(builder: (context) {
                 return DropdownButton(
                        hint: Text(
-                              "${isSelect ? selectedValue : 'Select Class'}"),
+                              "${isSelect ? className : 'Select Class'}"),
                     underline: SizedBox(),
                     icon: const Icon(Icons.keyboard_arrow_down),
                     value: classValue,
@@ -101,9 +103,9 @@ class _DairyPageState extends State<DairyPage> {
                         .map((e) => DropdownMenuItem(
                               value: e.id,
                               onTap: (){
-                     setState(() {
-                          selectedValue = e.name.toString(); 
-                     });
+                   
+                          className = e.name.toString(); 
+                   
                               },
                               child: Text(
                                 "${e.name} ${e.id}",
@@ -180,6 +182,7 @@ class _DairyPageState extends State<DairyPage> {
                                 child: ListView.builder(
                                   itemCount: snapshot.data!.diaries!.length,
                                   itemBuilder: ((context, index) {
+                             
                                     return Card(
                                       child: Container(
                                         alignment: Alignment.centerLeft,
@@ -194,8 +197,7 @@ class _DairyPageState extends State<DairyPage> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          leading: Image.network(snapshot.data!.diaries![index].diary
-                                                .toString()),
+                                          
                                           onTap: () {
                                             String id = snapshot
                                                 .data!.diaries![index].id

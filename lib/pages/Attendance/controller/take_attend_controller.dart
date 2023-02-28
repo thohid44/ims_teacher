@@ -39,7 +39,7 @@ class TakeAttendController extends GetxController {
       'Authorization': 'Bearer '+token,
     });
     var jsonData = json.decode(response.body);
-   
+   print("Class $jsonData"); 
     if (response.statusCode == 200) {
       AcademicClassesModel academic = AcademicClassesModel.fromJson(jsonData);
       classList = academic.classes!;
@@ -62,7 +62,7 @@ class TakeAttendController extends GetxController {
           'Authorization': 'Bearer ' +token,
         });
     var jsonData = json.decode(response.body);
-   
+   print("C $jsonData"); 
     if (response.statusCode == 200) {
      
       clsId.clear();
@@ -96,7 +96,7 @@ class TakeAttendController extends GetxController {
       'Authorization': 'Bearer '+token,
     });
     var jsonData = json.decode(response.body);
-  print(jsonData); 
+  
     if (response.statusCode == 200) {
       SubjectModel subject = SubjectModel.fromJson(jsonData);
       subjectList = subject.sections!;

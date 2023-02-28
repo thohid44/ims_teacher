@@ -10,6 +10,7 @@ import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
+import 'package:imsteacher/pages/Dairy/Controller/Dairies_Controllder.dart';
 
 import 'package:intl/intl.dart';
 
@@ -23,9 +24,11 @@ class AddNewDiaryPage extends StatefulWidget {
 class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
   bool isSelect = false;
   bool isSubject = false;
-  XFile? selectedImagePath;
-  File? uploadImage;
+ 
   GlobalKey<FlutterSummernoteState> _keyEditor = GlobalKey();
+  
+
+//final  TextEditingController dateinput = TextEditingController();
   final TextEditingController _des = TextEditingController();
   String? classValue;
   bool selectedImage = false;
@@ -33,50 +36,23 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
   String? selectSub = "Select Subject";
   String selectedValue = "Select Class";
   String? subjectValue;
-  String selectSubject = "Select Subject";
+  String? subId;
   final _box = GetStorage();
   var url = ApiUrl.baseUrl;
    late File uploadimage; //variable for choosed file
-
-
-  addNewDairy() async {
-    var token = _box.read(LocalStoreKey.token);
-    var teacher_id = _box.read(LocalStoreKey.teacherId);
-
-    print(token);
-    var response = await ApiUrl.userClient
-        .post(Uri.parse('$url/teacher-add-diary'), headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ' + token,
-    }, body: {
-      "academic_class_id": selectedValue.toString(),
-      "date": dateController.text,
-      "teacher_id": "1",
-      "subject_id": selectSubject.toString(),
-      "description": selectedImagePath
-    });
-    print(response);
-    var data = json.decode(response.body);
-    print(data);
-    if (response.statusCode == 200) {
-      Get.snackbar("Data", "Successfully Added");
-    }
-  }
-
-  TextEditingController dateinput = TextEditingController();
+   String? imgPath = ''; 
   void initState() {
-    dateinput.text = "";
+    // dateinput.text = "";
     super.initState();
   }
+  final    AllDairyController _diaryController = Get.put(AllDairyController()); 
 
   @override
   Widget build(BuildContext context) {
     var _con = Get.put(TakeAttendController());
     _con.getAcademicCls();
-    _con.fetchSubject();
-    print("class ${_con.classList}");
+   _con.fetchSubject();
 
-    print("class ${_con.subjectList}");
     return Scaffold(
       appBar: AppBar(
         title: Text("ADD NEW DIARY"),
@@ -106,7 +82,7 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
                   border: Border.all(width: 1.w, color: Colors.grey)),
               child: GetBuilder<TakeAttendController>(builder: (context) {
                 return DropdownButton(
-                    hint: Text("${isSelect ? selectClass : 'Select Class'}"),
+                    hint: Text("${isSelect ? selectClass : 'Select Academic Class'}"),
                     underline: SizedBox(),
                     icon: const Icon(Icons.keyboard_arrow_down),
                     value: classValue,
@@ -142,7 +118,7 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
                   border: Border.all(width: 1.w, color: Colors.grey)),
               child: GetBuilder<TakeAttendController>(builder: (context) {
                 return DropdownButton(
-                    hint: Text("${isSelect ? selectSub : 'Select Subject'}"),
+                    hint: Text("${isSubject ? selectSub : 'Select Subject'}"),
                     underline: SizedBox(),
                     icon: const Icon(Icons.keyboard_arrow_down),
                     value: subjectValue,
@@ -159,8 +135,9 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
                         .toList(),
                     onChanged: (value) {
                       setState(() {
-                        selectSubject = value.toString();
-                        print("Dairy Class $selectSubject");
+                        isSubject = true; 
+                        subId = value.toString();
+                        print("Dairy Class $subId");
                       });
                     });
               })),
@@ -179,21 +156,21 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
             height: 10.h,
           ),
 
-          selectedImagePath == ''
+          imgPath == ''
               ? Image.asset(
                   'assets/camera.png',
-                  height: 100,
+                  height: 50,
                   width: 50,
                 )
               : Image.file(
-                  File(selectedImagePath!.path),
+                  File(imgPath!),
                   height: 200,
                   width: 200,
                   fit: BoxFit.fill,
                 ),
 
           SizedBox(
-            height: 10.h,
+            height: 30.h,
           ),
           InkWell(
             onTap: () {
@@ -220,8 +197,8 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
           ),
           InkWell(
             onTap: () {
-              addNewDairy();
-              print(_keyEditor);
+            
+              _diaryController.uploadDiary(selectedValue.toString(), dateController.text.toString(),subId.toString() );
             },
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
@@ -343,10 +320,11 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            selectedImagePath = await selectImageFromGallery();
+                            imgPath = await selectImageFromGallery();
+                            _diaryController.imageFileUpload(imgPath!);
                             print('Image_Path:-');
-                            print(selectedImagePath);
-                            if (selectedImagePath != '') {
+                            print(imgPath);
+                            if (imgPath != '') {
                               Navigator.pop(context);
 
                               setState(() {});
@@ -375,11 +353,12 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            selectedImagePath = await selectImageFromCamera();
+                            imgPath = await selectImageFromCamera();
                             print('Image_Path:-');
-                            print(selectedImagePath);
+                            
+                            print(imgPath);
 
-                            if (selectedImagePath != '') {
+                            if (imgPath != '') {
                               Navigator.pop(context);
 
                               setState(() {});
@@ -420,6 +399,7 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
     XFile? file = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 10);
     if (file != null) {
+      
       return file.path;
     } else {
       return '';

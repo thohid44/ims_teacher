@@ -64,9 +64,10 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
           shrinkWrap: true,
           children: [
             Container(
-                height: 40.h,
+                height: 35.h,
+                margin: EdgeInsets.symmetric(horizontal: 20.w),
                 alignment: Alignment.center,
-                width: 220.w,
+                width: 200.w,
                 decoration: BoxDecoration(
                     border: Border.all(width: 1.w, color: Colors.grey)),
                 child: GetBuilder<TakeAttendController>(builder: (context) {
@@ -105,23 +106,40 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                    width: 170.w, height: 35.h, child: _buildDatePicker()),
+               Container(
+                      margin: EdgeInsets.only(left: 80.w),
+                      width: 170.w, height: 35.h, child: _buildDatePicker()),
+                
               ],
             ),
+            // Container(
+            //     child: ListTile(
+            //   leading: Text("Roll"),
+            //   title: Text("Name"),
+            //   trailing: Text("Status"),
+            // )),
             Container(
-                child: ListTile(
-              leading: Text("Roll"),
-              title: Text("Name"),
-              trailing: Text("Status"),
-            )),
+              margin: EdgeInsets.only(left: 10.w, right: 15.w, top: 10.h),
+              child: Row(
+              
+                children: [
+                  Text("Roll",style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, ),), 
+                  SizedBox(width: 30.w,), 
+                   Text("Name",style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, ),), 
+                   SizedBox(width: 170.w,), 
+                    Text("Status",style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, ),), 
+                ],
+              ),
+            ), 
             selectClass == true
                 ? Container(
-                    height: 370.h,
+                    height: 360.h,
+                    
+                    padding: EdgeInsets.only(left: 10.w, right: 5.w, ),
                     child: GetBuilder<TakeAttendController>(builder: (context) {
                       if (_con.mobile.length > 0) {
                         return ListView.builder(
-                          shrinkWrap: true,
+                  
                           itemCount: _con.mobile.length,
                           itemBuilder: ((context, index) {
                             return Container(
@@ -129,18 +147,23 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                               child: ListTile(
                                 onTap: (){
                                   FlutterClipboard.copy( _con.mobile[index].studentId.toString());
-                                  
-                          
+                                
                                                },
                                 contentPadding: EdgeInsets.all(0),
                                   leading: Text(_con
                                       .mobile[index].studentAcademicId
-                                      .toString()),
+                                      .toString(),style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, )),
                                   title: Text(
-                                      _con.mobile[index].studentName.toString()),
+                                      _con.mobile[index].studentName.toString(),
+                                      style: TextStyle(color: Colors.black,fontSize: 13.sp, fontWeight: FontWeight.bold, )),
                                   subtitle: Text(
                                     _con.mobile[index].studentId.toString(),
+                                    style: TextStyle(fontSize: 15.sp, )
                                   ),
+                                  // subtitle: Text(
+                                  //   _con.mobile2[index]['attendance_status_id'].toString(),
+                                  //   style: TextStyle(fontSize: 15.sp, )
+                                  // ),
                                   trailing: Switch(
                                     value: _con.mobile2[index]
                                         ['attendance_status_id'],
@@ -183,7 +206,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                 : Center(
                     child: Text("Please Select Class"),
                   ),
-           SizedBox(height: 3.h,), 
+           SizedBox(height: 18.h,), 
             selectClass == true
                 ? Container(
                     margin: EdgeInsets.only(left: 50.w, right: 50.w),
