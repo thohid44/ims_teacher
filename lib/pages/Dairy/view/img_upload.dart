@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,47 +21,32 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.yellow.shade800,
       body: Center(
         child: Column(
-         children: [
-
-          Container(
-            height: 100.h, 
-            child: ListView.builder(
-              itemCount: 1,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context,index){
-              return SizedBox(
-                child: Card(
-                  child:Row(children: [
-                    Container(
-                      height: 90.h,
-                      width: 80.w,
-                      child: Image.asset("assets/mobile.png"),
-                    ), 
-                    Column(
-                      children: [
-                        Container(
-                          child: Text("Check Shipping Content", style:TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                        ), 
-                          Container(
-                          child: Text("Always check & carry", style:TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                        ),
-                          Container(
-                          child: Text("Open items and legal items", style:TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                        ),  
-                          Container(
-                          child: Text( "Avoid  risks & stay safe.", style:TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                        ), 
-                      ],
-                    )
-                  ]) ,
-                ),
-              ); 
-            })
-            
-          ), 
-
-         ],
-          
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            selectedImagePath == ''
+                ? Image.asset('assets/camera.png', height: 200, width: 200, fit: BoxFit.fill,)
+                : Image.file(File(selectedImagePath), height: 200, width: 200, fit: BoxFit.fill,),
+            Text(
+              'Select Image',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                    padding:
+                        MaterialStateProperty.all(const EdgeInsets.all(20)),
+                    textStyle: MaterialStateProperty.all(
+                        const TextStyle(fontSize: 14, color: Colors.white))),
+                onPressed: () async {
+                  selectImage();
+                  setState(() {});
+                },
+                child: const Text('Select')),
+            const SizedBox(height: 10),
+          ],
         ),
       ),
     );

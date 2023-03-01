@@ -27,6 +27,7 @@ class _AppDrawerState extends State<AppDrawer> {
       clipper:LDOvalRightBorderClipper(),
       clipBehavior: Clip.antiAliasWithSaveLayer,
          child: Drawer(
+          
           backgroundColor: Color(0xff1A1A1A),
            child: Stack(
             children: [
@@ -38,7 +39,7 @@ class _AppDrawerState extends State<AppDrawer> {
               DrawerHeader(child:Container(
                 margin: EdgeInsets.only(right: 25),
                 child: Center(
-                  child: Icon(Icons.abc, color: Colors.white,),
+                  child: Image.asset("assets/logo.jpeg")
                 ),
               )),
               ListTile(

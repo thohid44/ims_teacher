@@ -8,6 +8,7 @@ import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Dairy/model/single_dairy_model.dart';
+import 'package:imsteacher/pages/Home/custom_bar.dart';
 
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 
@@ -89,6 +90,8 @@ class _DairyDetailsPageState extends State<DairyDetailsPage> {
            return Center(child: CircularProgressIndicator(),);
          },
       ),
+
+      bottomNavigationBar: CustomNavigationBar(),
     );
     
   }

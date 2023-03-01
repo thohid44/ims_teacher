@@ -39,7 +39,7 @@ class TakeAttendController extends GetxController {
       'Authorization': 'Bearer '+token,
     });
     var jsonData = json.decode(response.body);
-   print("Class $jsonData"); 
+  
     if (response.statusCode == 200) {
       AcademicClassesModel academic = AcademicClassesModel.fromJson(jsonData);
       classList = academic.classes!;
@@ -68,6 +68,7 @@ class TakeAttendController extends GetxController {
       clsId.clear();
      MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
       mobile = data.attendances!;
+    
      mobile2 = mobile.map((e) {
 
 

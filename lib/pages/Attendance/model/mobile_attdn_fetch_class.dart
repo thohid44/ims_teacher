@@ -41,7 +41,7 @@ class Attendance {
     String? studentId;
     String? studentName;
     String? shiftId;
-    int? attendanceStatusId;
+    dynamic? attendanceStatusId;
 
     factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
         studentAcademicId: json["student_academic_id"],

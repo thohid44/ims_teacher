@@ -8,6 +8,7 @@ import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
 import 'package:imsteacher/pages/Attendance/model/daily_attendance_model.dart';
+import 'package:imsteacher/pages/Home/custom_bar.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:native_screenshot/native_screenshot.dart';
@@ -191,7 +192,9 @@ class _DailyAttendancePageState extends State<DailyAttendancePage> {
                     child: Text("Select Date and Class"),
                   )
           ],
-        ));
+        ), 
+        bottomNavigationBar: CustomNavigationBar(),
+        );
   }
 
   final TextEditingController dateController = TextEditingController();

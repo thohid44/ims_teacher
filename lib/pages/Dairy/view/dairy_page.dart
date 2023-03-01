@@ -15,6 +15,7 @@ import 'package:imsteacher/pages/Dairy/Controller/Dairies_Controllder.dart';
 import 'package:imsteacher/pages/Dairy/model/all_dairy_model.dart';
 import 'package:imsteacher/pages/Dairy/view/add_new_diary_page.dart';
 import 'package:imsteacher/pages/Dairy/view/dairy_details_page.dart';
+import 'package:imsteacher/pages/Home/custom_navigation_bar.dart';
 import 'package:imsteacher/widgets/custom_appbar.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:intl/intl.dart';
@@ -229,6 +230,7 @@ class _DairyPageState extends State<DairyPage> {
                     )),
         ],
       ),
+             bottomNavigationBar: CustomNavigationBar(),
     );
   }
 
