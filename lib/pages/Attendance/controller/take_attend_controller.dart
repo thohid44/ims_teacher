@@ -10,7 +10,7 @@ import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart'
 import '../../Subject/model/subject_model.dart';
 
 class TakeAttendController extends GetxController {
-
+var atn = true; 
   var isLooding = false.obs; 
   List classList = [].obs;
   List<Attendance> mobile = <Attendance>[].obs;
@@ -26,7 +26,7 @@ class TakeAttendController extends GetxController {
 
   mobile2Update() {
   
-    mobile2;
+  
     update();
   }
    final _box = GetStorage(); 
@@ -68,14 +68,13 @@ class TakeAttendController extends GetxController {
       clsId.clear();
      MobileAttendFetchClass data = MobileAttendFetchClass.fromJson(jsonData);
       mobile = data.attendances!;
-    
+    mobile2.clear();
      mobile2 = mobile.map((e) {
-
-
                                   return {
-                                    "student_academic_id": e.studentAcademicId,
+                                    
+                                    "student_academic_id": e.studentAcademicId.toString(),
                                     "shift_id": e.shiftId,
-                                    "attendance_status_id": true,
+                                    "attendance_status_id": atn,
                                   };
                                 }).toList();
      isLooding(true); 

@@ -145,10 +145,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                             return Container(
                               height: 45,
                               child: ListTile(
-                                onTap: (){
-                                  FlutterClipboard.copy( _con.mobile[index].studentId.toString());
-                                
-                                               },
+                         
                                 contentPadding: EdgeInsets.all(0),
                                   leading: Text(_con
                                       .mobile[index].studentAcademicId
@@ -156,41 +153,51 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                   title: Text(
                                       _con.mobile[index].studentName.toString(),
                                       style: TextStyle(color: Colors.black,fontSize: 13.sp, fontWeight: FontWeight.bold, )),
-                                  subtitle: Text(
-                                    _con.mobile[index].studentId.toString(),
-                                    style: TextStyle(fontSize: 15.sp, )
-                                  ),
                                   // subtitle: Text(
-                                  //   _con.mobile2[index]['attendance_status_id'].toString(),
+                                  //   _con.mobile[index].studentId.toString(),
                                   //   style: TextStyle(fontSize: 15.sp, )
                                   // ),
+                                  subtitle: Text(
+                                    _con.mobile2[index]['attendance_status_id'].toString(),
+                                    style: TextStyle(fontSize: 15.sp, )
+                                  ),
+                                        onTap: (){
+                                  FlutterClipboard.copy( _con.mobile[index].studentId.toString());
+                                     
+                                               },
                                   trailing: Switch(
                                     value: _con.mobile2[index]
                                         ['attendance_status_id'],
                                     onChanged: (bool value) {
-                                      _con.mobile2;
-                            
-                                      for (int i = 0;
+                                    print(value);
+                                   for (int i = 0;
                                           i <= _con.mobile2.length;
                                           i++) {
-                                        if (_con.mobile2[index]
+                                        if (_con.mobile2[i]
                                                     ['student_academic_id'] ==
                                                 _con.mobile2[index]
                                                     ['student_academic_id'] &&
                                             _con.mobile2[index]
-                                                    ['attendance_status_id'] ==
-                                                true) {
-                                          setState(() {
-                                            _con.mobile2[index]
+                                                    ['attendance_status_id']) {
+                                       
+                                            setState(() {
+                                              _con.mobile2[index]
                                                 ['attendance_status_id'] = false;
-                                            print(_con.mobile2[index]
-                                                ['attendance_status_id']);
-                                          });
-                                        } else {
-                                          _con.mobile2[index]
-                                              ['attendance_status_id'] = true;
+                                            });
+                                         
+                              
+                                        } else if(_con.mobile2[i]
+                                                    ['student_academic_id'] ==
+                                                _con.mobile2[index]
+                                                    ['student_academic_id'] &&
+                                            _con.mobile2[index]
+                                                    ['attendance_status_id']==false){
+                                                      setState(() {
+                                              _con.mobile2[index]
+                                                ['attendance_status_id'] = true;
+                                            });
+
                                         }
-                            
                                         //print(mobile);
                                       }
                                     },

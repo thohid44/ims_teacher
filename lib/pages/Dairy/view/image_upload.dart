@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Image.asset("assets/mobile.png"),
                     ), 
                     Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           child: Text("Check Shipping Content", style:TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
@@ -60,6 +61,87 @@ class _HomeScreenState extends State<HomeScreen> {
             })
             
           ), 
+
+          SizedBox(height:20.h
+          ), 
+
+          Stack(
+            children: [
+              Container(
+                height: 200.h,
+                width: 270.w,
+                child:Column(
+                 children: [
+                   Row(children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange, 
+
+                      ),
+                      height: 50.h, 
+                      width: 130.w,
+                      child: Text("Want to give a ride & \n make money?", style: TextStyle(
+                        fontSize: 13.sp, 
+                      ),),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange, 
+
+                      ),
+                      height: 50.h, 
+                      width: 130.w,
+                      child: Row(
+                        children: [
+                         Image.asset("assets/mobile.png", 
+                         height: 50.h, width: 20.w,fit: BoxFit.fitHeight,
+                         ),
+                         Column(
+                          children: [
+                        
+                            Text("TripShipTask", style: TextStyle(
+                        fontSize: 11.sp, 
+                      ),),
+                      
+                            Text("Move shipping Task", style: TextStyle(
+                        fontSize: 11.sp, 
+                      ),),
+                          ],
+                         )
+                        ],
+                      ),
+                    ),
+                  ],),
+ SizedBox(height: 10.h,), 
+                   Row(children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange, 
+
+                      ),
+                      height: 50.h, 
+                      width: 130.w,
+                      child: Text("Post your destination & choose passengers who are headed the same direction", style: TextStyle(
+                        fontSize: 13.sp, 
+                      ),),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange, 
+
+                      ),
+                      height: 60.h, 
+                      width: 50.w,
+                      child: Image.asset("assets/mobile.png", 
+                         height: 50.h, width: 50.w,
+                         ),
+                    ),
+                  ],)
+                 ],
+                )
+              ),
+            ],
+          )
 
          ],
           

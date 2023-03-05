@@ -1,20 +1,16 @@
 // import 'dart:convert';
 
+// import 'package:clipboard/clipboard.dart';
 // import 'package:flutter/material.dart';
-
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:get/get.dart';
+// import 'package:get_storage/get_storage.dart';
 // import 'package:imsteacher/Service/Api_url.dart';
 // import 'package:imsteacher/Utils/Constrans/color.dart';
-// import 'package:imsteacher/pages/Academic/model/academicClassesModel.dart';
 // import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
-
-// import 'package:imsteacher/pages/Attendance/model/mobile_attdn_fetch_class.dart';
-// import 'package:imsteacher/pages/Attendance/model/store_attendance_model.dart';
-// import 'package:imsteacher/pages/Attendance/model/student.dart';
-// import 'package:imsteacher/pages/Attendance/view/std.dart';
-// import 'package:imsteacher/pages/Attendance/view/switch_item.dart';
+// import 'package:imsteacher/pages/Home/custom_bar.dart';
+// import 'package:imsteacher/pages/Home/deshboard.dart';
 // import 'package:imsteacher/widgets/custom_text_widget.dart';
 // import 'package:http/http.dart' as http;
 // import 'package:intl/intl.dart';
@@ -29,12 +25,13 @@
 // class _MobileAttendancePageState extends State<MobileAttendancePage> {
 //   bool status = false;
 //   bool isSelected = true;
+//   var url = ApiUrl.baseUrl;
 // // get class
 //   String? classValue;
+//   var classId;
 
-//   String selectedValue = "Select Class";
-
-//   var mobile2 = [];
+//   String? selectedValue;
+//   bool isSelect = false;
 //   bool selectClass = false;
 
 //   @override
@@ -42,202 +39,210 @@
 //     super.initState();
 //   }
 
+//   var _con = Get.put(TakeAttendController());
 //   var s1 = 2;
 //   bool f1 = false;
 //   final GlobalKey key = GlobalKey();
 //   @override
 //   Widget build(BuildContext context) {
-//     var _con = Get.put(TakeAttendController());
 //     _con.getAcademicCls();
-
-   
+//     _con.clsId;
 //     _con.classList;
+
+//     print(_con.mobile.length);
 
 //     print("class data ${_con.classList}");
 //     return Scaffold(
-//         appBar: AppBar(
-//           elevation: 0,
-//           title: const Text("MOBILE ATTENDENCE"),
-//           backgroundColor: primaryColor,
-//         ),
-//         body: Padding(
-//           padding: const EdgeInsets.all(8.0),
-//           child: ListView(
-//             children: [
-//               Row(
-//                 children: [
-//                   Container(
-//                       width: 160.w, height: 45.h, child: _buildDatePicker()),
-//                   Container(
-//                       height: 40.h,
-//                       alignment: Alignment.center,
-//                       width: 150.w,
-//                       decoration: BoxDecoration(
-//                           border: Border.all(width: 1.w, color: Colors.grey)),
-//                       child:
-//                           GetBuilder<TakeAttendController>(builder: (context) {
-//                         return DropdownButton(
-//                             hint: Text("Select Class "),
-//                             underline: SizedBox(),
-//                             icon: const Icon(Icons.keyboard_arrow_down),
-//                             value: classValue,
-//                             items: _con.classList
-//                                 .map((e) => DropdownMenuItem(
-//                                       value: e.numericClass,
-//                                       child: Text(
-//                                         "${e.name}",
-//                                       ),
-//                                     ))
-//                                 .toList(),
-//                             onChanged: (value) {
-//                               setState(() {
-//                                 selectClass = true;
-//                               });
-//                               classValue = value.toString();
-//                               _con.getClassId(value);
-//                               _con.mobile;
-//                               selectClass = true;
-
-//                               _con.fetchMobileCls();
-
-//                               _con.mobile2 = _con.mobile.map((e) {
-//                                 return {
-//                                   "student_academic_id": e.studentAcademicId,
-//                                   "shift_id": e.shiftId,
-//                                   "attendance_status_id": true,
-//                                 };
-//                               }).toList();
-
-                            
-//                             });
-//                       })),
-//                 ],
-//               ),
-//               SizedBox(
-//                 height: 30,
-//               ),
-//               SizedBox(
-//                 height: 10.h,
-//               ),
-//               Container(
-//                   child: ListTile(
-//                 leading: Text("ID"),
-//                 title: Text("Name"),
-//                 trailing: Text("Status"),
-//               )),
-//               selectClass == true
-//                   ? Container(
-//                       height: 400.h,
-//                       child:
-//                           GetBuilder<TakeAttendController>(builder: (context) {
-//                         if (_con.mobile.isNotEmpty) {
-//                           return ListView.builder(
-//                               itemCount: _con.mobile.length,
-//                               itemBuilder: ((context, index) {
-//                                 return ListTile(
-//                                   title: Text(_con.mobile[index].studentName.toString()),
-                                   
-//                                     trailing: Switch(
-//                                       value: _con.mobile2[index]['attendance_status_id'],
-//                                       onChanged: (bool value) {
-//                                         setState(() {
-                                        
-
-                                         
-//                                           _con.mobile2Update();
-                                       
-//                                           for (int i = 0;
-//                                               i <= _con.mobile.length;
-//                                               i++) {
-//                                             if (_con.mobile2[index][
-//                                                         'student_academic_id'] ==
-//                                                     _con.mobile2[index][
-//                                                         'student_academic_id'] &&
-//                                                 _con.mobile2[index][
-//                                                         'attendance_status_id'] ==
-//                                                     false) {
-//                                               _con.mobile2[index]
-//                                                   ['attendance_status_id'] = true;
-//                                             } else {
-//                                               _con.mobile2[index]
-//                                                   ['attendance_status_id'] = false;
-//                                             }
-
-//                                             //print(mobile);
-//                                             print(_con.mobile2);
-//                                           }
-                                         
-//                                         });
-//                                       },
-//                                     ));
-//                               }));
-//                         }
-//                         return Center(child: CircularProgressIndicator());
-//                       }))
-//                   : Center(
-//                       child: Text("Please select a class"),
-//                     ),
-//               SizedBox(
-//                 height: 20.h,
-//               ),
-//               Container(
-//                 margin: EdgeInsets.only(left: 30.w, right: 30.w),
+//       appBar: AppBar(
+//         elevation: 0,
+//         title: const Text("MOBILE ATTENDENCE"),
+//         backgroundColor: primaryColor,
+//       ),
+//       body: Padding(
+//         padding:  EdgeInsets.only(left:8.0.w,right: 8.0.w, top: 8.0.h),
+//         child: ListView(
+//           shrinkWrap: true,
+//           children: [
+//             Container(
+//                 height: 35.h,
+//                 margin: EdgeInsets.symmetric(horizontal: 20.w),
 //                 alignment: Alignment.center,
-//                 height: 50.h,
 //                 width: 200.w,
 //                 decoration: BoxDecoration(
-//                   color: Colors.green,
-//                 ),
-//                 child: InkWell(
-//                   onTap: () {
-//                     sendAttendance();
-//                   },
-//                   child: customText(
-//                       "Save Attendance", Colors.white, 18.0, FontWeight.bold),
-//                 ),
-//               )
-//             ],
-//           ),
-//         ));
+//                     border: Border.all(width: 1.w, color: Colors.grey)),
+//                 child: GetBuilder<TakeAttendController>(builder: (context) {
+//                   return DropdownButton(
+//                       hint:
+//                           Text("${isSelect ? selectedValue : 'Select Class'}"),
+//                       underline: SizedBox(),
+//                       icon: const Icon(Icons.keyboard_arrow_down),
+//                       value: classValue,
+//                       items: _con.classList
+//                           .map((e) => DropdownMenuItem(
+//                                 onTap: () {
+//                                   selectedValue = e.name.toString();
+//                                 },
+//                                 value: e.id,
+//                                 child: Text(
+//                                   "${e.name}",
+//                                 ),
+//                               ))
+//                           .toList(),
+//                       onChanged: (value) {
+//                         var id = value;
+//                         _con.fetchMobileCls(id);
+//                         // _con.getClassId(value.toString());
+//                         setState(() {
+//                           classId = value.toString();
+//                           isSelect = true;
+//                           print(classId);
+//                           selectClass = true;
+//                         });
+//                       });
+//                 })),
+//             SizedBox(
+//               height: 10.h,
+//             ),
+//             Row(
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                Container(
+//                       margin: EdgeInsets.only(left: 80.w),
+//                       width: 170.w, height: 35.h, child: _buildDatePicker()),
+                
+//               ],
+//             ),
+//             // Container(
+//             //     child: ListTile(
+//             //   leading: Text("Roll"),
+//             //   title: Text("Name"),
+//             //   trailing: Text("Status"),
+//             // )),
+//             Container(
+//               margin: EdgeInsets.only(left: 10.w, right: 15.w, top: 10.h),
+//               child: Row(
+              
+//                 children: [
+//                   Text("Roll",style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, ),), 
+//                   SizedBox(width: 30.w,), 
+//                    Text("Name",style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, ),), 
+//                    SizedBox(width: 170.w,), 
+//                     Text("Status",style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, ),), 
+//                 ],
+//               ),
+//             ), 
+//             selectClass == true
+//                 ? Container(
+//                     height: 360.h,
+                    
+//                     padding: EdgeInsets.only(left: 10.w, right: 5.w, ),
+//                     child: GetBuilder<TakeAttendController>(builder: (context) {
+//                       if (_con.mobile.length > 0) {
+//                         return ListView.builder(
+                  
+//                           itemCount: _con.mobile.length,
+//                           itemBuilder: ((context, index) {
+//                             return Container(
+//                               height: 45,
+//                               child: ListTile(
+//                                 onTap: (){
+//                                   FlutterClipboard.copy( _con.mobile[index].studentId.toString());
+                                
+//                                                },
+//                                 contentPadding: EdgeInsets.all(0),
+//                                   leading: Text(_con
+//                                       .mobile[index].studentAcademicId
+//                                       .toString(),style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, )),
+//                                   title: Text(
+//                                       _con.mobile[index].studentName.toString(),
+//                                       style: TextStyle(color: Colors.black,fontSize: 13.sp, fontWeight: FontWeight.bold, )),
+//                                   // subtitle: Text(
+//                                   //   _con.mobile[index].studentId.toString(),
+//                                   //   style: TextStyle(fontSize: 15.sp, )
+//                                   // ),
+//                                   subtitle: Text(
+//                                     _con.mobile2[index]['attendance_status_id'].toString(),
+//                                     style: TextStyle(fontSize: 15.sp, )
+//                                   ),
+//                                   trailing: 
+                                  
+//                                   Switch(
+//                                     value: _con.mobile2[index]
+//                                         ['attendance_status_id'],
+//                                     onChanged: (value) {
+                                    
+
+
+//                                       for (int i = 0;
+//                                           i <= _con.mobile2.length;
+//                                           i++) {
+//                                         if (_con.mobile2[index]
+//                                                     ['attendance_status_id'] 
+//                                             ) {
+//                                           setState(() {
+//                                             _con.mobile2[index].assign('attendance_status_id',value); 
+                                                
+                                         
+//                                           });
+//                                         }else{
+//                                            setState(() {
+//                                             _con.mobile2[index].assign('attendance_status_id',value); 
+                                                
+                                            
+//                                           });
+//                                         } 
+//                                         //print(mobile);
+//                                       }
+//                                     },
+//                                   )),
+//                             );
+//                           }),
+//                         );
+//                       }
+//                       return Center(
+//                         child: CircularProgressIndicator(),
+//                       );
+//                     }))
+//                 : Center(
+//                     child: Text("Please Select Class"),
+//                   ),
+//            SizedBox(height: 18.h,), 
+//             selectClass == true
+//                 ? Container(
+//                     margin: EdgeInsets.only(left: 50.w, right: 50.w),
+//                     alignment: Alignment.center,
+//                     height: 40.h,
+//                     width: 150.w,
+//                     decoration: BoxDecoration(
+//                       color: Colors.purple,
+//                     ),
+//                     child: InkWell(
+//                       onTap: () {
+//                         sendAttendance();
+//                       },
+//                       child: customText("Save Attendance", Colors.white, 18.0,
+//                           FontWeight.bold),
+//                     ),
+//                   )
+//                 : Container()
+//           ],
+//         ),
+//       ),
+
+//       bottomNavigationBar: CustomNavigationBar(),
+//     );
 //   }
 
-//   List attendList = [];
-
-//   takeAttendance(
-//     String studentAcademicId,
-//     String attendanceStatusId,
-//   ) async {
-//     for (int i = 0; i < mobile2.length; i++) {
-//       if (mobile2[i]['student_academic_id'] == 47) {
-//         setState(() {
-//           mobile2[i]['attendance_status_id'] = "1";
-//         });
-//       }
-//     }
-
-//     // print(attendList);
-//     //   print(std1);
-//   }
-
-//   List<Map<String, dynamic>> std1 = [];
-
-//   // List<Map<String, dynamic>> std1 = [
-//   //   {"student_academic_id": 100, "shift_id": 2, "attendance_status_id": 1},
-//   //   {"student_academic_id": 100, "shift_id": 1, "attendance_status_id": 1}
-//   // ];
-//   List<Students> students = [
-//     Students(studentAcademicId: "1", shiftId: "1", attendanceStatusId: "1"),
-//     Students(studentAcademicId: "2", shiftId: "2", attendanceStatusId: "2")
-//   ];
-
+//   final _box = GetStorage();
 //   sendAttendance() async {
-//     var postUri =
-//         Uri.parse("https://demo.webpointbd.com/api/mobile-attendance-store");
+//     var token = _box.read(ApiUrl.token);
+//     var postUri = Uri.parse("$url/mobile-attendance-store");
+
 //     Map<String, dynamic> map = {
 //       "status": true,
-//       "date": "2023-02-05",
-//       "academic_class_id": 5,
-//       "attendances": mobile2
+//       "date": date,
+//       "academic_class_id": classId,
+//       "attendances": _con.mobile2
 //     };
 //     var finalmap = jsonEncode(map);
 
@@ -246,7 +251,7 @@
 //       var request = await http.post(postUri, body: finalmap, headers: {
 //         'Content-Type': 'application/json',
 //         'Accept': 'application/json',
-//         'Authorization': 'Bearer ' + ApiUrl.token,
+//         'Authorization': 'Bearer ' + token,
 //       });
 //       print("$request");
 
@@ -254,6 +259,14 @@
 //       ;
 //       if (resdata.statusCode == 200) {
 //         print("ff ${resdata.body}");
+//         Get.snackbar(
+//           "Attendance",
+//           "Successfully Save",
+//           colorText: Colors.white,
+//           snackPosition: SnackPosition.BOTTOM,
+//           backgroundColor: Colors.purple,
+//         );
+//         Get.to(DeashBoard());
 //       } else {}
 //       print(resdata.body);
 //     } catch (e) {
@@ -298,6 +311,8 @@
 //               dateController.text =
 //                   DateFormat('yyyy-MM-dd').format(selectedDate);
 //               print("thohid ${dateController.text}");
+//               date = dateController.text;
+//               print(date);
 //             });
 //           }
 //         });
