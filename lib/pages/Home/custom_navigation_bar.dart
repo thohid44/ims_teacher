@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:native_screenshot/native_screenshot.dart';
@@ -30,11 +31,12 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   Widget build(BuildContext context) {
     var _bottomNavigationKey;
     return Container(
+    
       child: CurvedNavigationBar(
         backgroundColor: Colors.white,
         key: _bottomNavigationKey,
         index: _index,
-        height: 60.0,
+        height: 45.0.h,
         items: <Widget>[
           IconButton(
               onPressed: () {
@@ -58,7 +60,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               },
               icon: Icon(
                 Icons.share,
-                size: 30,
+                size: 30.h,
                 color: Colors.white,
               )),
           IconButton(

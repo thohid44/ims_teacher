@@ -2,19 +2,20 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
+import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Attendance/view/daily_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/mobile_attendance_page.dart';
 import 'package:imsteacher/pages/Attendance/view/student_wise_atten_report.dart';
 import 'package:imsteacher/pages/Dairy/view/add_new_diary_page.dart';
 import 'package:imsteacher/pages/Dairy/view/dairy_page.dart';
-import 'package:imsteacher/pages/Dairy/view/image_upload.dart';
 import 'package:imsteacher/pages/Exam%20Routine/views/exam_routine_page.dart';
 import 'package:imsteacher/pages/Home/drawer.dart';
-import 'package:imsteacher/pages/Leave/view/add_student_leave.dart';
 import 'package:imsteacher/pages/Result_Sheet/views/result_sheet.dart';
 import 'package:imsteacher/pages/login/controller/auth_controller.dart';
 
+import '../../Service/Api_url.dart';
 
 class DeashBoard extends StatefulWidget {
   const DeashBoard({super.key});
@@ -25,238 +26,294 @@ class DeashBoard extends StatefulWidget {
 
 class _DeashBoardState extends State<DeashBoard> {
   final AuthenticationManager authManager = Get.find<AuthenticationManager>();
+  final _box = GetStorage();
+  var url = ApiUrl.baseUrl;
+  logo() async {
+    var token = _box.read(LocalStoreKey.token);
+    try {
+      print("try");
+      var response =
+          await ApiUrl.userClient.get(Uri.parse("$url/logo"), headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      });
+
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        var logo = response.body.toString();
+        _box.write(LocalStoreKey.logo, logo);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void initState() {
+   
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    logo(); 
     print(authManager.getToken());
     return Scaffold(
       backgroundColor: Colors.white,
-        appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: primaryColor,
-        title:const Text("DASHBOARD", 
-      
-      ), centerTitle: true, ),
-     drawer: AppDrawer(),
+        title: const Text(
+          "DASHBOARD",
+        ),
+        centerTitle: true,
+      ),
+      drawer: AppDrawer(),
       body: ListView(
-             scrollDirection: Axis.vertical,
+        scrollDirection: Axis.vertical,
         children: [
           Container(
-            margin: EdgeInsets.only(left: 10.w,right: 10.w, 
-         
-            top: 10.h, bottom: 10.h),
-               padding:EdgeInsets.only(bottom: 5.h),
+            margin: EdgeInsets.only(
+                left: 10.w, right: 10.w, top: 10.h, bottom: 10.h),
+            padding: EdgeInsets.only(bottom: 5.h),
             decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(
-                width: 2, 
-                color: dark
-              ))
+                border: Border(bottom: BorderSide(width: 2, color: dark))),
+            child: Text(
+              "Attendance",
+              style: TextStyle(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                  color: dark),
             ),
-            child: Text("Attendance",style: TextStyle(
-              fontSize: 17.sp, 
-              fontWeight: FontWeight.bold, 
-              fontFamily: 'Roboto',
-              color: dark
-            ),),
           ),
-        
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.w,),
-        
+            padding: EdgeInsets.symmetric(
+              horizontal: 15.w,
+            ),
             height: 120.h,
-           
             child: ListView(
-              scrollDirection: Axis.horizontal, 
+              scrollDirection: Axis.horizontal,
               children: [
-                  InkWell(
-                     onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>DailyAttendancePage()));
-                  },
-                  child: deshboardItem(title: "Daily Attendence",imageLInk:"assets/attendance.png")), 
-                  
                 InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
-                  },
-                  child: deshboardItem(title:"Mobile Attendance",imageLInk:"assets/mobile.png")), 
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => DailyAttendancePage()));
+                    },
+                    child: deshboardItem(
+                        title: "Daily Attendence",
+                        imageLInk: "assets/attendance.png")),
                 InkWell(
-                     onTap: (){
-                      print("object"); 
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
-                  },
-                  child: deshboardItem(title:"Student Wise Report",imageLInk:"assets/student.png")), 
-              
-                
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => MobileAttendancePage()));
+                    },
+                    child: deshboardItem(
+                        title: "Mobile Attendance",
+                        imageLInk: "assets/mobile.png")),
+                InkWell(
+                    onTap: () {
+                      print("object");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => StudentWishAttendence()));
+                    },
+                    child: deshboardItem(
+                        title: "Student Wise Report",
+                        imageLInk: "assets/student.png")),
               ],
             ),
-          ), 
-          SizedBox(height: 10.h,), 
-
-             Container(
-            margin: EdgeInsets.only(left: 10.w,right: 10.w, 
-            top: 10.h, bottom: 10.h),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(
-                width: 2, 
-                color: dark
-              ))
-            ),
-            child: Text("Diary                    ",style: TextStyle(
-              fontSize: 17.sp, 
-              fontWeight: FontWeight.bold, 
-              color: dark
-            ),),
+          ),
+          
+          SizedBox(
+            height: 10.h,
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.w,),
-        
-            height: 100.h,
-           
-            child: ListView(
-              scrollDirection: Axis.horizontal, 
-              children: [
-                InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>DairyPage()));
-                  },
-                  child: deshboardItem(title:"Daily Diary",imageLInk:"assets/diary.png")), 
-                InkWell(
-                     onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
-                  },
-                  child: deshboardItem(title:"Add New Diary",imageLInk:"assets/add_diary.png")), 
-                InkWell(
-                     onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>HomeScreen()));
-              //        Get.snackbar(
-              // "",
-              //  "Coming Soon",
-              //  colorText: Colors.white,
-              //  backgroundColor: Colors.purple,
-              //  snackPosition: SnackPosition.BOTTOM,    
-              //  );
-                  },
-                  child: deshboardItem(title: "Image Upload",)), 
-                
-              ],
-            ),
-          ),
-
-          SizedBox(height: 10.h,), 
-
-             Container(
-            margin: EdgeInsets.only(left: 10.w,right: 10.w, 
-            top: 10.h, bottom: 10.h),
+            margin: EdgeInsets.only(
+                left: 10.w, right: 10.w, top: 10.h, bottom: 10.h),
             decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(
-                width: 2, 
-                color: dark
-              ))
+                border: Border(bottom: BorderSide(width: 2, color: dark))),
+            child: Text(
+              "Diary                    ",
+              style: TextStyle(
+                  fontSize: 17.sp, fontWeight: FontWeight.bold, color: dark),
             ),
-            child: Text("Leave Management ",style: TextStyle(
-              fontSize: 17.sp, 
-              fontWeight: FontWeight.bold, 
-              color: dark
-            ),),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.w,),
-        
+            padding: EdgeInsets.symmetric(
+              horizontal: 15.w,
+            ),
             height: 100.h,
-           
             child: ListView(
-              scrollDirection: Axis.horizontal, 
+              scrollDirection: Axis.horizontal,
               children: [
                 InkWell(
-                  onTap: (){
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => DairyPage()));
+                    },
+                    child: deshboardItem(
+                        title: "Daily Diary", imageLInk: "assets/diary.png")),
+                InkWell(
                   
-                    //Navigator.push(context, MaterialPageRoute(builder:(_)=>AddStudentLeave()));
-                 
-                       Get.snackbar(
-              "Add Leave",
-               "Coming Soon",
-               colorText: Colors.white,
-               backgroundColor: Colors.purple,
-               snackPosition: SnackPosition.BOTTOM,
-                 
-               );
-
-                  },
-                  child: deshboardItem(title:"Add Leave",imageLInk: "assets/leave.png")), 
-                InkWell(
-                     onTap: (){
-                  //  Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
-                           Get.snackbar(
-              "Leave Categories",
-               "Coming Soon",
-               colorText: Colors.white,
-               backgroundColor: Colors.purple,
-               snackPosition: SnackPosition.BOTTOM,
-                 
-               );
-                  },
-                  child: deshboardItem(title:"Leave Categories",imageLInk: "assets/add_leave.png")), 
-                InkWell(
-                     onTap: (){
-                   // Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
-                            Get.snackbar(
-              "Leave Report",
-               "Coming Soon",
-               colorText: Colors.white,
-               backgroundColor: Colors.purple,
-               snackPosition: SnackPosition.BOTTOM,
-                 
-               );
-                  },
-                  child: deshboardItem(title: "Leave Report",)), 
-                
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => AddNewDiaryPage()));
+                    },
+                    child: deshboardItem(
+                        title: "Add New Diary",
+                        imageLInk: "assets/add_diary.png")),
+                // InkWell(
+                //     onTap: () {
+                //       // Navigator.push(context, MaterialPageRoute(builder:(_)=>HomeScreen()));
+                //              Get.snackbar(
+                //       "",
+                //        "Coming Soon",
+                //        colorText: Colors.white,
+                //        backgroundColor: Colors.purple,
+                //        snackPosition: SnackPosition.BOTTOM,
+                //        );
+                //     },
+                //     child: deshboardItem(
+                //       title: "Image Upload",
+                //     ),
+                //     ),
               ],
             ),
           ),
-    SizedBox(height: 10.h,), 
-Container(
-            margin: EdgeInsets.only(left: 10.w,right: 10.w, 
-            top: 10.h, bottom: 10.h),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(
-                width: 2, 
-                color: dark
-              ))
-            ),
-            child: Text("Exam ",style: TextStyle(
-              fontSize: 17.sp, 
-              fontWeight: FontWeight.bold, 
-              color: dark
-            ),),
+          SizedBox(
+            height: 10.h,
           ),
-
-           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.w,),
-        
+          Container(
+            margin: EdgeInsets.only(
+                left: 10.w, right: 10.w, top: 10.h, bottom: 10.h),
+            decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(width: 2, color: dark))),
+            child: Text(
+              "Leave Management ",
+              style: TextStyle(
+                  fontSize: 17.sp, fontWeight: FontWeight.bold, color: dark),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 15.w,
+            ),
             height: 100.h,
-           
             child: ListView(
-              scrollDirection: Axis.horizontal, 
+              scrollDirection: Axis.horizontal,
               children: [
                 InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>ExamRoutinePage()));
-                  },
-                  child: deshboardItem(title:"Exam Routine",imageLInk: "assets/routine.png",)), 
+                    onTap: () {
+                      //Navigator.push(context, MaterialPageRoute(builder:(_)=>AddStudentLeave()));
+
+                      Get.snackbar(
+                        "Add Leave",
+                        "Coming Soon",
+                        colorText: Colors.white,
+                        backgroundColor: Colors.purple,
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    },
+                    child: deshboardItem(
+                        title: "Add Leave", imageLInk: "assets/leave.png")),
+                InkWell(
+                    onTap: () {
+                      //  Navigator.push(context, MaterialPageRoute(builder:(_)=>StudentWishAttendence()));
+                      Get.snackbar(
+                        "Leave Categories",
+                        "Coming Soon",
+                        colorText: Colors.white,
+                        backgroundColor: Colors.purple,
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    },
+                    child: deshboardItem(
+                        title: "Leave Categories",
+                        imageLInk: "assets/add_leave.png")),
+                InkWell(
+                    onTap: () {
+                      // Navigator.push(context, MaterialPageRoute(builder:(_)=>MobileAttendancePage()));
+                      Get.snackbar(
+                        "Leave Report",
+                        "Coming Soon",
+                        colorText: Colors.white,
+                        backgroundColor: Colors.purple,
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    },
+                    child: deshboardItem(
+                      title: "Leave Report",
+                    )),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          Container(
+            margin: EdgeInsets.only(
+                left: 10.w, right: 10.w, top: 10.h, bottom: 10.h),
+            decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(width: 2, color: dark))),
+            child: Text(
+              "Exam ",
+              style: TextStyle(
+                  fontSize: 17.sp, fontWeight: FontWeight.bold, color: dark),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 15.w,
+            ),
+            height: 100.h,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                InkWell(
+                    onTap: () {
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (_) => ExamRoutinePage()));
+                        Get.snackbar(
+                        "Exam",
+                        "Coming Soon",
+                        colorText: Colors.white,
+                        backgroundColor: Colors.purple,
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    },
+                    child: deshboardItem(
+                      title: "Exam Routine",
+                      imageLInk: "assets/routine.png",
+                    )),
                 // InkWell(
                 //      onTap: (){
                 //     Navigator.push(context, MaterialPageRoute(builder:(_)=>AddNewDiaryPage()));
                 //   },
-                //   child: deshboardItem(title:"Exam Schedule",imageLInk: "assets/routine.png",)), 
+                //   child: deshboardItem(title:"Exam Schedule",imageLInk: "assets/routine.png",)),
                 InkWell(
-                     onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder:(_)=>ResultSheet()));
-                  },
-                  child: deshboardItem(title: "Exam Result",imageLInk: "assets/result.png",)), 
-                
+                    onTap: () {
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (_) => ResultSheet()));
+                        Get.snackbar(
+                        "Exam Result",
+                        "Coming Soon",
+                        colorText: Colors.white,
+                        backgroundColor: Colors.purple,
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    },
+                    child: deshboardItem(
+                      title: "Exam Result",
+                      imageLInk: "assets/result.png",
+                    )),
               ],
             ),
           ),
-
-
         ],
       ),
     );
@@ -264,24 +321,25 @@ Container(
 }
 
 class deshboardItem extends StatelessWidget {
-  String? title; 
+  String? title;
   String? imageLInk;
-  int? height; 
+  int? height;
   int? width;
-   deshboardItem({
-    Key? key, this.title,  this.imageLInk , this.height, this.width
-  }) : super(key: key);
+  deshboardItem({Key? key, this.title, this.imageLInk, this.height, this.width})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(left:14.0,),
+      padding: EdgeInsets.only(
+        left: 14.0,
+      ),
       child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-             color: Colors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20.r),
-        
+
             // boxShadow:const [
             //   BoxShadow(
             //     color: primaryColor,
@@ -295,28 +353,35 @@ class deshboardItem extends StatelessWidget {
           width: 100.w,
           child: Column(
             children: [
-             SizedBox(height: 10.h,),
+              SizedBox(
+                height: 10.h,
+              ),
               Container(
                 height: 40.h,
                 width: 60.w,
-                child: imageLInk==null?Text("No Image"):Image.asset(imageLInk.toString(), ),
-              ), 
-              SizedBox(height: 10.h,),
-              Text(title.toString(), 
-              style: TextStyle(fontFamily: "Roboto", 
-              fontSize: 13.sp, fontWeight: FontWeight.w700, 
-              color: Colors.black
+                child: imageLInk == null
+                    ? Text("No Image")
+                    : Image.asset(
+                        imageLInk.toString(),
+                      ),
               ),
-              textAlign: TextAlign.center,
+              SizedBox(
+                height: 10.h,
+              ),
+              Text(
+                title.toString(),
+                style: TextStyle(
+                    fontFamily: "Roboto",
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black),
+                textAlign: TextAlign.center,
               )
             ],
-          )
-        ),
-      
+          )),
     );
   }
 }
-
 
 class LDOvalRightBorderClipper extends CustomClipper<Path> {
   @override
@@ -324,8 +389,10 @@ class LDOvalRightBorderClipper extends CustomClipper<Path> {
     var path = Path();
     path.lineTo(0, 0);
     path.lineTo(size.width - 50, 0);
-    path.quadraticBezierTo(size.width, size.height / 4, size.width, size.height / 2);
-    path.quadraticBezierTo(size.width, size.height - (size.height / 4), size.width - 40, size.height);
+    path.quadraticBezierTo(
+        size.width, size.height / 4, size.width, size.height / 2);
+    path.quadraticBezierTo(size.width, size.height - (size.height / 4),
+        size.width - 40, size.height);
     path.lineTo(0, size.height);
     return path;
   }

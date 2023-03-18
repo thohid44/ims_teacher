@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +12,8 @@ import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
 import 'package:imsteacher/pages/Dairy/Controller/Dairies_Controllder.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:imsteacher/pages/Home/deshboard.dart';
 import 'package:intl/intl.dart';
 
 class AddNewDiaryPage extends StatefulWidget {
@@ -29,20 +31,23 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
   
 
 //final  TextEditingController dateinput = TextEditingController();
-  final TextEditingController _des = TextEditingController();
+  final TextEditingController description= TextEditingController();
+
   String? classValue;
   bool selectedImage = false;
   String? selectClass;
   String? selectSub = "Select Subject";
   String selectedValue = "Select Class";
   String? subjectValue;
-  String? subId;
+  var subId;
   final _box = GetStorage();
   var url = ApiUrl.baseUrl;
    late File uploadimage; //variable for choosed file
    String? imgPath = ''; 
+ 
   void initState() {
-    // dateinput.text = "";
+    //dateinput.text = "";
+    
     super.initState();
   }
   final    AllDairyController _diaryController = Get.put(AllDairyController()); 
@@ -59,174 +64,229 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 20.h,
-          ),
-          Container(
-              width: 160.w,
-              height: 45.h,
-              margin: EdgeInsets.symmetric(horizontal: 30.w),
-              child: _buildDatePicker()),
-          SizedBox(
-            height: 10.h,
-          ),
-
-          Container(
-              height: 40.h,
-              alignment: Alignment.center,
-              margin: EdgeInsets.symmetric(horizontal: 30.w),
-              width: 230.w,
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1.w, color: Colors.grey)),
-              child: GetBuilder<TakeAttendController>(builder: (context) {
-                return DropdownButton(
-                    hint: Text("${isSelect ? selectClass : 'Select Academic Class'}"),
-                    underline: SizedBox(),
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    value: classValue,
-                    items: _con.classList
-                        .map((e) => DropdownMenuItem(
-                              onTap: () {
-                                selectClass = e.name.toString();
-                              },
-                              value: e.id,
-                              child: Text(
-                                "${e.name} ${e.id}",
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        isSelect = true;
-                        selectedValue = value.toString();
-                        print("Dairy Class $selectedValue");
-                      });
-                    });
-              })),
-
-          SizedBox(
-            height: 10.h,
-          ),
-          Container(
-              height: 40.h,
-              alignment: Alignment.center,
-              margin: EdgeInsets.symmetric(horizontal: 30.w),
-              width: 230.w,
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1.w, color: Colors.grey)),
-              child: GetBuilder<TakeAttendController>(builder: (context) {
-                return DropdownButton(
-                    hint: Text("${isSubject ? selectSub : 'Select Subject'}"),
-                    underline: SizedBox(),
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    value: subjectValue,
-                    items: _con.subjectList
-                        .map((e) => DropdownMenuItem(
-                              onTap: () {
-                                selectSub = e.name.toString();
-                              },
-                              value: e.id,
-                              child: Text(
-                                "${e.name}",
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        isSubject = true; 
-                        subId = value.toString();
-                        print("Dairy Class $subId");
-                      });
-                    });
-              })),
-          SizedBox(
-            height: 20.h,
-          ),
-          // Container(
-          //   margin: EdgeInsets.symmetric(horizontal: 30),
-          //   child: TextFormField(
-          //     controller: _des,
-          //     decoration: InputDecoration(),
-          //   )
-          // ),
-
-          SizedBox(
-            height: 10.h,
-          ),
-
-          imgPath == ''
-              ? Image.asset(
-                  'assets/camera.png',
-                  height: 50,
-                  width: 50,
-                )
-              : Image.file(
-                  File(imgPath!),
-                  height: 200,
-                  width: 200,
-                  fit: BoxFit.fill,
-                ),
-
-          SizedBox(
-            height: 30.h,
-          ),
-          InkWell(
-            onTap: () {
-              selectImage();
-              setState(() {});
-            },
-            child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 120.w),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 20.h,
+            ),
+            Container(
+                width: 285.w,
                 height: 40.h,
-                width: 100.w,
+                margin: EdgeInsets.symmetric(horizontal: 30.w),
+                child: _buildDatePicker()),
+            SizedBox(
+              height: 10.h,
+            ),
+      
+            Container(
+                height: 40.h,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(color: Colors.purple),
+                margin: EdgeInsets.symmetric(horizontal: 30.w),
+                width: 285.w,
+                decoration: BoxDecoration(
+                    border: Border.all(width: 1.w, color: Colors.grey)),
+                child: GetBuilder<TakeAttendController>(builder: (context) {
+                  return DropdownButton(
+                      hint: Text("${isSelect ? selectClass : 'Select Academic Class'}"),
+                      underline: SizedBox(),
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      value: classValue,
+                      items: _con.classList
+                          .map((e) => DropdownMenuItem(
+                                onTap: () {
+                                  selectClass = e.name.toString();
+                                },
+                                value: e.id,
+                                child: Text(
+                                  "${e.name}",
+                                ),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          isSelect = true;
+                          selectedValue = value.toString();
+                          print("Dairy Class $selectedValue");
+                        });
+                      });
+                })),
+      
+            SizedBox(
+              height: 10.h,
+            ),
+            Container(
+                height: 40.h,
+                alignment: Alignment.center,
+                margin: EdgeInsets.symmetric(horizontal: 30.w),
+                width: 285.w,
+                decoration: BoxDecoration(
+                    border: Border.all(width: 1.w, color: Colors.grey)),
+                child: GetBuilder<TakeAttendController>(builder: (context) {
+                  return DropdownButton(
+                      hint: Text("${isSubject ? selectSub : 'Select Subject'}", 
+                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold, ),
+                      ),
+                      underline: SizedBox(),
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      value: subjectValue,
+                      items: _con.subjectList
+                          .map((e) => DropdownMenuItem(
+                                onTap: () {
+                                  selectSub = e.name.toString();
+                                },
+                                value: e.id,
+                                child: Text(
+                                  "${e.name}", style: 
+                                  TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold),
+                                ),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          isSubject = true; 
+                          subId = value.toString();
+                          print("Dairy Class $subId");
+                        });
+                      });
+                })),
+            SizedBox(
+              height: 20.h,
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 30),
+              child: TextFormField(
+                controller: description,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder()
+                ),
+                maxLines: 10,
+                             minLines: 10,
+              )
+            ),
+      
+            SizedBox(
+              height: 10.h,
+            ),
+      
+            // imgPath == ''
+            //     ? Image.asset(
+            //         'assets/camera.png',
+            //         height: 50,
+            //         width: 50,
+            //       )
+            //     : Image.file(
+            //         File(imgPath!),
+            //         height: 200,
+            //         width: 200,
+            //         fit: BoxFit.fill,
+            //       ),
+      
+            // SizedBox(
+            //   height: 30.h,
+            // ),
+            // InkWell(
+            //   onTap: () {
+            //     selectImage();
+            //     setState(() {});
+            //   },
+            //   child: Container(
+            //       margin: EdgeInsets.symmetric(horizontal: 120.w),
+            //       height: 40.h,
+            //       width: 100.w,
+            //       alignment: Alignment.center,
+            //       decoration: BoxDecoration(color: Colors.purple),
+            //       child: Text(
+            //         "Upload",
+            //         style: TextStyle(
+            //             fontSize: 15.sp,
+            //             fontWeight: FontWeight.bold,
+            //             color: Colors.white),
+            //       )),
+            // ),
+      
+            SizedBox(
+              height: 20.h,
+            ),
+            InkWell(
+              onTap: () {
+              addDairy();
+             
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
+                alignment: Alignment.center,
+                height: 50.h,
+                width: 150.w,
+                decoration: BoxDecoration(
+                    color: Colors.deepPurpleAccent,
+                    borderRadius: BorderRadius.circular(30.r)),
                 child: Text(
-                  "Upload",
+                  "Submit Diary",
                   style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                )),
-          ),
-
-          SizedBox(
-            height: 20.h,
-          ),
-          InkWell(
-            onTap: () {
-            
-              _diaryController.uploadDiary(selectedValue.toString(), dateController.text.toString(),subId.toString() );
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
-              alignment: Alignment.center,
-              height: 50.h,
-              width: 150.w,
-              decoration: BoxDecoration(
-                  color: Colors.deepPurpleAccent,
-                  borderRadius: BorderRadius.circular(30.r)),
-              child: Text(
-                "Submit Diary",
-                style: TextStyle(
-                    fontFamily: 'Roboto',
-                    color: Colors.white,
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.bold),
+                      fontFamily: 'Roboto',
+                      color: Colors.white,
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 20.h,
-          )
-        ],
+            SizedBox(
+              height: 20.h,
+            )
+          ],
+        ),
       ),
     );
   }
 
   final TextEditingController dateController = TextEditingController();
+  var dio = Dio();
+   addDairy() async {
+
+
+    var token = _box.read(LocalStoreKey.token);
+    var teacher_id = _box.read(LocalStoreKey.teacherId);
+    print(teacher_id); 
+  //    Map mapData =  
+  //  var jsonData = jsonEncode(mapData); 
+    try {
+    var response = await dio.post(
+      'http://www.urkircharhs.edu.bd/api/teacher-add-diary',
+      data:{
+      "academic_class_id":selectedValue,
+      "date":"$date",
+      "teacher_id": teacher_id,
+      "subject_id":subId,
+      "description":description.text.toString()
+    }, options: Options(headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer '+token,
+    })
+    );
+   
+  if (response.statusCode == 200) {
+      
+        Get.snackbar(
+          "Diary",
+          "Successfully Save",
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.purple,
+        );
+        Get.to(DeashBoard());
+      } else {}
+    print('User created: ${response.data}');
+
+   
+  } catch (e) {
+    print('Error creating user: $e');
+  }
+
+ 
+
+    }
 
   DateTime selectedDate = DateTime.now();
   late String date;
@@ -260,6 +320,7 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
               selectedDate = pickedDate;
               dateController.text =
                   DateFormat('yyyy-MM-dd').format(selectedDate);
+            date=dateController.text; 
               print("thohdi ${dateController.text}");
             });
           }

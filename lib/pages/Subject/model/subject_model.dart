@@ -11,25 +11,25 @@ String subjectModelToJson(SubjectModel data) => json.encode(data.toJson());
 class SubjectModel {
     SubjectModel({
         this.status,
-        this.sections,
+        this.subjects,
     });
 
     bool? status;
-    List<Section>? sections;
+    List<Subject>? subjects;
 
     factory SubjectModel.fromJson(Map<String, dynamic> json) => SubjectModel(
         status: json["status"],
-        sections: List<Section>.from(json["sections"].map((x) => Section.fromJson(x))),
+        subjects: List<Subject>.from(json["subjects"].map((x) => Subject.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "status": status,
-        "sections": List<dynamic>.from(sections!.map((x) => x.toJson())),
+        "subjects": List<dynamic>.from(subjects!.map((x) => x.toJson())),
     };
 }
 
-class Section {
-    Section({
+class Subject {
+    Subject({
         this.id,
         this.name,
     });
@@ -37,7 +37,7 @@ class Section {
     int? id;
     String? name;
 
-    factory Section.fromJson(Map<String, dynamic> json) => Section(
+    factory Subject.fromJson(Map<String, dynamic> json) => Subject(
         id: json["id"],
         name: json["name"],
     );

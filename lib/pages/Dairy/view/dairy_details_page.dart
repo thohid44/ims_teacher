@@ -8,9 +8,11 @@ import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Dairy/model/single_dairy_model.dart';
-import 'package:imsteacher/pages/Home/custom_bar.dart';
+
 
 import 'package:imsteacher/widgets/custom_text_widget.dart';
+
+import '../../Home/custom_navigation_bar.dart';
 
 class DairyDetailsPage extends StatefulWidget {
   String? id;
@@ -31,7 +33,7 @@ class _DairyDetailsPageState extends State<DairyDetailsPage> {
     var response = await ApiUrl.userClient.get(Uri.parse("$url/teacher-diary?id=${widget.id}"), 
   
     headers: {    
-      'Accept':'application/json',
+        "accept": "application/json",
       'Authorization': 'Bearer '+token,
     }
     
@@ -69,8 +71,8 @@ class _DairyDetailsPageState extends State<DairyDetailsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              customText("Date:${snapshot.data!.diary!.date.toString()}", dark, 16.0, FontWeight.bold),
-                customText("Teacher Name:${snapshot.data!.diary!.teacher.toString()}", dark, 16.0, FontWeight.bold)
+              customText("Date:${snapshot.data!.diary!.date.toString()}", dark, 13.0, FontWeight.bold),
+                customText("Teacher Name:${snapshot.data!.diary!.teacher.toString()}", dark, 13.0, FontWeight.bold)
             ],),
             SizedBox(height: 15.h,), 
             Container(
@@ -91,7 +93,7 @@ class _DairyDetailsPageState extends State<DairyDetailsPage> {
          },
       ),
 
-      bottomNavigationBar: CustomNavigationBar(),
+    bottomNavigationBar: CustomNavigationBar(),
     );
     
   }

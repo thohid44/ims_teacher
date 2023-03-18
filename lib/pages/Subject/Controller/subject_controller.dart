@@ -7,7 +7,7 @@ import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Subject/model/subject_model.dart';
 
 class SubjectController extends GetxController {
-  List<Section> subjectList = <Section>[].obs;
+  List<Subject> subjectList = <Subject>[].obs;
 
   final _box = GetStorage();
 
@@ -15,7 +15,7 @@ class SubjectController extends GetxController {
   fetchSubject() async {
     var token = _box.read(LocalStoreKey.token);
     var response =
-        await ApiUrl.userClient.get(Uri.parse("$url/sections"), headers: {
+        await ApiUrl.userClient.get(Uri.parse("$url/subjects"), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer ' +token,
     });
@@ -23,7 +23,7 @@ class SubjectController extends GetxController {
   print(jsonData); 
     if (response.statusCode == 200) {
       SubjectModel subject = SubjectModel.fromJson(jsonData);
-      subjectList = subject.sections!;
+      subjectList = subject.subjects!;
 
       update();
     }

@@ -10,7 +10,7 @@ import 'package:imsteacher/pages/login/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-// WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 //   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await GetStorage.init();
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Teacher WPIMS',
+          title: 'Urkirchar High School',
           // You can use the library anywhere in the app even in theme
           theme: ThemeData(
             primarySwatch: Colors.blue,

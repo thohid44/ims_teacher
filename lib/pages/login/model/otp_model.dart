@@ -34,6 +34,7 @@ class OtpModel {
 
 class Teacher {
     Teacher({
+      this.id, 
         this.name,
         this.cardId,
         this.dob,
@@ -42,7 +43,7 @@ class Teacher {
         this.email,
         this.joining,
     });
-
+    int? id; 
     String? name;
     String? cardId;
     String? dob;
@@ -52,6 +53,7 @@ class Teacher {
     String? joining;
 
     factory Teacher.fromJson(Map<String, dynamic> json) => Teacher(
+       id: json["id"],
         name: json["name"],
         cardId: json["card_id"],
         dob: json["dob"],
@@ -62,6 +64,7 @@ class Teacher {
     );
 
     Map<String, dynamic> toJson() => {
+      "id": id,
         "name": name,
         "card_id": cardId,
         "dob": dob,

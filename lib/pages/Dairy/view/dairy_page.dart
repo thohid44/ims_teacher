@@ -43,6 +43,7 @@ class _DairyPageState extends State<DairyPage> {
         '$url/teacher-diaries?date=${dateController.text}&academic_class_id=$selectedValue';
 
     var response = await ApiUrl.userClient.get(Uri.parse(url2), headers: {
+      
       'Accept': 'application/json',
       'Authorization': 'Bearer ' + token,
     });
@@ -109,7 +110,7 @@ class _DairyPageState extends State<DairyPage> {
                    
                               },
                               child: Text(
-                                "${e.name} ${e.id}",
+                                "${e.name}",
                               ),
                             ))
                         .toList(),
@@ -184,7 +185,8 @@ class _DairyPageState extends State<DairyPage> {
                                   itemCount: snapshot.data!.diaries!.length,
                                   itemBuilder: ((context, index) {
                              
-                                    return Card(
+                                    if(snapshot.data!.diaries!.isNotEmpty){
+                                      return Card(
                                       child: Container(
                                         alignment: Alignment.centerLeft,
                                         width: double.infinity,
@@ -214,6 +216,8 @@ class _DairyPageState extends State<DairyPage> {
                                         ),
                                       ),
                                     );
+                                    }
+                                    return Center(child: Text("No Diary Found"),); 
                                   }),
                                 ),
                               ),

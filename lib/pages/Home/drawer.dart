@@ -19,8 +19,13 @@ class _AppDrawerState extends State<AppDrawer> {
   Future<void> logout() async{
     _box.remove(LocalStoreKey.token); 
   }
+  void initState(){
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+     var logo= _box.read(LocalStoreKey.logo);
     return Container(
       margin: EdgeInsets.only(right: 40.h),
        child: ClipPath(
@@ -39,7 +44,7 @@ class _AppDrawerState extends State<AppDrawer> {
               DrawerHeader(child:Container(
                 margin: EdgeInsets.only(right: 25),
                 child: Center(
-                  child: Image.asset("assets/logo.jpeg")
+                  child: Image.network("$logo")
                 ),
               )),
               ListTile(

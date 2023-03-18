@@ -8,10 +8,12 @@ import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/Utils/Constrans/pref_local_store_keys.dart';
 import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
 import 'package:imsteacher/pages/Attendance/model/daily_attendance_model.dart';
-import 'package:imsteacher/pages/Home/custom_bar.dart';
+
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:native_screenshot/native_screenshot.dart';
+
+import '../../Home/custom_navigation_bar.dart';
 
 class DailyAttendancePage extends StatefulWidget {
   const DailyAttendancePage({super.key});
@@ -193,7 +195,7 @@ class _DailyAttendancePageState extends State<DailyAttendancePage> {
                   )
           ],
         ), 
-        bottomNavigationBar: CustomNavigationBar(),
+     bottomNavigationBar: CustomNavigationBar(),
         );
   }
 
@@ -231,6 +233,10 @@ class _DailyAttendancePageState extends State<DailyAttendancePage> {
               selectedDate = pickedDate;
               dateController.text =
                   DateFormat('yyyy-MM-dd').format(selectedDate);
+                  if (selectCls && dateController != null) {
+                             
+                                fetchDailyAttnd();
+                              }
               print("thohid ${dateController.text}");
             });
           }

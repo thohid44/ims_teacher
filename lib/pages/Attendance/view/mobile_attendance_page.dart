@@ -9,11 +9,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:imsteacher/Service/Api_url.dart';
 import 'package:imsteacher/Utils/Constrans/color.dart';
 import 'package:imsteacher/pages/Attendance/controller/take_attend_controller.dart';
-import 'package:imsteacher/pages/Home/custom_bar.dart';
+
 import 'package:imsteacher/pages/Home/deshboard.dart';
 import 'package:imsteacher/widgets/custom_text_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+
+import '../../Home/custom_navigation_bar.dart';
 
 class MobileAttendancePage extends StatefulWidget {
   const MobileAttendancePage({super.key});
@@ -36,6 +38,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
 
   @override
   void initState() {
+    date=''; 
     super.initState();
   }
 
@@ -144,6 +147,7 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                           itemBuilder: ((context, index) {
                             return Container(
                               height: 45,
+                              margin:EdgeInsets.only(bottom:13.h), 
                               child: ListTile(
                          
                                 contentPadding: EdgeInsets.all(0),
@@ -153,14 +157,21 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                   title: Text(
                                       _con.mobile[index].studentName.toString(),
                                       style: TextStyle(color: Colors.black,fontSize: 13.sp, fontWeight: FontWeight.bold, )),
+                                     subtitle: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        _con.mobile[index].studentId.toString(),
+                                        style: TextStyle(fontSize: 15.sp, )
+                                      ),
+                                      
+                                      Icon(Icons.copy, size: 18.w, color: Colors.purple,)
+                                    ],
+                                  ),
                                   // subtitle: Text(
-                                  //   _con.mobile[index].studentId.toString(),
+                                  //   _con.mobile2[index]['attendance_status_id'].toString(),
                                   //   style: TextStyle(fontSize: 15.sp, )
                                   // ),
-                                  subtitle: Text(
-                                    _con.mobile2[index]['attendance_status_id'].toString(),
-                                    style: TextStyle(fontSize: 15.sp, )
-                                  ),
                                         onTap: (){
                                   FlutterClipboard.copy( _con.mobile[index].studentId.toString());
                                      
@@ -201,7 +212,8 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                                         //print(mobile);
                                       }
                                     },
-                                  )),
+                                  ),
+                                  ),
                             );
                           }),
                         );
@@ -213,10 +225,10 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                 : Center(
                     child: Text("Please Select Class"),
                   ),
-           SizedBox(height: 18.h,), 
+           SizedBox(height: 10.h,), 
             selectClass == true
                 ? Container(
-                    margin: EdgeInsets.only(left: 50.w, right: 50.w),
+                    margin: EdgeInsets.only(left: 60.w, right: 60.w),
                     alignment: Alignment.center,
                     height: 40.h,
                     width: 150.w,
@@ -225,18 +237,31 @@ class _MobileAttendancePageState extends State<MobileAttendancePage> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        sendAttendance();
+                        if(date.isEmpty){
+ Get.snackbar(
+          "Please",
+          "Select Date",
+          
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+        );
+                        }else{
+                          sendAttendance();
+                        }
+                    
                       },
                       child: customText("Save Attendance", Colors.white, 18.0,
                           FontWeight.bold),
                     ),
                   )
-                : Container()
+                : Container(),
+                
           ],
         ),
       ),
 
-      bottomNavigationBar: CustomNavigationBar(),
+     bottomNavigationBar: CustomNavigationBar(),
     );
   }
 

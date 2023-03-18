@@ -6,6 +6,6 @@ class ApiUrl {
   static final  userClient = http.Client();
 //http://www.urkircharhs.edu.bd
    
-      static const baseUrl = "http://www.urkircharhs.edu.bd/api";
+      static const baseUrl = "https://www.urkircharhs.edu.bd/api";
   static const logInUrl = 'teacher-login'; 
 }

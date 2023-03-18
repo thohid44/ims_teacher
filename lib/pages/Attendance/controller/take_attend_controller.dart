@@ -39,7 +39,7 @@ var atn = true;
       'Authorization': 'Bearer '+token,
     });
     var jsonData = json.decode(response.body);
-  
+  print(jsonData); 
     if (response.statusCode == 200) {
       AcademicClassesModel academic = AcademicClassesModel.fromJson(jsonData);
       classList = academic.classes!;
@@ -87,11 +87,11 @@ var atn = true;
    }
    
   }
-  List<Section> subjectList = <Section>[].obs;
+  List<Subject> subjectList = <Subject>[].obs;
     fetchSubject() async {
     var token = _box.read(LocalStoreKey.token);
     var response =
-        await ApiUrl.userClient.get(Uri.parse("$url/sections"), headers: {
+        await ApiUrl.userClient.get(Uri.parse("$url/subjects"), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer '+token,
     });
@@ -99,11 +99,12 @@ var atn = true;
   
     if (response.statusCode == 200) {
       SubjectModel subject = SubjectModel.fromJson(jsonData);
-      subjectList = subject.sections!;
+      subjectList = subject.subjects!;
 
       update();
     }
   }
+
 
 
 //   fetchMobileCls() async {
