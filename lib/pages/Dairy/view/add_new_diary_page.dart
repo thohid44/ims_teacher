@@ -99,7 +99,7 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
                                 },
                                 value: e.id,
                                 child: Text(
-                                  "${e.name}",
+                                  "${e.name} ",
                                 ),
                               ))
                           .toList(),
@@ -248,17 +248,17 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
 
     var token = _box.read(LocalStoreKey.token);
     var teacher_id = _box.read(LocalStoreKey.teacherId);
-    print(teacher_id); 
+    print("teacher Id $teacher_id"); 
   //    Map mapData =  
   //  var jsonData = jsonEncode(mapData); 
     try {
     var response = await dio.post(
-      'http://www.urkircharhs.edu.bd/api/teacher-add-diary',
+      'https://www.urkircharhs.edu.bd/api/teacher-add-diary',
       data:{
       "academic_class_id":selectedValue,
       "date":"$date",
-      "teacher_id": teacher_id,
-      "subject_id":subId,
+      "teacher_id":"$teacher_id",
+      "subject_id":"$subId",
       "description":description.text.toString()
     }, options: Options(headers: {
       'Accept': 'application/json',
