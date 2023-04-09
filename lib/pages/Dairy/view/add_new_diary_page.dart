@@ -243,8 +243,8 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
 
   final TextEditingController dateController = TextEditingController();
   var dio = Dio();
-   addDairy() async {
 
+   addDairy() async {
 
     var token = _box.read(LocalStoreKey.token);
     var teacher_id = _box.read(LocalStoreKey.teacherId);
@@ -253,7 +253,7 @@ class _AddNewDiaryPageState extends State<AddNewDiaryPage> {
   //  var jsonData = jsonEncode(mapData); 
     try {
     var response = await dio.post(
-      'https://www.urkircharhs.edu.bd/api/teacher-add-diary',
+      '$url/teacher-add-diary',
       data:{
       "academic_class_id":selectedValue,
       "date":"$date",
